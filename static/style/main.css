@@ -1,1 +1,19 @@
-/**TODO**/
+html {
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+body {
+    font-size: 12pt;
+    color: #3C3D3F;
+    text-align: left;
+    margin: auto;
+    height: 100vh;
+    overflow: auto;
+    background: #fdfdfd;
+    display: flex;
+    justify-content: center;
+    min-width: 320px;
+    min-height: 480px;
+}
