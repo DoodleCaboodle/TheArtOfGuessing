@@ -43,20 +43,12 @@
 		}
 	});
 
-	//pen outside of the paper
-	canvas.addEventListener('mouseout', function(e){
-		if (drawing) {
-			drawing = false;
-			drawLine(curr.x, curr.y, e.clientY, e.clientY, true);
-		}
-	});
-
 	var lastEmit = Date.now();
 
 	//drawing
 	canvas.addEventListener('mousemove', function(e){
-		if (drawing) {
-			if((Date.now() - lastEmit) > 30) {
+		if ((Date.now() - lastEmit) >= 10) {
+			if(drawing) {
 				drawLine(curr.x, curr.y, e.clientX, e.clientY, true);
 				lastEmit = Date.now();
 				curr.x = e.clientX;
@@ -69,8 +61,11 @@
 		drawLine(data.fromx*canvas.width, data.fromy*canvas.height, data.tox*canvas.width, data.toy*canvas.height, false);
 	});
 
-	window.addEventListener('resize', function(){
+	window.addEventListener('resize', onResize);
+	onResize();
+
+	function onResize() {
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
-	});
+	}
 }());
