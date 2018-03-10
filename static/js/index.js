@@ -7,6 +7,7 @@
 	//drawing flag
 	var drawing = false;
 
+	//current location
 	var curr = {};
 
 	function drawLine(fromx, fromy, tox, toy, emit) {
