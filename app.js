@@ -23,7 +23,12 @@ app.use(function (req, res, next){
 });
 
 const http = require('http');
+const io = require('socket.io')(http);
 const PORT = 3000;
+
+io.on('connection', function(socket){
+	socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
+});
 
 http.createServer(app).listen(PORT, function (err) {
     if (err) console.log(err);
