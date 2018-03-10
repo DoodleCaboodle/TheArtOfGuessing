@@ -1,19 +1,20 @@
-html {
-    overflow: -moz-scrollbars-vertical;
-    overflow-y: auto;
-    overflow-x: auto;
+{
+  box-sizing: border-box;
 }
 
-body {
-    font-size: 12pt;
-    color: #3C3D3F;
-    text-align: left;
-    margin: auto;
-    height: 100vh;
-    overflow: auto;
-    background: #fdfdfd;
-    display: flex;
-    justify-content: center;
-    min-width: 320px;
-    min-height: 480px;
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
+
+#myCanvas {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+}
+

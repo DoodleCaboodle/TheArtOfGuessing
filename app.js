@@ -22,15 +22,17 @@ app.use(function (req, res, next){
     console.log("HTTP Response", res.statusCode);
 });
 
-const http = require('http');
+const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const PORT = 3000;
 
 io.on('connection', function(socket){
-	socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
+	socket.on('drawing', function(data){
+		socket.broadcast.emit('drawing', data);
+	});
 });
 
-http.createServer(app).listen(PORT, function (err) {
+http.listen(PORT, function (err) {
     if (err) console.log(err);
     else console.log("HTTP server on http://localhost:%s", PORT);
 });

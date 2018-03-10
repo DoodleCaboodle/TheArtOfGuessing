@@ -66,7 +66,7 @@
 	});
 
 	socket.on('drawing', function(data){
-		drawLine(data.fromx*canvas.width, data.fromy*height, data.tox*canvas.width, data.toy*canvas.height, false);
+		drawLine(data.fromx*canvas.width, data.fromy*canvas.height, data.tox*canvas.width, data.toy*canvas.height, false);
 	});
 
 	window.addEventListener('resize', function(){
