@@ -24,7 +24,7 @@ app.use(function (req, res, next){
 
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 io.on('connection', function(socket){
 	socket.on('drawing', function(data){

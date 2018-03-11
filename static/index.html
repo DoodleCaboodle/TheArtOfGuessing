@@ -17,5 +17,18 @@
 
 		<script src="socket.io/socket.io.js"></script>
 		<script src="js/index.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+        <script>
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyARhawkaY4BId7GFqbW57Q6ezUUW9BO_bo",
+                authDomain: "art-of-guessing.firebaseapp.com",
+                databaseURL: "https://art-of-guessing.firebaseio.com",
+                projectId: "art-of-guessing",
+                storageBucket: "art-of-guessing.appspot.com",
+                messagingSenderId: "800972567864"
+            };
+            firebase.initializeApp(config);
+        </script>
 	</body>
 </html>
