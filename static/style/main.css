@@ -8,6 +8,10 @@ html, body {
   padding: 0;
 }
 
+#toolbar{
+    position:fixed;
+}
+
 #myCanvas {
   height: 100%;
   width: 100%;
