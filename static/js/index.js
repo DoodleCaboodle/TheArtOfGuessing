@@ -4,8 +4,19 @@
 	var socket = io();
 	var canvas = document.getElementById("myCanvas");
 	var context = canvas.getContext("2d");
+
 	var colourPanel = document.getElementById("colourPanel");
 	var brushSelector = document.getElementById("brushSize");
+
+	var undoButton = document.getElementById("undo");
+	var redoButton = document.getElementById("redo");
+	var clearButton = document.getElementById("clear");
+
+	var undoPoints = [];
+	var redoPoints = [];
+
+	var imgSrc = canvas.toDataURL("image/png");
+	undoPoints.push(imgSrc);
 
 	//drawing flag
 	var drawing = false;
@@ -51,6 +62,40 @@
 		curr.brushSize = e.target.value;
 	});
 
+	undoButton.addEventListener("click", function(e){
+		if(undoPoints.length > 0) {
+			var imgSrc = canvas.toDataURL("image/png");
+			redoPoints.push(imgSrc);
+
+			var oldImg = new Image();
+			oldImg.onload = function() {
+				context.clearRect(0, 0, canvas.width, canvas.height);
+				context.drawImage(oldImg, 0, 0);
+			}
+			oldImg.src = undoPoints.pop();
+		}
+	});
+
+	redoButton.addEventListener("click", function(e){
+		if(redoPoints.length > 0){
+			var imgSrc = canvas.toDataURL("image/png");
+			undoPoints.push(imgSrc);
+
+			var oldImg = new Image();
+			oldImg.onload = function() {
+				context.clearRect(0, 0, canvas.width, canvas.height);
+				context.drawImage(oldImg, 0, 0);
+			}
+			oldImg.src = redoPoints.pop();
+		}
+	});
+
+	clearButton.addEventListener("click", function(e){
+		var imgSrc = canvas.toDataURL("image/png");
+		undoPoints.push(imgSrc);
+		context.clearRect(0, 0, canvas.width, canvas.height);
+	});
+
 	//pen on paper
 	canvas.addEventListener('mousedown', function(e){
 		drawing = true;
@@ -63,6 +108,10 @@
 		if (drawing) {
 			drawing = false;
 			drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+			
+			var imgSrc = canvas.toDataURL("image/png");
+			undoPoints.push(imgSrc);
+			redoPoints = [];
 		}
 	});
 
@@ -70,6 +119,10 @@
 		if (drawing) {
 			drawing = false;
 			drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+			
+			var imgSrc = canvas.toDataURL("image/png");
+			undoPoints.push(imgSrc);
+			redoPoints = [];
 		}
 	});
 
@@ -80,6 +133,11 @@
 		if ((Date.now() - lastEmit) >= 10) {
 			if(drawing) {
 				drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+				
+				var imgSrc = canvas.toDataURL("image/png");
+				undoPoints.push(imgSrc);
+				redoPoints = [];
+
 				lastEmit = Date.now();
 				curr.x = e.clientX;
 				curr.y = e.clientY;
@@ -89,6 +147,10 @@
 
 	socket.on('drawing', function(data){
 		drawLine(data.fromx*canvas.width, data.fromy*canvas.height, data.tox*canvas.width, data.toy*canvas.height, data.colour, data.brushSize, false);
+	
+		var imgSrc = canvas.toDataURL("image/png");
+		undoPoints.push(imgSrc);
+		redoPoints = [];
 	});
 
 	window.addEventListener('resize', onResize);
