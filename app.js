@@ -1,27 +1,28 @@
 const express = require('express');
+const session = require('express-session');
+const bodyParser = require('body-parser');
+
+
+// the APP
 const app = express();
 
-var MongoClient = require('mongodb').MongoClient;
-var uri = "mongodb+srv://user-01:user-01@art-of-guessing-gdqip.mongodb.net/art-of-guessing";
-MongoClient.connect(uri, function(err, client) {
-    const collection = client.db("art-of-guessing").collection("users");
-    // perform actions on the collection object
-    // this is an example table I made, just make any other table you want but keep the database the same
-    //    console.log("hello");
-    //    collection.find({user:"bob"}).toArray(function(err, result) {
-    //        if (err) throw err;
-    //        console.log(result);
-    //        client.close();
-    //    });
-})
-
-
 app.use(express.static('static'));
+app.use(bodyParser.json());
+
+app.use(session({
+    secret: 'please change this secret',
+    resave: false,
+    saveUninitialized: true,
+}));
 
 app.use(function (req, res, next){
+    req.session.username = ('username' in req.session)? req.session.username : null;
     console.log("HTTP request", req.method, req.url, req.body);
     next();
 });
+
+// init all other 
+require('./user').init(app);
 
 // Handle 404
 app.use(function(req, res) {
@@ -30,6 +31,7 @@ app.use(function(req, res) {
 
 // Handle 500
 app.use(function(error, req, res, next) {
+    console.log(error);
     res.status(500).send('500: Internal Server Error');
 });
 
