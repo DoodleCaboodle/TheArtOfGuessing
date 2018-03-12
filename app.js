@@ -47,6 +47,10 @@ io.on('connection', function(socket){
 	socket.on('drawing', function(data){
 		socket.broadcast.emit('drawing', data);
 	});
+    
+    socket.on('clear', function(data){
+		socket.broadcast.emit('clear', data);
+	});
 });
 
 http.listen(PORT, function (err) {

@@ -94,6 +94,7 @@
 		var imgSrc = canvas.toDataURL("image/png");
 		undoPoints.push(imgSrc);
 		context.clearRect(0, 0, canvas.width, canvas.height);
+        socket.emit('clear', {});
 	});
 
 	//pen on paper
@@ -152,6 +153,12 @@
 		undoPoints.push(imgSrc);
 		redoPoints = [];
 	});
+    
+    socket.on('clear', function(data){
+        var imgSrc = canvas.toDataURL("image/png");
+		undoPoints.push(imgSrc);
+		context.clearRect(0, 0, canvas.width, canvas.height);
+    });
 
 	window.addEventListener('resize', onResize);
 	onResize();
