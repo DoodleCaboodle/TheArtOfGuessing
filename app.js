@@ -1,6 +1,21 @@
 const express = require('express');
 const app = express();
 
+var MongoClient = require('mongodb').MongoClient;
+var uri = "mongodb+srv://user-01:user-01@art-of-guessing-gdqip.mongodb.net/art-of-guessing";
+MongoClient.connect(uri, function(err, client) {
+    const collection = client.db("art-of-guessing").collection("users");
+    // perform actions on the collection object
+    // this is an example table I made, just make any other table you want but keep the database the same
+    //    console.log("hello");
+    //    collection.find({user:"bob"}).toArray(function(err, result) {
+    //        if (err) throw err;
+    //        console.log(result);
+    //        client.close();
+    //    });
+})
+
+
 app.use(express.static('static'));
 
 app.use(function (req, res, next){
