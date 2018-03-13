@@ -3,19 +3,20 @@
 }
 
 html, body {
-    height: 100%;
+    height: 100vh;
     margin: 0;
     padding: 0;
 }
 
 #toolbar{
-    position:fixed;
+    width: 100%;
+    height: 10%;
+    background: green;
 }
 
 #myCanvas {
     height: 100%;
     width: 100%;
-    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
@@ -49,4 +50,36 @@ html, body {
     padding: 5px;
     border: 1px solid #e7e7e7;
     background: #eee;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+
+#start-container {
+    display: none;
+}
+
+#chat {
+    height: 100%;
+    width: 20%;
+    background: blue;
+}
+
+#canvas-container {
+    width: 100%;
+    height: 90%;
+    background: red;
+    display: flex;
+    flex-direction: row;
+}
+
+#canvas {
+    width: 80%;
+    height: 100%;
+    background: purple;
 }

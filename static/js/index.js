@@ -6,6 +6,12 @@
         window.location.href = '/login';
     }
     window.onload = function() {
+        
+        document.getElementById('start').addEventListener('click', function() {
+            document.getElementById('start-container').style.display = 'none';
+            document.getElementById('container').style.display = 'flex';
+        });
+        
         var socket = io();
         var canvas = document.getElementById("myCanvas");
         var context = canvas.getContext("2d");
