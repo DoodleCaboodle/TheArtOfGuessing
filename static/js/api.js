@@ -32,5 +32,9 @@ var api = (function(){
         send("POST", "/signup/", {email: email, password: password, firstname:firstname, lastname:lastname}, callback);
     }
     
+    module.logout = function (callback){
+        send("POST", "/signout/", {}, callback);
+    }
+    
     return module;
 })();

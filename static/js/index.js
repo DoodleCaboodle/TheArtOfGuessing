@@ -33,6 +33,9 @@
         };
         
         document.getElementById("user").innerHTML = user.split('%40')[0];
+        document.getElementById("logout").addEventListener("click", function() {
+            window.location.href = "/signout"
+        });
 
         function drawLine(fromx, fromy, tox, toy, colour, brushSize, emit) {
             context.beginPath();

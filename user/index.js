@@ -96,14 +96,14 @@ function init(app) {
         });
     });
 
-    app.post('/signout/', function(req, res, next){
+    // retrieve
+    
+    app.get('/signout/', function(req, res, next){
         logout(req, res, function(err, success) {
             if (success) res.redirect('/');
             else res.redirect('/login');
         });
     });
-
-    // retrieve
 
     app.get('/login/', authenticateMiddleware, function(req, res, next){
         res.sendFile(config.filepath + 'profile/profile.html');
