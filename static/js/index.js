@@ -38,10 +38,29 @@
             brushSize: 1
         };
         
-        document.getElementById("user").innerHTML = user.split('%40')[0];
+        Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d){
+            d.innerHTML  = user.split('%40')[0];
+        });
+        
         document.getElementById("logout").addEventListener("click", function() {
             window.location.href = "/signout"
         });
+        
+        document.getElementById("feed-input").addEventListener("keypress", function(e){
+            var key = e.which || e.keyCode;
+            if (key === 13) {
+                postFeed();
+                document.getElementById("feed-input").value = "";
+            }
+        });
+        
+        function postFeed() {
+            var msg = document.getElementById("feed-input").value;
+            var div = document.createElement('div');
+            div.classList.add("message");
+            div.innerHTML = `<span class="user"> ${user.split('%40')[0]} : </span> ${msg}`;
+            document.getElementById("feed").appendChild(div);
+        }
 
         function drawLine(fromx, fromy, tox, toy, colour, brushSize, emit) {
             context.beginPath();
