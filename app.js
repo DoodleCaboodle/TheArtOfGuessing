@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const cookie = require('cookie');
 const bodyParser = require('body-parser');
 
 
@@ -17,6 +18,11 @@ app.use(session({
 
 app.use(function (req, res, next){
     req.session.username = ('username' in req.session)? req.session.username : null;
+    var email = (req.session.username)? req.session.username : '';
+    res.setHeader('Set-Cookie', cookie.serialize('email', email, {
+          path : '/', 
+          maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
+    }));
     console.log("HTTP request", req.method, req.url, req.body);
     next();
 });
@@ -26,13 +32,13 @@ require('./user').init(app);
 
 // Handle 404
 app.use(function(req, res) {
-    res.status(404).send('404: Page not Found');
+    return res.status(404).send('404: Page not Found');
 });
 
 // Handle 500
 app.use(function(error, req, res, next) {
     console.log(error);
-    res.status(500).send('500: Internal Server Error');
+    return res.status(500).send('500: Internal Server Error');
 });
 
 app.use(function (req, res, next){

@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const cookie = require('cookie');
 const User = require('./user');
 const config = require('../config.js');
 
@@ -20,12 +21,16 @@ var getSaltedHash = function(pass, salt) {
     return bcrypt.hashSync(pass, salt);
 }
 
-var authenticate = function(req, email, pass, callback) {
+var authenticate = function(req, res, email, pass, callback) {
     User.findByEmail(email, function(err, result){
         if (err) callback(err, null);
         if (result.length == 1 && result[0].email === email && bcrypt.compareSync(pass, result[0].password)) {
             
             req.session.username = email;
+            res.setHeader('Set-Cookie', cookie.serialize('email', email, {
+                  path : '/', 
+                  maxAge: 60 * 60 * 24 * 7
+            }));
             callback(null, true);
         }
         else {
@@ -34,7 +39,7 @@ var authenticate = function(req, email, pass, callback) {
     });
 }
 
-var register = function(req, user, callback) {
+var register = function(req, res, user, callback) {
     if (!user) callback(null, false);
     else {
         User.findByEmail(user.email, function(err, result) {
@@ -47,14 +52,22 @@ var register = function(req, user, callback) {
                         // something
                     });
                 });
+                res.setHeader('Set-Cookie', cookie.serialize('email', user, {
+                      path : '/', 
+                      maxAge: 60 * 60 * 24 * 7
+                }));
                 callback(null, true);
             }
         });
     }
 }
 
-var logout = function(req, callback) {
+var logout = function(req, res, callback) {
     req.session.username = '';
+    res.setHeader('Set-Cookie', cookie.serialize('email', '', {
+          path : '/', 
+          maxAge: 60 * 60 * 24 * 7
+    }));
     callback(null, true);
 }
 
@@ -64,10 +77,10 @@ function init(app) {
     app.post('/signin/', function(req, res, next) {
         var email = req.body.email;
         var pass = req.body.password;
-        authenticate(req, email, pass, function(err, success) {
-            if (err) res.redirect('/login');
-            if (success) res.redirect('/profile');
-            else res.redirect('/login');
+        authenticate(req, res, email, pass, function(err, success) {
+            if (err) return res.status(500).end(err);
+            if (success) return res.json("user " + email + " signed in");
+            else return res.status(401).end("access denied");
         });
     });
     
@@ -76,18 +89,17 @@ function init(app) {
         var salt = getSalt();
         var hash = getSaltedHash(req.body.password, salt);
         var newUser = new User(req.body.email, hash, salt, req.body.firstname, req.body.lastname);
-        register(req, newUser, function(err, success) {
-            if (err) res.redirect('/login');
-            if (success) res.redirect('/profile');
-            else res.redirect('/login');
+        register(req, res, newUser, function(err, success) {
+            if (err) return res.status(500).end(err);
+            if (success) return res.json("User " + req.body.email + " signed up");
+            else return res.status(409).end("email " + req.body.email + " already exists");
         });
     });
 
     app.post('/signout/', function(req, res, next){
-        logout(req, function(err, success) {
+        logout(req, res, function(err, success) {
             if (success) res.redirect('/');
             else res.redirect('/login');
-            
         });
     });
 

@@ -8,13 +8,20 @@
 	</head>
 	<body>
         <h1>login.html</h1>
-        
-        <form>
-            <input name="email" id="email" type="text" placeholder="Your username" />
+        <p>
+            So far there are 2 example users.<br>
+            email: bob@gmail.com,
+            pass: 1234<br>
+            email: tod@gmail.com,
+            pass: 1234
+        </p>
+        <form id="login-form">
+            <input name="email" id="email" type="email" placeholder="Your username" />
             <input name="password" id="password" type="password" placeholder="Your password"/>
-            <input type="submit" />
+            <input type="submit" id="submit-btn"/>
         </form>
 		
+		<script src="../js/api.js"></script>
 		<script src="../js/login.js"></script>
 	</body>
 </html>

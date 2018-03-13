@@ -1,3 +1,8 @@
+const config = require('../config.js');
+
+var MongoClient = require('mongodb').MongoClient;
+var uri = config.uri;
+
 function User(email, password, salt, firstname, lastname) {
     this.email = email;
     this.password = password;
