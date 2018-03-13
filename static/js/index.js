@@ -56,10 +56,12 @@
         
         function postFeed() {
             var msg = document.getElementById("feed-input").value;
+            if (msg === '') return;
             var div = document.createElement('div');
             div.classList.add("message");
             div.innerHTML = `<span class="user"> ${user.split('%40')[0]} : </span> ${msg}`;
             document.getElementById("feed").appendChild(div);
+            document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight;
         }
 
         function drawLine(fromx, fromy, tox, toy, colour, brushSize, emit) {
