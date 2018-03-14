@@ -6,6 +6,10 @@
         window.location.href = '/login';
     }
     window.onload = function() {
+
+    	document.getElementById('brushSize').value = 1;
+
+    	var offsetY = document.getElementById('toolbar').clientHeight;
         
         document.getElementById('start').addEventListener('click', function() {
             document.getElementById('start-container').style.display = 'none';
@@ -109,7 +113,9 @@
                     context.clearRect(0, 0, canvas.width, canvas.height);
                     context.drawImage(oldImg, 0, 0);
                 }
-                oldImg.src = undoPoints.pop();
+                var undopoint = undoPoints.pop();
+                oldImg.src = undopoint;
+                socket.emit('undo', {undopoint: undopoint});
             }
         });
 
@@ -123,7 +129,9 @@
                     context.clearRect(0, 0, canvas.width, canvas.height);
                     context.drawImage(oldImg, 0, 0);
                 }
-                oldImg.src = redoPoints.pop();
+                var redopoint = redoPoints.pop();
+                oldImg.src = redopoint;
+                socket.emit('redo', {redopoint: redopoint});
             }
         });
 
@@ -138,14 +146,14 @@
         canvas.addEventListener('mousedown', function(e){
             drawing = true;
             curr.x = e.clientX;
-            curr.y = e.clientY;
+            curr.y = e.clientY - offsetY;
         });
 
         //pen up
         canvas.addEventListener('mouseup', function(e){
             if (drawing) {
                 drawing = false;
-                drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+                drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
 
                 var imgSrc = canvas.toDataURL("image/png");
                 undoPoints.push(imgSrc);
@@ -156,7 +164,7 @@
         canvas.addEventListener('mouseout', function(e){
             if (drawing) {
                 drawing = false;
-                drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+                drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
 
                 var imgSrc = canvas.toDataURL("image/png");
                 undoPoints.push(imgSrc);
@@ -170,7 +178,7 @@
         canvas.addEventListener('mousemove', function(e){
             if ((Date.now() - lastEmit) >= 10) {
                 if(drawing) {
-                    drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+                    drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
 
                     var imgSrc = canvas.toDataURL("image/png");
                     undoPoints.push(imgSrc);
@@ -178,7 +186,7 @@
 
                     lastEmit = Date.now();
                     curr.x = e.clientX;
-                    curr.y = e.clientY;
+                    curr.y = e.clientY - offsetY;
                 }
             }
         });
@@ -197,12 +205,38 @@
             context.clearRect(0, 0, canvas.width, canvas.height);
         });
 
+        socket.on('redo', function(data){
+        	var imgSrc = canvas.toDataURL("image/png");
+        	undoPoints.push(imgSrc);
+
+        	var oldImg = new Image();
+        	oldImg.onload = function() {
+        		context.clearRect(0, 0, canvas.width, canvas.height);
+        		context.drawImage(oldImg, 0, 0);
+        	}
+
+        	oldImg.src = data.redopoint;
+        });
+
+        socket.on('undo', function(data){
+        	var imgSrc = canvas.toDataURL("image/png");
+        	redoPoints.push(imgSrc);
+
+        	var oldImg = new Image();
+        	oldImg.onload = function() {
+        		context.clearRect(0, 0, canvas.width, canvas.height);
+        		context.drawImage(oldImg, 0, 0);
+        	}
+
+        	oldImg.src = data.undopoint;
+        });
+
         window.addEventListener('resize', onResize);
         onResize();
 
         function onResize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.width = document.getElementById("canvas-cont").clientWidth;
+            canvas.height = document.getElementById("canvas-cont").clientHeight;
         }
     }
 }());

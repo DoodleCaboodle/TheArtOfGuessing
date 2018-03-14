@@ -23,6 +23,10 @@ html, body {
     top: 0;
 }
 
+#myCanvas:hover {
+    cursor: crosshair;
+}
+
 #undo{
     display: inline-block;
     background: #eee;
@@ -79,7 +83,7 @@ html, body {
     flex-direction: row;
 }
 
-#canvas {
+#canvas-cont {
     width: 80%;
     height: 100%;
     background: purple;

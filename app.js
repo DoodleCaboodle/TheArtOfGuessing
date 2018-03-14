@@ -81,7 +81,15 @@ io.on('connection', function(socket) {
 	});
     
     socket.on('join', function(data) {
-        socket.broadcast.email('join', data);
+        socket.broadcast.emit('join', data);
+    });
+
+    socket.on('undo', function(data) {
+        socket.broadcast.emit('undo', data);
+    });
+
+    socket.on('redo', function(data) {
+        socket.broadcast.emit('redo', data);
     });
 });
 
