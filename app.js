@@ -4,10 +4,6 @@ const cookie = require('cookie');
 const bodyParser = require('body-parser');
 const queueLimit = 2;
 
-// game queue
-var queue = [];
-var flushQueue = [];
-
 // the APP
 const app = express();
 
@@ -33,24 +29,8 @@ app.use(function (req, res, next){
 
 // init all other 
 require('./user').init(app);
+var server = require('./server');
 
-// manage single game queue
-app.get('/join/:email', function(req, res, next) {
-    queue.push(req.params.email);
-    if (queue.length == queueLimit) {
-        flushQueue = queue;
-        queue = [];
-        return res.json(2);
-    }
-    return res.json(queue.length);
-});
-
-app.get('queue', function(req, res, next) {
-    if (queue.length != 0) 
-        return res.json(queue);
-    else 
-        return res.json(flushQueue);
-});
 
 // Handle 404
 app.use(function(req, res) {
@@ -72,6 +52,8 @@ const io = require('socket.io')(http);
 const PORT = process.env.PORT || 3000;
 
 io.on('connection', function(socket) {
+    server.init(io, socket);
+
 	socket.on('drawing', function(data){
 		socket.broadcast.emit('drawing', data);
 	});
