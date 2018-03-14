@@ -7,7 +7,7 @@
     }
     window.onload = function() {
 
-    	document.getElementById('brushSize').value = 1;
+    	document.getElementById('brushSize').value = 10;
 
     	var offsetY = document.getElementById('toolbar').clientHeight;
         
@@ -39,7 +39,7 @@
         //current location
         var curr = {
             colour: "#000000",
-            brushSize: 1
+            brushSize: 10
         };
         
         Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d){
@@ -74,6 +74,8 @@
             context.lineTo(tox, toy);
             context.strokeStyle = colour;
             context.lineWidth = brushSize;
+            context.lineJoin = 'round';
+            context.lineCap = 'round';
             context.stroke();
             context.closePath();
 
