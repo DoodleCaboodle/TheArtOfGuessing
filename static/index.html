@@ -5,18 +5,36 @@
 		<link rel="stylesheet" href="style/main.css" type="text/css"/>
 	</head>
 	<body>
-
-		<canvas id="myCanvas"></canvas>
-
-		<div id = "toolbar"> 
-			<input type="color" value="#000000" id="colourPanel">
-			<input type="range" min="1" max="10" value="1" id=brushSize>
-			<span id="undo">UNDO</span> 
-			<span id="redo">REDO</span> 
-			<span id="clear">CLEAR</span> 
-		</div>
+        <div id="start-container">
+            <button id="start">Start</button>
+        </div>
+        <div id="container">
+            <div id = "toolbar"> 
+                <input type="color" value="#000000" id="colourPanel">
+                <input type="range" min="1" max="10" value="1" id=brushSize>
+                <span id="undo">UNDO</span> 
+                <span id="redo">REDO</span> 
+                <span id="clear">CLEAR</span> 
+                <span class="user"></span> 
+                <button id="logout">LOGOUT</button> 
+                <span>Word to draw: <span id="word">House</span></span>
+                <span id="time"></span>
+            </div>
+            <div id="canvas-container">
+                <div id="canvas">
+                    <canvas id="myCanvas"></canvas>
+                </div>
+                <div id="chat">
+                    <div id="feed">
+                        <!--<div class="message"><span class="user"></span>: test message</div>-->
+                    </div>
+                    <input id="feed-input" type="text" />
+                </div>
+            </div>
+        </div>
 
 		<script src="socket.io/socket.io.js"></script>
+		<script src="js/api.js"></script>
 		<script src="js/index.js"></script>
 	</body>
 </html>
