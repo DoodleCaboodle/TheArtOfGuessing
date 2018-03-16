@@ -171,7 +171,7 @@
             if (canDraw) {
                 drawing = true;
                 curr.x = e.clientX;
-                curr.y = e.clientY;
+                curr.y = e.clientY - offsetY;
             }
         });
 
@@ -180,7 +180,8 @@
             if (canDraw) {
                 if (drawing) {
                     drawing = false;
-                    drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+                    drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
+
                     var imgSrc = canvas.toDataURL("image/png");
                     undoPoints.push(imgSrc);
                     redoPoints = [];
@@ -192,7 +193,8 @@
             if (canDraw) {
                 if (drawing) {
                     drawing = false;
-                    drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+                    drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
+
                     var imgSrc = canvas.toDataURL("image/png");
                     undoPoints.push(imgSrc);
                     redoPoints = [];
@@ -207,10 +209,12 @@
             if (canDraw) {
                 if ((Date.now() - lastEmit) >= 10) {
                     if(drawing) {
-                        drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+                        drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
+
                         var imgSrc = canvas.toDataURL("image/png");
                         undoPoints.push(imgSrc);
                         redoPoints = [];
+
                         lastEmit = Date.now();
                         curr.x = e.clientX;
                         curr.y = e.clientY - offsetY;
@@ -298,15 +302,13 @@
         socket.on('gameWinner', function(data) {
             // do a popup
             alert(data.name+" won!");
-            setTimeout(function(){goBack();}, 5000);
+            goBack();
         });
         // game won
         socket.on('gameWon', function(data) {
             
             // special pop up for you won the game
             console.log("gamewon: ", data.gameWinner);
-            alert(data.name+" won!");
-            setTimeout(function(){goBack();}, 5000);
         });
         // round won
         socket.on('won', function(data) {

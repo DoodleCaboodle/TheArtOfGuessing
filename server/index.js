@@ -113,7 +113,7 @@ function startGame() {
 
 function endRound() {
     
-    clearInterval(roundTimer);
+    clearInterval(roundInterval);
     roundTimer = 60;
     console.log("round end");
     io.emit('clear', {});
@@ -142,6 +142,7 @@ function startNextRound() {
 
 function startRoundTimer() {
     roundTimer -= 1;
+    console.log(roundTimer);
     if (io.sockets.adapter.rooms[gameRoom]) {
         for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
             io.sockets.connected[key].emit('roundTimer', {time: roundTimer});
