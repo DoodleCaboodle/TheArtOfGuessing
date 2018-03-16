@@ -25,6 +25,14 @@ exports.init = function(hio, hsocket) {
     socket.on('clear', function(data) {
 		io.emit('clear', data);
     });
+    
+    socket.on('undo', function(data) {
+        io.emit('undo', data);
+    });
+
+    socket.on('redo', function(data) {
+        iot.emit('redo', data);
+    });
 
     socket.on('ready', function(data) {
 
