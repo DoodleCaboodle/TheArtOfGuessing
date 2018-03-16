@@ -6,7 +6,9 @@
 	</head>
 	<body>
         <div id="start-container">
-            <button id="start">Start</button>
+            <button id="ready">Ready</button>
+            <div id="gameStatus"></div>
+            <div id="queueTimer"></div>
         </div>
         <div id="container">
             <div id = "toolbar"> 
@@ -18,7 +20,8 @@
                 <span class="user"></span> 
                 <button id="logout">LOGOUT</button> 
                 <span>Word to draw: <span id="word">House</span></span>
-                <span id="time"></span>
+                <span id="roundTime">Round Timer: <span id="time"></span></span>
+                <span id="roundWinner">Last round won by: <span id="rwinner"></span></span>
             </div>
             <div id="canvas-container">
                 <div id="canvas">

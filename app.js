@@ -53,18 +53,6 @@ const PORT = process.env.PORT || 3000;
 
 io.on('connection', function(socket) {
     server.init(io, socket);
-
-	socket.on('drawing', function(data){
-		socket.broadcast.emit('drawing', data);
-	});
-    
-    socket.on('clear', function(data) {
-		socket.broadcast.emit('clear', data);
-	});
-    
-    socket.on('join', function(data) {
-        socket.broadcast.email('join', data);
-    });
 });
 
 http.listen(PORT, function (err) {

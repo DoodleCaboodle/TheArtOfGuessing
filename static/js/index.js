@@ -5,14 +5,16 @@
     if (!user || user === '') {
         window.location.href = '/login';
     }
+    
+    var socket = io();
+    
+    window.onunload = function() {
+        socket.close();    
+    }
+    
     window.onload = function() {
         
-        document.getElementById('start').addEventListener('click', function() {
-            document.getElementById('start-container').style.display = 'none';
-            document.getElementById('container').style.display = 'flex';
-        });
-        
-        var socket = io();
+        // canvas setup
         var canvas = document.getElementById("myCanvas");
         var context = canvas.getContext("2d");
 
@@ -30,6 +32,8 @@
         undoPoints.push(imgSrc);
 
         //drawing flag
+        var canDraw = false;
+        var canMessage = true;
         var drawing = false;
 
         //current location
@@ -47,21 +51,29 @@
         });
         
         document.getElementById("feed-input").addEventListener("keypress", function(e){
-            var key = e.which || e.keyCode;
-            if (key === 13) {
-                postFeed();
-                document.getElementById("feed-input").value = "";
+            if (canMessage) {
+                var key = e.which || e.keyCode;
+                if (key === 13) {
+                    var msg = document.getElementById("feed-input").value;
+                    if (msg !== '') socket.emit('message', {name:user.split('%40')[0], msg:msg});
+                    postFeed(user.split('%40')[0], msg);
+                }
+            }
+            else {
+                if (key === 13) {
+                    postFeed("you are currently drawing.");
+                }
             }
         });
         
-        function postFeed() {
-            var msg = document.getElementById("feed-input").value;
+        function postFeed(name, msg) {
             if (msg === '') return;
             var div = document.createElement('div');
             div.classList.add("message");
-            div.innerHTML = `<span class="user"> ${user.split('%40')[0]} : </span> ${msg}`;
+            div.innerHTML = `<span class="user"> ${name} : </span> ${msg}`;
             document.getElementById("feed").appendChild(div);
             document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight;
+            document.getElementById("feed-input").value = "";
         }
 
         function drawLine(fromx, fromy, tox, toy, colour, brushSize, emit) {
@@ -86,81 +98,93 @@
         }
 
         colourPanel.addEventListener("input", function(e){
-            curr.colour = e.target.value;
+            if (canDraw) curr.colour = e.target.value;
         });
 
         colourPanel.addEventListener("change", function(e){
-            curr.colour = e.target.value;
+            if (canDraw) curr.colour = e.target.value;
         });
 
         colourPanel.select();
 
         brushSelector.addEventListener("input", function(e){
-            curr.brushSize = e.target.value;
+            if (canDraw) curr.brushSize = e.target.value;
         });
 
         undoButton.addEventListener("click", function(e){
-            if(undoPoints.length > 0) {
-                var imgSrc = canvas.toDataURL("image/png");
-                redoPoints.push(imgSrc);
+            if (canDraw) {
+                if(undoPoints.length > 0) {
+                    var imgSrc = canvas.toDataURL("image/png");
+                    redoPoints.push(imgSrc);
 
-                var oldImg = new Image();
-                oldImg.onload = function() {
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    context.drawImage(oldImg, 0, 0);
+                    var oldImg = new Image();
+                    oldImg.onload = function() {
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        context.drawImage(oldImg, 0, 0);
+                    }
+                    oldImg.src = undoPoints.pop();
                 }
-                oldImg.src = undoPoints.pop();
             }
         });
 
         redoButton.addEventListener("click", function(e){
-            if(redoPoints.length > 0){
-                var imgSrc = canvas.toDataURL("image/png");
-                undoPoints.push(imgSrc);
+            if (canDraw) {
+                if(redoPoints.length > 0){
+                    var imgSrc = canvas.toDataURL("image/png");
+                    undoPoints.push(imgSrc);
 
-                var oldImg = new Image();
-                oldImg.onload = function() {
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    context.drawImage(oldImg, 0, 0);
+                    var oldImg = new Image();
+                    oldImg.onload = function() {
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        context.drawImage(oldImg, 0, 0);
+                    }
+                    oldImg.src = redoPoints.pop();
                 }
-                oldImg.src = redoPoints.pop();
             }
         });
 
         clearButton.addEventListener("click", function(e){
-            var imgSrc = canvas.toDataURL("image/png");
-            undoPoints.push(imgSrc);
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            socket.emit('clear', {});
+            if (canDraw) {
+                var imgSrc = canvas.toDataURL("image/png");
+                undoPoints.push(imgSrc);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                socket.emit('clear', {});
+            }
         });
 
         //pen on paper
         canvas.addEventListener('mousedown', function(e){
-            drawing = true;
-            curr.x = e.clientX;
-            curr.y = e.clientY;
+            if (canDraw) {
+                drawing = true;
+                curr.x = e.clientX;
+                curr.y = e.clientY;
+            }
         });
 
         //pen up
         canvas.addEventListener('mouseup', function(e){
-            if (drawing) {
-                drawing = false;
-                drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+            if (canDraw) {
+                if (drawing) {
+                    drawing = false;
+                    drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
 
-                var imgSrc = canvas.toDataURL("image/png");
-                undoPoints.push(imgSrc);
-                redoPoints = [];
+                    var imgSrc = canvas.toDataURL("image/png");
+                    undoPoints.push(imgSrc);
+                    redoPoints = [];
+                }
             }
         });
 
         canvas.addEventListener('mouseout', function(e){
-            if (drawing) {
-                drawing = false;
-                drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+            if (canDraw) {
+                if (drawing) {
+                    drawing = false;
+                    drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
 
-                var imgSrc = canvas.toDataURL("image/png");
-                undoPoints.push(imgSrc);
-                redoPoints = [];
+                    var imgSrc = canvas.toDataURL("image/png");
+                    undoPoints.push(imgSrc);
+                    redoPoints = [];
+                }
             }
         });
 
@@ -168,22 +192,25 @@
 
         //drawing
         canvas.addEventListener('mousemove', function(e){
-            if ((Date.now() - lastEmit) >= 10) {
-                if(drawing) {
-                    drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
+            if (canDraw) {
+                if ((Date.now() - lastEmit) >= 10) {
+                    if(drawing) {
+                        drawLine(curr.x, curr.y, e.clientX, e.clientY, curr.colour, curr.brushSize, true);
 
-                    var imgSrc = canvas.toDataURL("image/png");
-                    undoPoints.push(imgSrc);
-                    redoPoints = [];
+                        var imgSrc = canvas.toDataURL("image/png");
+                        undoPoints.push(imgSrc);
+                        redoPoints = [];
 
-                    lastEmit = Date.now();
-                    curr.x = e.clientX;
-                    curr.y = e.clientY;
+                        lastEmit = Date.now();
+                        curr.x = e.clientX;
+                        curr.y = e.clientY;
+                    }
                 }
             }
         });
 
         socket.on('drawing', function(data){
+            console.log("drawing");
             drawLine(data.fromx*canvas.width, data.fromy*canvas.height, data.tox*canvas.width, data.toy*canvas.height, data.colour, data.brushSize, false);
 
             var imgSrc = canvas.toDataURL("image/png");
@@ -196,6 +223,8 @@
             undoPoints.push(imgSrc);
             context.clearRect(0, 0, canvas.width, canvas.height);
         });
+        
+        // canvas setup end
 
         window.addEventListener('resize', onResize);
         onResize();
@@ -203,6 +232,94 @@
         function onResize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+        }
+        
+        // queue setup
+        document.getElementById('ready').addEventListener('click', function() {
+            socket.emit('ready', {name:user.split('%40')[0], email:user.split('%40')[0]}); 
+            socket.emit('gameStatus', {});
+        });
+        
+        // handle server responses
+        // queue timer
+        socket.on('queueTimer', function(data){
+            console.log('queue timer', data.time);
+            document.getElementById('queueTimer').innerHTML = data.time;
+        });
+        // round timer
+        socket.on('roundTimer', function(data) {
+            document.getElementById('time').innerHTML = data.time;
+        });
+        // mesages
+        socket.on('message', function(data) {
+            postFeed(data.name, data.msg);
+        });
+        // update user list
+        socket.on('', function(data) {
+            
+        });
+        // gameWinner
+        socket.on('gameWinner', function(data) {
+            // do a popup
+            alert(data.name+" won!");
+            setTimeout(function(){goBack();}, 5000);
+        });
+        // game won
+        socket.on('gameWon', function(data) {
+            
+            // special pop up for you won the game
+            console.log("gamewon: ", data.gameWinner);
+            alert(data.name+" won!");
+            setTimeout(function(){goBack();}, 5000);
+        });
+        // round won
+        socket.on('won', function(data) {
+            document.getElementById('rwinner').innerHTML = data.name;
+        });
+        // draw
+        socket.on('draw', function(data) {
+            canDraw = true;
+            canMessage = false;
+            getWord();
+        });
+        // no draw
+        socket.on('noDraw', function(data) {
+            canDraw = false;
+            canMessage = true;
+        });
+        // startgame
+        socket.on('startGame', function(data) {
+            // reset start-container
+            document.getElementById('queueTimer').innerHTML = '';
+            document.getElementById('gameStatus').innerHTML = '';
+            document.getElementById('start-container').style.display = 'none';
+            document.getElementById('container').style.display = 'flex';
+        });
+        // gameStatus
+        socket.on('gameStatus', function(data) {
+            if (data.gameStarted) {
+                document.getElementById('gameStatus').innerHTML = 'Please wait for the current game to finish';
+            } 
+            else {
+                document.getElementById('gameStatus').innerHTML = 'You are in queue for the next game';
+            }
+        });
+        // current word
+        socket.on('word', function(data) {
+            document.getElementById("word").innerHTML = data.word;
+        });
+        
+        function getWord() {
+            var word = prompt("Please enter what you will be drawing:", "HOUSE");
+            document.getElementById("word").innerHTML = word;
+            socket.emit('word', {word:word});
+        }
+        
+        function goBack() {
+            document.getElementById('queueTimer').innerHTML = '';
+            document.getElementById('gameStatus').innerHTML = '';
+            document.getElementById('start-container').style.display = 'flex';
+            document.getElementById('container').style.display = 'none';
         }
     }
 }());
