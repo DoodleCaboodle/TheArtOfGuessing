@@ -182,6 +182,7 @@ function endGame() {
         }
         for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
             io.sockets.connected[key].emit('gameWinner', {name:gameWinner});
+            io.sockets.connected[key].leave(doneRoom);
         }
         io.sockets.connected[winnerID].emit('gameWon', {name:gameWinner, wincount:winCount});
     }
