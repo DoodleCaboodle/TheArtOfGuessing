@@ -1,7 +1,6 @@
 (function(){
 	"use strict";
     var user = api.getCurrentUser()
-    console.log(user);
     if (!user || user === '') {
         window.location.href = '/login';
     }
@@ -20,6 +19,9 @@
         var canvas = document.getElementById("myCanvas");
         var context = canvas.getContext("2d");
 
+        canvas.width = document.getElementById("canvas-cont").clientWidth;
+        canvas.height = document.getElementById("canvas-cont").clientHeight;
+
         var colourPanel = document.getElementById("colourPanel");
         var brushSelector = document.getElementById("brushSize");
 
@@ -27,11 +29,9 @@
         var redoButton = document.getElementById("redo");
         var clearButton = document.getElementById("clear");
 
-        var undoPoints = [];
-        var redoPoints = [];
-
-        var imgSrc = canvas.toDataURL("image/png");
-        undoPoints.push(imgSrc);
+        var displayedPoints = [];
+        var displayedRedoPoints = [];
+        var undoClearPoints = [];
 
         //drawing flag
         var drawing = false;
@@ -106,41 +106,54 @@
         });
 
         undoButton.addEventListener("click", function(e){
-            if(undoPoints.length > 0) {
-                var imgSrc = canvas.toDataURL("image/png");
-                redoPoints.push(imgSrc);
 
-                var oldImg = new Image();
-                oldImg.onload = function() {
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    context.drawImage(oldImg, 0, 0);
+            if (displayedPoints.length > 0 || undoClearPoints.length > 0){
+                if (undoClearPoints.length > 0) {
+                    displayedPoints = undoClearPoints.slice();
+                    undoClearPoints = [];
+                } else {
+                    displayedRedoPoints.push(displayedPoints.pop());
                 }
-                var undopoint = undoPoints.pop();
-                oldImg.src = undopoint;
-                socket.emit('undo', {undopoint: undopoint});
+
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                var point;
+                for (var i=0; i < displayedPoints.length; i++) {
+                    point = displayedPoints[i];
+                    drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
+                }
+
+                socket.emit('undo', {});
             }
         });
 
         redoButton.addEventListener("click", function(e){
-            if(redoPoints.length > 0){
-                var imgSrc = canvas.toDataURL("image/png");
-                undoPoints.push(imgSrc);
 
-                var oldImg = new Image();
-                oldImg.onload = function() {
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    context.drawImage(oldImg, 0, 0);
+            if(displayedRedoPoints.length > 0){
+
+                displayedPoints.push(displayedRedoPoints.pop());
+
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                var point;
+                for (var i=0; i < displayedPoints.length; i++) {
+                    point = displayedPoints[i];
+                    drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
                 }
-                var redopoint = redoPoints.pop();
-                oldImg.src = redopoint;
-                socket.emit('redo', {redopoint: redopoint});
+
+                socket.emit('redo', {});
             }
         });
 
         clearButton.addEventListener("click", function(e){
-            var imgSrc = canvas.toDataURL("image/png");
-            undoPoints.push(imgSrc);
+
+            undoClearPoints = displayedPoints.slice();
+
+            displayedPoints = [];
+            displayedRedoPoints = [];
+
             context.clearRect(0, 0, canvas.width, canvas.height);
+
             socket.emit('clear', {});
         });
 
@@ -156,10 +169,15 @@
             if (drawing) {
                 drawing = false;
                 drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
-
-                var imgSrc = canvas.toDataURL("image/png");
-                undoPoints.push(imgSrc);
-                redoPoints = [];
+                displayedPoints.push({
+                    fromx:curr.x / canvas.width, 
+                    fromy:curr.y / canvas.height, 
+                    tox:e.clientX / canvas.width, 
+                    toy:(e.clientY - offsetY) / canvas.height, 
+                    colour:curr.colour, 
+                    brushSize:curr.brushSize});
+                displayedRedoPoints = [];
+                undoClearPoints = [];
             }
         });
 
@@ -167,10 +185,15 @@
             if (drawing) {
                 drawing = false;
                 drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
-
-                var imgSrc = canvas.toDataURL("image/png");
-                undoPoints.push(imgSrc);
-                redoPoints = [];
+                displayedPoints.push({
+                    fromx:curr.x / canvas.width, 
+                    fromy:curr.y / canvas.height, 
+                    tox:e.clientX / canvas.width, 
+                    toy:(e.clientY - offsetY) / canvas.height, 
+                    colour:curr.colour, 
+                    brushSize:curr.brushSize});
+                displayedRedoPoints = [];
+                undoClearPoints = [];
             }
         });
 
@@ -180,11 +203,18 @@
         canvas.addEventListener('mousemove', function(e){
             if ((Date.now() - lastEmit) >= 10) {
                 if(drawing) {
-                    drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
 
-                    var imgSrc = canvas.toDataURL("image/png");
-                    undoPoints.push(imgSrc);
-                    redoPoints = [];
+                    drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
+                    displayedPoints.push({
+                        fromx:curr.x / canvas.width, 
+                        fromy:curr.y / canvas.height, 
+                        tox:e.clientX / canvas.width, 
+                        toy:(e.clientY - offsetY) / canvas.height, 
+                        colour:curr.colour, 
+                        brushSize:curr.brushSize});
+
+                    displayedRedoPoints = [];
+                    undoClearPoints = [];
 
                     lastEmit = Date.now();
                     curr.x = e.clientX;
@@ -194,51 +224,70 @@
         });
 
         socket.on('drawing', function(data){
-            drawLine(data.fromx*canvas.width, data.fromy*canvas.height, data.tox*canvas.width, data.toy*canvas.height, data.colour, data.brushSize, false);
 
-            var imgSrc = canvas.toDataURL("image/png");
-            undoPoints.push(imgSrc);
-            redoPoints = [];
+            drawLine(data.fromx*canvas.width, data.fromy*canvas.height, data.tox*canvas.width, data.toy*canvas.height, data.colour, data.brushSize, false);
+            displayedPoints.push({
+                        fromx:data.fromx, 
+                        fromy:data.fromy, 
+                        tox:data.tox, 
+                        toy:data.toy, 
+                        colour:data.colour, 
+                        brushSize:data.brushSize});
         });
 
         socket.on('clear', function(data){
-            var imgSrc = canvas.toDataURL("image/png");
-            undoPoints.push(imgSrc);
+
+            undoClearPoints = displayedPoints.slice();
+
+            displayedPoints = [];
+            displayedRedoPoints = [];
+
             context.clearRect(0, 0, canvas.width, canvas.height);
         });
 
         socket.on('redo', function(data){
-        	var imgSrc = canvas.toDataURL("image/png");
-        	undoPoints.push(imgSrc);
+            displayedPoints.push(displayedRedoPoints.pop());
 
-        	var oldImg = new Image();
-        	oldImg.onload = function() {
-        		context.clearRect(0, 0, canvas.width, canvas.height);
-        		context.drawImage(oldImg, 0, 0);
-        	}
+            context.clearRect(0, 0, canvas.width, canvas.height);
 
-        	oldImg.src = data.redopoint;
+            var point;
+            for (var i=0; i < displayedPoints.length; i++) {
+                point = displayedPoints[i];
+                drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
+            }
         });
 
         socket.on('undo', function(data){
-        	var imgSrc = canvas.toDataURL("image/png");
-        	redoPoints.push(imgSrc);
 
-        	var oldImg = new Image();
-        	oldImg.onload = function() {
-        		context.clearRect(0, 0, canvas.width, canvas.height);
-        		context.drawImage(oldImg, 0, 0);
-        	}
+            if (undoClearPoints.length > 0){
+                displayedPoints = undoClearPoints.slice();
+                undoClearPoints = [];
+            } else {
+                displayedRedoPoints.push(displayedPoints.pop());
+            }
 
-        	oldImg.src = data.undopoint;
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            var point;
+            for (var i=0; i < displayedPoints.length; i++) {
+                point = displayedPoints[i];
+                drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
+            }
         });
 
         window.addEventListener('resize', onResize);
-        onResize();
 
         function onResize() {
             canvas.width = document.getElementById("canvas-cont").clientWidth;
             canvas.height = document.getElementById("canvas-cont").clientHeight;
+
+            var point;
+            for (var i=0; i < displayedPoints.length; i++) {
+                point = displayedPoints[i];
+                drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
+            }
+
+            offsetY = document.getElementById('toolbar').clientHeight;
         }
     }
 }());
