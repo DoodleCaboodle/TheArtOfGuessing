@@ -31,7 +31,7 @@ exports.init = function(hio, hsocket) {
     });
 
     socket.on('redo', function(data) {
-        iot.emit('redo', data);
+        io.emit('redo', data);
     });
 
     socket.on('ready', function(data) {

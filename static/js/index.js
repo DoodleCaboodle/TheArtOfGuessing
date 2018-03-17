@@ -263,6 +263,8 @@
                         toy:data.toy, 
                         colour:data.colour, 
                         brushSize:data.brushSize});
+            displayedRedoPoints = [];
+            undoClearPoints = [];
         });
 
         socket.on('clear', function(data){
