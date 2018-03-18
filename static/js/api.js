@@ -35,6 +35,10 @@ var api = (function(){
     module.logout = function (callback){
         send("POST", "/signout/", {}, callback);
     }
+
+    module.getStats = function(email, callback) {
+        send("GET", "/stats/"+email, null, callback);
+    }
     
     return module;
 })();
