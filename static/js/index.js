@@ -2,6 +2,7 @@
 	"use strict";
     var user = api.getCurrentUser()
     console.log(user);
+    console.log('test');
     if (!user || user === '') {
         window.location.href = '/login';
     }

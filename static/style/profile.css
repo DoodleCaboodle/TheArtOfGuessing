@@ -1,0 +1,4 @@
+html, body {
+    /* background credit : Photo by Alicia Zinn from Pexels https://www.pexels.com/photo/woman-with-red-nails-painting-green-stripe-on-canvas-159983/ */
+    background: linear-gradient(rgba(109, 109, 109, 0.35), rgba(90, 90, 90, 0.85)), url("../media/background_0.jpeg");
+}
