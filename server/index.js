@@ -1,5 +1,5 @@
 var io;
-var socket;
+var userModel;
 var gameRoom = 'game';
 var doneRoom = 'done';
 var queueRoom = 'queue';
@@ -14,43 +14,41 @@ var queueInterval;
 var roundInterval;
 
 exports.init = function(hio, hsocket) {
-    io = hio;
-    socket = hsocket;   
-    
-    socket.emit('connected', {msg: 'You have connected!'});
+    io = hio;    
+    hsocket.emit('connected', {msg: 'You have connected!'});
 
-    socket.on('drawing', function(data) {
+    hsocket.on('drawing', function(data) {
 		io.emit('drawing', data);
 	});
     
-    socket.on('clear', function(data) {
+    hsocket.on('clear', function(data) {
 		io.emit('clear', data);
     });
     
-    socket.on('undo', function(data) {
+    hsocket.on('undo', function(data) {
         io.emit('undo', data);
     });
 
-    socket.on('redo', function(data) {
+    hsocket.on('redo', function(data) {
         io.emit('redo', data);
     });
 
-    socket.on('ready', function(data) {
+    hsocket.on('ready', function(data) {
 
-        queueData[socket.id] = data;
-        queueData[socket.id].wincount = 0;
-        socket.join(queueRoom);
-        console.log(io.sockets.adapter.rooms[queueRoom], io.sockets.adapter.rooms[gameRoom], socket.id);
-        socket.emit('gameStatus', {gameStarted: gameStarted});
+        queueData[hsocket.id] = data;
+        queueData[hsocket.id].wincount = 0;
+        hsocket.join(queueRoom);
+        console.log(io.sockets.adapter.rooms[queueRoom], io.sockets.adapter.rooms[gameRoom], hsocket.id);
+        hsocket.emit('gameStatus', {gameStarted: gameStarted});
         checkQueue();
     });
 
-    socket.on('message', function(data) {
+    hsocket.on('message', function(data) {
         if (data.msg.toLowerCase().includes(currentWord.toLowerCase())) userWon(socket.id);
-        socket.broadcast.emit('message', data);
+        hsocket.broadcast.emit('message', data);
     });
     
-    socket.on('disconnect', function(data) {
+    hsocket.on('disconnect', function(data) {
 //        if (socket.id == queue[currentDrawing]) endRound();
 //        queue.splice(queue.indexOf(socket.id), 1);
 //        gameQueue.splice(queue.indexOf(socket.id), 1);
@@ -61,13 +59,13 @@ exports.init = function(hio, hsocket) {
         //socket.leave(doneRoom);
     });
     
-    socket.on('word', function(data) {
-        socket.broadcast.emit('word', data);
+    hsocket.on('word', function(data) {
+        hsocket.broadcast.emit('word', data);
         currentWord = data.word;
     });
     
-    socket.on('gameStatus', function(data) {
-        socket.emit('gameStatus', {gameStarted: gameStarted});
+    hsocket.on('gameStatus', function(data) {
+        hsocket.emit('gameStatus', {gameStarted: gameStarted});
     });
 }
 
