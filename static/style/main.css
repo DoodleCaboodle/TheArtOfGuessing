@@ -217,7 +217,89 @@ header a {
 #toolbar{
     width: 100%;
     height: 5%;
+    min-height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(rgba(54, 116, 72, 0.35), rgba(8, 114, 126, 0.85));
+    color: #fff;
 }
+
+#canvas-controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 10px;
+}
+
+#canvas-controls * {
+    margin: 0px;
+}
+
+.tb-btn {
+    margin: 10px !important;
+    border-radius: 5px;
+    width: 100px;
+    text-align: center;
+    height: 30px;
+    background: none !important;
+    border: 2px solid #fff;
+}
+
+.tb-btn:hover {
+    background: #fff !important;
+    color: rgb(8, 114, 126);
+    cursor: pointer;
+}
+
+#brushSize {
+    -webkit-appearance: none;
+    width: calc(100% - (73px));
+    height: 10px;
+    border-radius: 5px;
+    background: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    height: 40px;
+}
+
+#brushSize::-webkit-slider-thumb {
+    -webkit-appearance: none;
+            appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #2c3e50;
+    cursor: pointer;
+    -webkit-transition: background 0.15s ease-in-out;
+    transition: background 0.15s ease-in-out;
+  }
+  #brushSize::-webkit-slider-thumb:hover {
+    background: #1abc9c;
+  }
+  #brushSize:active::-webkit-slider-thumb {
+    background: #1abc9c;
+  }
+  #brushSize::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 0;
+    border-radius: 50%;
+    background: #2c3e50;
+    cursor: pointer;
+    -webkit-transition: background 0.15s ease-in-out;
+    transition: background 0.15s ease-in-out;
+  }
+  #brushSize::-moz-range-thumb:hover {
+    background: #1abc9c;
+  }
+  #brushSize:active::-moz-range-thumb {
+    background: #1abc9c;
+  }
+  
 
 #myCanvas {
     height: 100%;
@@ -254,15 +336,16 @@ header a {
 }
 
 #container {
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
     height: 100%;
 }
 
 #start-container {
-    display: flex;
+    display: none;
 }
 
 #chat {
@@ -283,12 +366,12 @@ header a {
 #canvas-cont {
     width: 80%;
     height: 100%;
-    background: purple;
+    background: #fff;
 }
 
 #feed {
     width: 100%;
-    height: 93%;
+    height: 80%;
     display: flex;
     flex-direction: column;
     align-content: center;
