@@ -9,19 +9,25 @@
             <div id="header-container">
                 <div id="title-container">
                     <a id="header-logo" href="/"></a>
-                    <a id="header-title" href="/"><span class="highlight">ART</span>of GUESSING</a>
+                    <a id="header-title" href="/"><span class="highlight">ART</span> of GUESSING</a>
                 </div>
                 <div id="nav-button-container">
+                    <!-- icon credit: <div>Icons made by <a href="https://www.flaticon.com/authors/nice-and-serious" title="Nice and Serious">Nice and Serious</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
                     <a id="profile" class="nav-btn" href="/profile"></a>
-                    <a id="logout" class="nav-btn" href="/logout"></a> 
+                    <!-- icon credit: <div>Icons made by <a href="https://www.flaticon.com/authors/elias-bikbulatov" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
+                    <a id="logout" class="nav-btn" href="/signout"></a> 
                 </div>
             </div>
         </header>
         <div id="start-container">
-            <div id="gameStatus"></div>
-            <div id="queueTimer"></div>
-            <button id="ready" class="btn">Ready</button>
-            <button id="cancel" class="btn">cancel</button>
+            <div id="welcom-title">Hello! <span class="highlight"><span class="user">Bob</span></span></div>
+            <div id="queue-container">
+                <div id="gameStatus" class="inqueue"></div>
+                <div id="queueStatus" class="not-inqueue">People in queue: <span class="queue-status"></span></div>
+                <div id="queueTimer" class="inqueue"><span id="queue-time-container"><span id="queue-time"></span></span></div>
+                <button id="ready" class="btn" class="not-inqueue">Ready</button>
+                <button id="cancel" class="btn" class="inqueue">cancel</button>
+            </div>
         </div>
         <div id="container">
             <div id = "toolbar"> 
@@ -47,9 +53,10 @@
                 </div>
             </div>
         </div>
-
+        <!--
 		<script src="socket.io/socket.io.js"></script>
 		<script src="js/api.js"></script>
-		<script src="js/index.js"></script>
+        <script src="js/index.js"></script>
+        -->
 	</body>
 </html>

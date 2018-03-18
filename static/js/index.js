@@ -51,9 +51,6 @@
             d.innerHTML  = user.split('%40')[0];
         });
         
-        document.getElementById("logout").addEventListener("click", function() {
-            window.location.href = "/signout"
-        });
         
         document.getElementById("feed-input").addEventListener("keypress", function(e){
             if (canMessage) {
