@@ -2,8 +2,6 @@ const express = require('express');
 const session = require('express-session');
 const cookie = require('cookie');
 const bodyParser = require('body-parser');
-const queueLimit = 2;
-
 // the APP
 const app = express();
 
