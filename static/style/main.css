@@ -394,7 +394,7 @@ header a {
 @keyframes pulse-round {to {box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);}}
 
 #container {
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
@@ -403,7 +403,7 @@ header a {
 }
 
 #start-container {
-    display: none;
+    display: flex;
 }
 
 #chat {
