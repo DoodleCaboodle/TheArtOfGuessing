@@ -254,6 +254,8 @@ header a {
     cursor: pointer;
 }
 
+/* input range css: https://codepen.io/seanstopnik/pen/CeLqA?q=range&order=popularity&depth=everything&show_forks=false */
+
 #brushSize {
     -webkit-appearance: none;
     width: calc(100% - (73px));
@@ -264,6 +266,7 @@ header a {
     padding: 0;
     margin: 0;
     height: 40px;
+    width: 300px;
 }
 
 #brushSize::-webkit-slider-thumb {
@@ -272,33 +275,38 @@ header a {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #2c3e50;
+    background: rgb(20, 138, 87);
     cursor: pointer;
     -webkit-transition: background 0.15s ease-in-out;
     transition: background 0.15s ease-in-out;
-  }
-  #brushSize::-webkit-slider-thumb:hover {
+}
+
+#brushSize::-webkit-slider-thumb:hover {
     background: #1abc9c;
-  }
-  #brushSize:active::-webkit-slider-thumb {
+}
+
+#brushSize:active::-webkit-slider-thumb {
     background: #1abc9c;
-  }
-  #brushSize::-moz-range-thumb {
+}
+
+#brushSize::-moz-range-thumb {
     width: 20px;
     height: 20px;
     border: 0;
     border-radius: 50%;
-    background: #2c3e50;
+    background: rgb(20, 138, 87);
     cursor: pointer;
     -webkit-transition: background 0.15s ease-in-out;
     transition: background 0.15s ease-in-out;
-  }
-  #brushSize::-moz-range-thumb:hover {
+}
+
+#brushSize::-moz-range-thumb:hover {
     background: #1abc9c;
-  }
-  #brushSize:active::-moz-range-thumb {
+}
+
+#brushSize:active::-moz-range-thumb {
     background: #1abc9c;
-  }
+}
   
 
 #myCanvas {
@@ -336,7 +344,7 @@ header a {
 }
 
 #container {
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
@@ -345,7 +353,7 @@ header a {
 }
 
 #start-container {
-    display: none;
+    display: flex;
 }
 
 #chat {
