@@ -27,7 +27,7 @@
 
             recognition.onresult = function(e) {
                 var transcript = e.results[e.resultIndex][0].transcript;
-                console.log(transcript);
+                document.getElementById("feed-input").value = transcript;
             }
         }
 
@@ -80,8 +80,8 @@
         });
         
         document.getElementById("feed-input").addEventListener("keypress", function(e){
+            var key = e.which || e.keyCode;
             if (canMessage) {
-                var key = e.which || e.keyCode;
                 if (key === 13) {
                     var msg = document.getElementById("feed-input").value;
                     if (msg !== '') socket.emit('message', {name:user.split('%40')[0], msg:msg});
@@ -90,7 +90,7 @@
             }
             else {
                 if (key === 13) {
-                    postFeed("you are currently drawing.");
+                    postFeed("System", "You are currently drawing.", "red");
                 }
             }
         });
@@ -387,11 +387,16 @@
             canDraw = true;
             canMessage = false;
             getWord();
+            document.getElementById("speech-rec-btns").style.display = "none";
+            document.getElementById("feed-input").style.display = "none";
         });
         // no draw
         socket.on('noDraw', function(data) {
             canDraw = false;
             canMessage = true;
+            document.getElementById("speech-rec-btns").style.display = "flex";
+            document.getElementById("feed-input").style.display = "flex";
+            document.getElementById("word").innerHTML = "";
         });
         // startgame
         socket.on('startGame', function(data) {
