@@ -318,7 +318,7 @@
         
         // queue setup
         document.getElementById('ready').addEventListener('click', function() {
-            socket.emit('ready', {name:user.split('%40')[0], email:user.split('%40')[0]}); 
+            socket.emit('ready', {name:user.split('%40')[0], email:user}); 
             //socket.emit('gameStatus', {});
         });
         

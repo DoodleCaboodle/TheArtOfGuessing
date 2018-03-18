@@ -37,6 +37,11 @@ exports.init = function(hio, hsocket) {
 
         queueData[hsocket.id] = data;
         queueData[hsocket.id].wincount = 0;
+        userModel.getStats(queueData[hsocket.id].email, function(err, result){
+            if (!err && result.length > 0) {
+                queueData[hsocket.id].stats = result[0];
+            }
+        })
         hsocket.join(queueRoom);
         console.log(io.sockets.adapter.rooms[queueRoom], io.sockets.adapter.rooms[gameRoom], hsocket.id);
         hsocket.emit('gameStatus', {gameStarted: gameStarted});
@@ -54,9 +59,9 @@ exports.init = function(hio, hsocket) {
 //        gameQueue.splice(queue.indexOf(socket.id), 1);
 //        delete queueData[socket.id];
 //        //if (currentDrawing === socket.id) endRound();
-        //socket.leave(queueRoom);
-        //socket.leave(gameRoom);
-        //socket.leave(doneRoom);
+        hsocket.leave(queueRoom);
+        hsocket.leave(gameRoom);
+        hsocket.leave(doneRoom);
     });
     
     hsocket.on('word', function(data) {

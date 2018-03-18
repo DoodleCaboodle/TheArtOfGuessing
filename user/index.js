@@ -51,6 +51,16 @@ var register = function(req, res, user, callback) {
                     collection.insertOne({email:user.email, password:user.password, salt:user.salt, firstname:user.firstname, lastname:user.lastname}).then(function(result){
                         // something
                     });
+                    const collectionStats = client.db("art-of-guessing").collection("user-stats");
+                    collectionStats.insertOne({email:user.email,
+                                              roundsWon: 0,
+                                              roundsPlayed: 0,
+                                              gamesWon: 0,
+                                              gamesPlayed: 0,
+                                              words: {}
+                                             }).then(function(result){
+                        // something
+                    });
                 });
                 res.setHeader('Set-Cookie', cookie.serialize('email', user, {
                       path : '/', 
