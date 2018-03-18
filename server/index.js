@@ -1,5 +1,5 @@
 var io;
-var userModel;
+var userModel = require("../user/user.js");
 var gameRoom = 'game';
 var doneRoom = 'done';
 var queueRoom = 'queue';
@@ -16,7 +16,7 @@ var roundInterval;
 exports.init = function(hio, hsocket) {
     io = hio;    
     hsocket.emit('connected', {msg: 'You have connected!'});
-
+    
     hsocket.on('drawing', function(data) {
 		io.emit('drawing', data);
 	});
@@ -44,7 +44,7 @@ exports.init = function(hio, hsocket) {
     });
 
     hsocket.on('message', function(data) {
-        if (data.msg.toLowerCase().includes(currentWord.toLowerCase())) userWon(socket.id);
+        if (currentWord !== '' && data.msg.toLowerCase().includes(currentWord.toLowerCase())) userWon(hsocket.id);
         hsocket.broadcast.emit('message', data);
     });
     
