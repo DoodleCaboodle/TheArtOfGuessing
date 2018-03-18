@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="style/main.css" type="text/css"/>
+	</head>
+	<body>
+        <header>
+            <div id="header-container">
+                <div id="title-container">
+                    <a id="header-logo" href="/"></a>
+                    <a id="header-title" href="/"><span class="highlight">ART</span>of GUESSING</a>
+                </div>
+                <div id="nav-button-container">
+                    <a id="profile" class="nav-btn" href="/profile"></a>
+                    <a id="logout" class="nav-btn" href="/logout"></a> 
+                </div>
+            </div>
+        </header>
+        <div id="start-container">
+            <div id="gameStatus"></div>
+            <div id="queueTimer"></div>
+            <button id="ready" class="btn">Ready</button>
+            <button id="cancel" class="btn">cancel</button>
+        </div>
+        <div id="container">
+            <div id = "toolbar"> 
+                <input type="color" value="#000000" id="colourPanel">
+                <input type="range" min="1" max="20" id=brushSize>
+                <span id="undo">UNDO</span> 
+                <span id="redo">REDO</span> 
+                <span id="clear">CLEAR</span> 
+                <span class="user"></span> 
+                <span>Word to draw: <span id="word">House</span></span>
+                <span id="roundTime">Round Timer: <span id="time"></span></span>
+                <span id="roundWinner">Last round won by: <span id="rwinner"></span></span>
+            </div>
+            <div id="canvas-container">
+                <div id="canvas-cont">
+                    <canvas id="myCanvas"></canvas>
+                </div>
+                <div id="chat">
+                    <div id="feed">
+                        <!--<div class="message"><span class="user"></span>: test message</div>-->
+                    </div>
+                    <input id="feed-input" type="text" />
+                </div>
+            </div>
+        </div>
+
+		<script src="socket.io/socket.io.js"></script>
+		<script src="js/api.js"></script>
+		<script src="js/index.js"></script>
+	</body>
+</html>
