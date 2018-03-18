@@ -65,7 +65,7 @@ exports.init = function(hio, hsocket) {
     });
     
     hsocket.on('word', function(data) {
-        hsocket.broadcast.emit('word', data);
+        //hsocket.broadcast.emit('word', data);
         currentWord = data.word;
     });
     
