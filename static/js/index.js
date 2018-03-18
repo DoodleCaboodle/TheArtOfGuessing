@@ -5,7 +5,7 @@
     if (!user || user === '') {
         window.location.href = '/login';
     }
-    
+
     var socket = io();
     
     window.onunload = function() {
@@ -13,6 +13,14 @@
     }
     
     window.onload = function() {
+
+        try{
+            var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            var recognition = new SpeechRecognition();
+        } catch (e) {
+            document.getElementById('speech-rec-btns').style.display = "none";
+            postFeed("System", "Sorry, your browser does not support speech recognition. If you want to use this feature, try to use Chrome instead.", "red");
+        }
 
     	document.getElementById('brushSize').value = 10;
 
@@ -71,11 +79,12 @@
             }
         });
         
-        function postFeed(name, msg) {
+        function postFeed(name, msg, colour="black") {
             if (msg === '') return;
             var div = document.createElement('div');
             div.classList.add("message");
             div.innerHTML = `<span class="user"> ${name} : </span> ${msg}`;
+            div.style.color = colour;
             document.getElementById("feed").appendChild(div);
             document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight;
             document.getElementById("feed-input").value = "";
