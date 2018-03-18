@@ -6,7 +6,7 @@
 		<link rel="stylesheet" href="style/main.css" type="text/css"/>
 	</head>
 	<body>
-        <header id ="header">
+        <header>
             <div id="header-container">
                 <div id="title-container">
                     <a id="header-logo" href="/"></a>
@@ -33,16 +33,18 @@
         <div id="container">
             <div id = "toolbar"> 
                 <div id="canvas-controls">
+                    <span class="label">Color: </span>
                     <input type="color" value="#000000" id="colourPanel">
+                    <span class="label">Brush size: </span>
                     <input type="range" min="1" max="20" id="brushSize">
                     <span id="undo" class="tb-btn">UNDO</span> 
                     <span id="redo" class="tb-btn">REDO</span> 
                     <span id="clear" class="tb-btn">CLEAR</span>
                 </div> 
                 <div id="round-info">
-                    <span>Word to draw: <span id="word">House</span></span>
-                    <span id="roundTime">Round Timer: <span id="time"></span></span>
-                    <span id="roundWinner">Last round won by: <span id="rwinner"></span></span>
+                    <span class="round-info-item">Word to draw: <span id="word">House</span></span>
+                    <span class="round-info-item" id="roundTime">Round Timer: <span id="time-container"><span id="time"></span></span></span>
+                    <span class="round-info-item" id="roundWinner">Last round won by: <span id="rwinner"></span></span>
                 </div>
             </div>
             <div id="canvas-container">
@@ -51,25 +53,30 @@
                 </div>
                 <div id="chat">
                     <div id="users-list">
+                        <!--
                         <div class="user-icon">
-                            <div class="user-wins"></div>
+                            <div class="user-wins"><span class="wincount">2</span></div>
                         </div>
+                        -->
                     </div>
                     <div id="feed">
-                        <!--<div class="message"><span class="user"></span>: test message</div>-->
+                        <!--
+                        <div class="message"><span class="user fd-user">bob</span>: test message</div>
+                        <div class="message"><span class="user fd-user">tod</span>: test message</div>
+                        -->
                     </div>
                     <div id="speech-rec-btns">
-                        <button id="start-record-btn" title="Start Recording">Start Recognition</button>
-                        <button id="pause-record-btn" title="Pause Recording">Pause Recognition</button>
+                        <button class="tb-btn fd-btn" id="start-record-btn" title="Start Recording">Start Recognition</button>
+                        <button class="tb-btn fd-btn" id="pause-record-btn" title="Pause Recording">Pause Recognition</button>
                     </div>
-                    <input id="feed-input" type="text" />
+                    <input id="feed-input" type="text" placeholder="Enter your guess"/>
                 </div>
             </div>
         </div>
-        <!--
+        
 		<script src="socket.io/socket.io.js"></script>
 		<script src="js/api.js"></script>
         <script src="js/index.js"></script>
-        -->
+        
 	</body>
 </html>
