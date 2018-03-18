@@ -22,9 +22,18 @@
             postFeed("System", "Sorry, your browser does not support speech recognition. If you want to use this feature, try to use Chrome instead.", "red");
         }
 
+        if (recognition) {
+            recognition.continous = true;
+
+            recognition.onresult = function(e) {
+                var transcript = e.results[e.resultIndex][0].transcript;
+                console.log(transcript);
+            }
+        }
+
     	document.getElementById('brushSize').value = 10;
 
-    	var offsetY = document.getElementById('toolbar').clientHeight;
+    	var offsetY = document.getElementById('toolbar').clientHeight + document.getElementById("header").clientHeight;
         
         // canvas setup
         var canvas = document.getElementById("myCanvas");
@@ -60,6 +69,16 @@
         });
         
         
+
+        document.getElementById("start-record-btn").addEventListener('click', function(e) {
+            recognition.start();
+            console.log("Listening");
+        });
+
+        document.getElementById("pause-record-btn").addEventListener('click', function(e){
+            recognition.stop();
+        });
+        
         document.getElementById("feed-input").addEventListener("keypress", function(e){
             if (canMessage) {
                 var key = e.which || e.keyCode;
@@ -81,7 +100,7 @@
             console.log(name);
             var div = document.createElement('div');
             div.classList.add("message");
-            div.innerHTML = `<span class="message-name"> ${name} : </span> ${msg}`;
+            div.innerHTML = `<span class="message-name"> ${name}: </span> ${msg}`;
             div.style.color = colour;
             document.getElementById("feed").appendChild(div);
             document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight;
@@ -320,7 +339,7 @@
                 drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
             }
 
-            offsetY = document.getElementById('toolbar').clientHeight;
+            offsetY = document.getElementById('toolbar').clientHeight + document.getElementById("header").clientHeight;
         }
         
         // queue setup
@@ -337,7 +356,6 @@
         });
         // round timer
         socket.on('roundTimer', function(data) {
-            console.log(offsetY);
             document.getElementById('time').innerHTML = data.time;
         });
         // mesages
