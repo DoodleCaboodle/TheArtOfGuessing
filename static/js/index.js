@@ -25,20 +25,12 @@
         canvas.width = document.getElementById("canvas-cont").clientWidth;
         canvas.height = document.getElementById("canvas-cont").clientHeight;
 
-        // context.mozImageSmoothingEnabled = true;
-        // context.webkitImageSmoothingEnabled = true;
-        // context.msImageSmoothingEnabled = true;
-        // context.imageSmoothingEnabled = true;
-
         var colourPanel = document.getElementById("colourPanel");
         var brushSelector = document.getElementById("brushSize");
 
         var undoButton = document.getElementById("undo");
         var redoButton = document.getElementById("redo");
         var clearButton = document.getElementById("clear");
-
-        // var undoPoints = [];
-        // var redoPoints = [];
 
         var displayedPoints = [];
         var displayedRedoPoints = [];
@@ -308,7 +300,7 @@
         });
 
         window.addEventListener('resize', onResize);
-        onResize();
+        //onResize();
 
         function onResize() {
 
