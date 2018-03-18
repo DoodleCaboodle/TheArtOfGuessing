@@ -2,7 +2,6 @@
 	"use strict";
     var user = api.getCurrentUser()
     console.log(user);
-    console.log('test');
     if (!user || user === '') {
         window.location.href = '/login';
     }
@@ -79,9 +78,10 @@
         
         function postFeed(name, msg, colour="black") {
             if (msg === '') return;
+            console.log(name);
             var div = document.createElement('div');
             div.classList.add("message");
-            div.innerHTML = `<span class="user"> ${name} : </span> ${msg}`;
+            div.innerHTML = `<span class="message-name"> ${name} : </span> ${msg}`;
             div.style.color = colour;
             document.getElementById("feed").appendChild(div);
             document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight;
