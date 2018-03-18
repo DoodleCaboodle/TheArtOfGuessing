@@ -7,7 +7,212 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-family: Verdana,Geneva,sans-serif; 
+    /* background credit : Photo by Alicia Zinn from Pexels https://www.pexels.com/photo/woman-with-red-nails-painting-green-stripe-on-canvas-159983/ */
+    background: linear-gradient(rgba(109, 109, 109, 0.35), rgba(90, 90, 90, 0.85)), url("../media/background_0.jpeg");
+    background-size: 100% 100%;
+    background-color: rgba(0,0,0,0.2);
 }
+
+.highlight {
+    font-weight: bold;
+}
+
+header {
+    width: 100%;
+    height: 10%;
+    background: none;
+    -webkit-box-shadow: 0px 1px 2px -1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 1px 2px -1px rgba(0,0,0,0.75);
+    box-shadow: 0px 1px 2px -1px rgba(0,0,0,0.75);
+    display: flex;
+    justify-content: center;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+#header-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    height: 100%; 
+    /*min-width: 1150px;*/
+}
+
+header a {
+    text-decoration: none;
+    color: #3C3D3F;
+}
+
+#title-container {
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#header-logo {
+    width: 40px;
+    height: 40px;
+    background: url("../media/logo.png");
+    background-size: 100% 100%;
+    margin-right: 20px;
+}
+
+#header-title {
+    font-size: 22pt;
+}
+
+#header-title:hover {
+    transition-duration: 0.5s;
+    text-decoration: none;
+    color: rgb(39, 50, 70);
+}
+
+#nav-button-container {
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.nav-btn {
+    width: 25px;
+    height: 25px;
+    min-width: 25px;
+    min-height: 25px;
+    background: red;
+    margin-left: 20px;
+    padding: 2px;
+}
+
+#logout {
+    background: url("../media/logout.png");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#profile {
+    background: url("../media/profile.png");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#start-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#welcom-title {
+    color: #ddd;
+    font-size: 48pt;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 100px;
+}
+
+#queue-container {
+    width: 600px;
+    height: 350px;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    color: #ddd;
+    font-size: 18pt;
+    text-align: center;
+}
+
+.btn,
+.btn::after {
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.btn {
+    background: none;
+    border: 3px solid #fff;
+    border-radius: 5px;
+    color: #fff;
+    display: block;
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 5px auto;
+    padding: 10px 50px;
+    position: relative;
+    text-transform: uppercase;
+    width: 200px;
+    height: 50px;
+}
+
+.btn::before,
+.btn::after {
+    background: #fff;
+    content: '';
+    position: absolute;
+    z-index: -1;
+}
+
+.btn:hover {
+    color: #2ecc71;
+    background: #fff;
+    cursor: pointer;
+}
+
+#cancel {
+    display: none; 
+}
+
+#cancel:hover {
+    color: #cc2e2e;
+}
+
+#queueTimer {
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+}
+
+#queue-time-container {
+    width: 100px;
+    height: 100px;
+    background: rgba(61, 232, 118, 1);
+    box-shadow: 0 0 0 0 rgba(61, 232, 118, 0.7);
+    padding: 20px;
+    border-radius: 100%;
+    -webkit-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    -moz-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    -ms-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+#queue-time {
+    color: rgb(26, 55, 41);
+    font-size: 20pt;
+}
+
+.inqueue {
+    display: none;
+}
+
+/* pulse animation */
+@-webkit-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(61, 232, 118, 0);}}
+@-moz-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
+@-ms-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
+@keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
 
 #toolbar{
     width: 100%;
@@ -46,14 +251,6 @@ html, body {
     background: #eee;
     border: 1px solid #e7e7e7;
     padding: 5px;
-}
-
-#logout {
-    width: auto;
-    height: auto;
-    padding: 5px;
-    border: 1px solid #e7e7e7;
-    background: #eee;
 }
 
 #container {
