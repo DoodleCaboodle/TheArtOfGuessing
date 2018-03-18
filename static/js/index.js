@@ -272,6 +272,8 @@
         function onResize() {
             canvas.width = document.getElementById("canvas-cont").clientWidth;
             canvas.height = document.getElementById("canvas-cont").clientHeight;
+            offsetY = document.getElementById('toolbar').clientHeight;
+            console.log(offsetY);
         }
         
         // queue setup
@@ -288,6 +290,7 @@
         });
         // round timer
         socket.on('roundTimer', function(data) {
+            console.log(offsetY);
             document.getElementById('time').innerHTML = data.time;
         });
         // mesages
@@ -332,6 +335,7 @@
             document.getElementById('gameStatus').innerHTML = '';
             document.getElementById('start-container').style.display = 'none';
             document.getElementById('container').style.display = 'flex';
+            onResize();
         });
         // gameStatus
         socket.on('gameStatus', function(data) {
