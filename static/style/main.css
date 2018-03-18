@@ -193,10 +193,10 @@ header a {
     box-shadow: 0 0 0 0 rgba(61, 232, 118, 0.7);
     padding: 20px;
     border-radius: 100%;
-    -webkit-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
-    -moz-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
-    -ms-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
-    animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    -webkit-animation: pulse 1s infinite cubic-bezier(0.66, 0, 0, 1);
+    -moz-animation: pulse 1s infinite cubic-bezier(0.66, 0, 0, 1);
+    -ms-animation: pulse 1s infinite cubic-bezier(0.66, 0, 0, 1);
+    animation: pulse 1s infinite cubic-bezier(0.66, 0, 0, 1);
 }
 
 #queue-time {
@@ -209,7 +209,7 @@ header a {
 }
 
 /* pulse animation */
-@-webkit-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(61, 232, 118, 0);}}
+@-webkit-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
 @-moz-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
 @-ms-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
 @keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
@@ -224,6 +224,8 @@ header a {
     align-items: center;
     background: linear-gradient(rgba(54, 116, 72, 0.35), rgba(8, 114, 126, 0.85));
     color: #fff;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 #canvas-controls {
@@ -257,16 +259,19 @@ header a {
 /* input range css: https://codepen.io/seanstopnik/pen/CeLqA?q=range&order=popularity&depth=everything&show_forks=false */
 
 #brushSize {
-    -webkit-appearance: none;
-    width: calc(100% - (73px));
     height: 10px;
     border-radius: 5px;
     background: none;
     outline: none;
     padding: 0;
     margin: 0;
-    height: 40px;
-    width: 300px;
+    height: 30px;
+    width: 250px;
+    margin: 5px;
+    border: 1px solid #fff; 
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #fff; 
 }
 
 #brushSize::-webkit-slider-thumb {
@@ -275,7 +280,7 @@ header a {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: rgb(20, 138, 87);
+    background: rgb(33, 182, 118);
     cursor: pointer;
     -webkit-transition: background 0.15s ease-in-out;
     transition: background 0.15s ease-in-out;
@@ -294,7 +299,7 @@ header a {
     height: 20px;
     border: 0;
     border-radius: 50%;
-    background: rgb(20, 138, 87);
+    background: rgb(33, 182, 118);
     cursor: pointer;
     -webkit-transition: background 0.15s ease-in-out;
     transition: background 0.15s ease-in-out;
@@ -307,7 +312,16 @@ header a {
 #brushSize:active::-moz-range-thumb {
     background: #1abc9c;
 }
-  
+
+#colourPanel {
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    border: none;
+}
+.label {
+    padding: 10px;
+}
 
 #myCanvas {
     height: 100%;
@@ -343,6 +357,42 @@ header a {
     padding: 5px;
 }
 
+#round-info {
+    width: 40%;
+    min-width: 300px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 40px;
+    line-height: 30px;
+}
+
+.round-info-item {
+    padding: 5px;
+    border: 1px solid #fff;
+    min-width: 0;
+    width: auto;
+}
+
+#time-container {
+    background: #cc2e2e;
+    width: 50px;
+    height: 50px;
+    padding: 5px;
+    border-radius: 100%;
+    box-shadow: 0 0 0 0 rgba(232, 87, 61, 0.7);
+    -webkit-animation: pulse-round 1s infinite cubic-bezier(0.36, 0, 0, 1);
+    -moz-animation: pulse-round 1s infinite cubic-bezier(0.36, 0, 0, 1);
+    -ms-animation: pulse-round 1s infinite cubic-bezier(0.36, 0, 0, 1);
+    animation: pulse-round 1s infinite cubic-bezier(0.36, 0, 0, 1);
+}
+
+/* pulse animation */
+@-webkit-keyframes pulse-round {to {box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);}}
+@-moz-keyframes pulse-round {to {box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);}}
+@-ms-keyframes pulse-round {to {box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);}}
+@keyframes pulse-round {to {box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);}}
+
 #container {
     display: none;
     flex-direction: column;
@@ -369,36 +419,91 @@ header a {
     height: 95%;
     display: flex;
     flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 0;
+    padding: 0;
 }
 
 #canvas-cont {
-    width: 80%;
+    width: 77%;
     height: 100%;
     background: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+#users-list {
+    height: 15%;
+    width: 100%;
+    border: 2px solid #000;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 #feed {
     width: 100%;
-    height: 80%;
+    height: 64.5%;
     display: flex;
     flex-direction: column;
     align-content: center;
     overflow-y: auto;
+    background: #fff;   
+    padding-top: 15px; 
+}
+
+#speech-rec-btns {
+    width: 100%;
+    height: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: #444;
+    border-top: 1px solid #aaa;
+}
+
+.fd-btn {
+    width: 200px;
+    color: #fff;
+    filter: invert(00%);
 }
 
 #feed-input {
     width: 100%;
-    height: 7%;
-    min-height: 50px;
-    border: 1px solid #aaa;
+    height: 5%;
+    border: none;
+    border-top: 1px solid #aaa;
     word-wrap: break-word;
     overflow-y: auto;
 }
 
 .message {
-    width: 100%;
-    min-height: 40px;
+    font-size: 11pt;
+    margin: 0;
+    padding: 0;
+    width: 98%;
+    margin-left: 2%;
+    min-height: 20px;
     height: auto;
-    line-height: 40px;
-    border-bottom: 1px solid #aaa;
+    line-height: 20px;
+}
+
+.user-icon {
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    padding: 0;
+}
+
+.wincount {
+    color: #fff;
+    font-size: 8pt;
+    margin: 0;
+    padding: 2px;
+    background: #555;
 }
