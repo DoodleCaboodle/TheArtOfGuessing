@@ -330,6 +330,7 @@
         });
         // round timer
         socket.on('roundTimer', function(data) {
+            console.log(offsetY);
             document.getElementById('time').innerHTML = data.time;
         });
         // mesages
@@ -374,6 +375,7 @@
             document.getElementById('gameStatus').innerHTML = '';
             document.getElementById('start-container').style.display = 'none';
             document.getElementById('container').style.display = 'flex';
+            onResize();
         });
         // gameStatus
         socket.on('gameStatus', function(data) {

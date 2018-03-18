@@ -15,7 +15,8 @@ var roundInterval;
 
 exports.init = function(hio, hsocket) {
     io = hio;
-    socket = hsocket;    
+    socket = hsocket;   
+    
     socket.emit('connected', {msg: 'You have connected!'});
 
     socket.on('drawing', function(data) {
@@ -71,18 +72,21 @@ exports.init = function(hio, hsocket) {
 }
 
 function checkQueue() {
+    console.log("checkign queue");
     if (!gameStarted && !queueStarted && io.sockets.adapter.rooms[queueRoom].length > 1) {
         queueStarted = true;
-        startQueueTimer();
+        startQueue();
     }
 }
 
-function startQueueTimer() {
+function startQueue() {
+    console.log("queue started");
     queueTimer = 20;
-    queueInterval = setInterval(function(){startQueue();}, 1000);
+    queueInterval = setInterval(function(){startQueueTimer();}, 1000);
 }
 
-function startQueue() {
+function startQueueTimer() {
+    //if (io.sockets.adapter.rooms[queueRoom].length < 2) endGame(true);
     queueTimer -= 1;
     console.log(queueTimer);
     for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
@@ -114,6 +118,7 @@ function startGame() {
 function endRound() {
     
     clearInterval(roundInterval);
+    currentWord = '';
     roundTimer = 60;
     console.log("round end");
     io.emit('clear', {});
@@ -141,7 +146,8 @@ function startNextRound() {
 }
 
 function startRoundTimer() {
-    roundTimer -= 1;
+    //if (io.sockets.adapter.rooms[gameRoom].length < 2) endGame(true);
+    if (currentWord !== '') roundTimer -= 1;
     console.log(roundTimer);
     if (io.sockets.adapter.rooms[gameRoom]) {
         for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
@@ -164,27 +170,29 @@ function userWon(id) {
     endRound();
 }
 
-function endGame() {
+function endGame(immediate=false) {
     clearInterval(roundInterval);
     clearInterval(queueInterval);
     //pickWinner
     gameStarted = false;
-    var gameWinner = '';
-    var winnerID;
-    var winCount = 0;
-    if (!io.sockets.adapter.rooms[gameRoom] && io.sockets.adapter.rooms[doneRoom]) {
-        for (var key in queueData) {
-            if (queueData[key].wincount >= winCount) {
-                gameWinner = queueData[key].name; 
-                winnerID = key;
-                winCount = queueData[key].wincount;
+    if (!immediate) {
+        var gameWinner = '';
+        var winnerID;
+        var winCount = 0;
+        if (!io.sockets.adapter.rooms[gameRoom] && io.sockets.adapter.rooms[doneRoom]) {
+            for (var key in queueData) {
+                if (queueData[key].wincount >= winCount) {
+                    gameWinner = queueData[key].name; 
+                    winnerID = key;
+                    winCount = queueData[key].wincount;
+                }
             }
+            for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
+                io.sockets.connected[key].emit('gameWinner', {name:gameWinner});
+                io.sockets.connected[key].leave(doneRoom);
+            }
+            io.sockets.connected[winnerID].emit('gameWon', {name:gameWinner, wincount:winCount});
         }
-        for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
-            io.sockets.connected[key].emit('gameWinner', {name:gameWinner});
-            io.sockets.connected[key].leave(doneRoom);
-        }
-        io.sockets.connected[winnerID].emit('gameWon', {name:gameWinner, wincount:winCount});
+        console.log("gamewon", gameWinner);
     }
-    console.log("gamewon", gameWinner);
 }
