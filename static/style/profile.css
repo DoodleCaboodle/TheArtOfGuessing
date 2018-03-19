@@ -22,6 +22,8 @@ html, body {
   margin: 20px auto;
     height: 90%;
     color: #fff;
+    padding: 20px;
+    display: flex;
 }
 .stats {
   height: 200px;
