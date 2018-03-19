@@ -23,6 +23,7 @@ html, body {
 }
 
 html {
+    overflow-x: auto;
     overflow-y: auto;
 }
 
@@ -447,7 +448,7 @@ header a {
 @keyframes pulse-round {to {box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);}}
 
 #container {
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
@@ -456,7 +457,7 @@ header a {
 }
 
 #start-container {
-    display: none;
+    display: flex;
 }
 
 #chat {
@@ -480,7 +481,7 @@ header a {
 
 #canvas-cont {
     width: 77%;
-    height: 95%;
+    height: 100%;
     background: #fff;
     margin: 0;
     padding: 0;
