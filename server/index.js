@@ -104,7 +104,7 @@ function checkQueue() {
 
 function startQueue() {
     console.log("queue started");
-    queueTimer = 20;
+    queueTimer = 45;
     queueInterval = setInterval(function(){startQueueTimer();}, 1000);
 }
 
@@ -125,7 +125,7 @@ function startQueueTimer() {
     }
     if (queueTimer <= 0) {
         clearInterval(queueInterval);
-        queueTimer = 20;
+        queueTimer = 45;
         console.log("queue over, starting game");
         startGame();
     }
