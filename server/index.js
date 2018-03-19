@@ -45,8 +45,28 @@ exports.init = function(hio, hsocket) {
         hsocket.join(queueRoom);
         console.log(io.sockets.adapter.rooms[queueRoom], io.sockets.adapter.rooms[gameRoom], hsocket.id);
         hsocket.emit('gameStatus', {gameStarted: gameStarted});
+        if (io.sockets.adapter.rooms[queueRoom])
+            io.emit('queueUpdated', {numInQueue: io.sockets.adapter.rooms[queueRoom].length});
+        else
+            io.emit('queueUpdated', {numInQueue: 0});
         checkQueue();
     });
+    
+    hsocket.on('leaveQueue', function(data) {
+        hsocket.leave(queueRoom);
+        delete queueData[hsocket.id];
+        if (io.sockets.adapter.rooms[queueRoom])
+            io.emit('queueUpdated', {numInQueue: io.sockets.adapter.rooms[queueRoom].length});
+        else
+            io.emit('queueUpdated', {numInQueue: 0});
+    });
+    
+     hsocket.on('getQueueStatus', function(data) {
+         if (io.sockets.adapter.rooms[queueRoom])
+            io.emit('queueUpdated', {numInQueue: io.sockets.adapter.rooms[queueRoom].length});
+         else
+             io.emit('queueUpdated', {numInQueue: 0});
+     });
 
     hsocket.on('message', function(data) {
         if (currentWord !== '' && data.msg.toLowerCase().includes(currentWord.toLowerCase())) userWon(hsocket.id);
@@ -89,7 +109,15 @@ function startQueue() {
 }
 
 function startQueueTimer() {
-    //if (io.sockets.adapter.rooms[queueRoom].length < 2) endGame(true);
+    if (io.sockets.adapter.rooms[queueRoom].length < 2) {
+        for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
+            io.sockets.connected[key].emit('stopQueueTimer', {});
+            io.sockets.connected[key].emit('queueUpdated', {numInQueue: io.sockets.adapter.rooms[queueRoom].length});
+            queueStarted = false;
+        }
+        clearInterval(queueInterval);
+        return;
+    }
     queueTimer -= 1;
     console.log(queueTimer);
     for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
@@ -149,7 +177,13 @@ function startNextRound() {
 }
 
 function startRoundTimer() {
-    //if (io.sockets.adapter.rooms[gameRoom].length < 2) endGame(true);
+    if ((io.sockets.adapter.rooms[gameRoom].length + io.sockets.adapter.rooms[doneRoom].length) < 2) {
+        if (io.sockets.adapter.rooms[gameRoom].length == 1)
+            io.sockets.connected[Object.keys(io.sockets.adapter.rooms[gameRoom].sockets)[0]].emit('systemMessage', {msg:"Ending game, not enough players in game.", endGame:true});
+        if (io.sockets.adapter.rooms[doneRoom].length == 1)
+            io.sockets.connected[Object.keys(io.sockets.adapter.rooms[doneRoom].sockets)[0]].emit('systemMessage', {msg:"Ending game, not enough players in game.", endGame:true});
+        endGame(true);
+    }
     if (currentWord !== '') roundTimer -= 1;
     console.log(roundTimer);
     if (io.sockets.adapter.rooms[gameRoom]) {

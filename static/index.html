@@ -9,7 +9,6 @@
         <header id="header">
             <div id="header-container">
                 <div id="title-container">
-                    <a id="header-logo" href="/"></a>
                     <a id="header-title" href="/"><span class="highlight">ART</span> of GUESSING</a>
                 </div>
                 <div id="nav-button-container">
@@ -20,12 +19,17 @@
                 </div>
             </div>
         </header>
+        <div id='popup'>
+            <div id="popup-label">What do you want to draw? </div>
+            <input id="word-to-draw" type="text" placeholder="Enter word" required/>
+            <button id="submit-word" class="tb-btn">OK</button>
+        </div>
         <div id="start-container">
             <div id="welcom-title">Hello! <span class="highlight"><span class="user"></span></span></div>
             <div id="queue-container">
                 <div id="gameStatus" class="inqueue"></div>
-                <div id="queueStatus">People in queue: <span class="queue-status"></span></div>
-                <div id="queueTimer" class="inqueue"><span id="queue-time-container"><span id="queue-time"></span></span></div>
+                <div id="queueStatus">People in queue: <span id="num-in-queue">0</span></div>
+                <div id="queueTimer" class="inqueue"><span id="queue-time-container"><span id="queue-time">45</span></span></div>
                 <button id="ready" class="btn" class="not-inqueue">Ready</button>
                 <button id="cancel" class="btn" class="inqueue">cancel</button>
             </div>
@@ -57,6 +61,7 @@
                         <!--
                         <div class="user-icon">
                             <div class="user-wins"><span class="wincount">2</span></div>
+                            <span class="user">bob</span>
                         </div>
                         -->
                     </div>
