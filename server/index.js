@@ -188,6 +188,7 @@ function startNextRound() {
     drawing = Object.keys(io.sockets.adapter.rooms[gameRoom].sockets)[0];
     io.sockets.connected[drawing].emit('draw', {});
     io.sockets.connected[drawing].broadcast.emit('noDraw', {});
+    io.emit('systemMessage', {msg:queueData[drawing].name + " will draw next.", endGame:false, color:'#33aa33'});
     io.sockets.connected[drawing].leave(gameRoom);
     io.sockets.connected[drawing].join(doneRoom);
     // round robin
@@ -226,6 +227,7 @@ function startRoundTimer() {
 
 function userWon(id) {
     io.emit('won', {name:queueData[id].name, word:currentWord});
+    io.emit('systemMessage', {msg:queueData[drawing].name + " won the round.", endGame:false, color:'#3333aa'});
     queueData[id].wincount++;
     endRound();
 }

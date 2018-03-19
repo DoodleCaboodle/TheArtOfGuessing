@@ -464,7 +464,10 @@
         });
         // system message
         socket.on('systemMessage', function(data) {
-            postFeed('System', data.msg, 'red');
+            var color = 'red';
+            if (data.color)
+                color = data.color;
+            postFeed('System', data.msg, color);
             
             if (data.endGame) setTimeout(goBack,1000);;
         });
