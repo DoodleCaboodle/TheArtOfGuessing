@@ -17,9 +17,11 @@ html, body {
   width: 60%;
   max-width: 1200px;
   height: 440px;
-  background: #222;
+  background: rgba(0,0,0,0.7);
   border-radius: 6px;
   margin: 20px auto;
+    height: 90%;
+    color: #fff;
 }
 .stats {
   height: 200px;
