@@ -1,0 +1,150 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+    /* background credit : Photo by Alicia Zinn from Pexels https://www.pexels.com/photo/woman-with-red-nails-painting-green-stripe-on-canvas-159983/ */
+    background: linear-gradient(rgba(109, 109, 109, 0.35), rgba(90, 90, 90, 0.85)), url("../media/background_0.jpeg");
+    margin: 0;
+  	padding: 0;
+  	font-family: 'Roboto', sans-serif;
+}
+
+.content {
+  min-width: 1000px;
+  width: 60%;
+  max-width: 1200px;
+  height: 440px;
+  background: rgba(0,0,0,0.7);
+  border-radius: 6px;
+  margin: 20px auto;
+    height: 90%;
+    color: #fff;
+}
+.stats {
+  height: 200px;
+}
+
+.col {
+  width: 33.33%;
+  height: 200px;
+  float: left;
+  padding: 10px;
+  position: relative;
+}
+
+.middle:before, .middle:after {
+  content: "";
+  height: 80%;
+  border: 1px solid #333;
+  position: absolute;
+  top: 0; bottom: 0;
+  margin: auto;
+}
+.middle:before {
+  left: 0;
+}
+.middle:after {
+  right: 0;
+}
+
+.matchStats {
+  float: right;
+  width: 300px;
+  height: 240px;
+  position: relative;
+}
+#gameStats, #roundsStats {
+  position: absolute;
+  top: 0; bottom: 0; right: 20px;
+  margin: auto;
+}
+#wordsData {
+  position: absolute;
+  top: 0; bottom: 0; right: -10px;
+  margin: auto;
+}
+
+.mainInfo {
+  height: 240px;
+  padding: 20px;
+  width: calc(100% - 600px);
+  float: left;
+}
+.mainInfo span {
+  color: #999;
+}
+
+.mainInfo .aboutMe {
+  font-size: 12px;
+  color: #999;
+}
+h1 {
+  color: #fff;
+  font-size: 40px;
+  margin: 0;
+  padding: 0;
+}
+h2 {
+  color: #FDB45C;
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
+  margin-left: 5px;
+  display: block;
+  position: absolute;
+  top: -5px; left: 10px;
+}
+h3 {
+  display: block;
+  font-size: 24px;
+  margin: 0;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  border-bottom: 2px solid #333;color: #FDB45C;
+}
+.clearFix {
+  clear: both;
+}
+
+/*.playerStats {
+  margin: auto;
+  padding: 0;
+  list-style: none;
+  margin: 6px;
+}
+.playerStats li {
+  display: block;
+  height: 30px;
+  line-height: 30px;
+  color: #fff;
+}
+.playerStats li span {
+  display: inline-block;
+  width: 60%;
+  color: #999;
+}*/
+
+.backgroundText {
+  width: 100%;
+  height: 100%;
+  font-size: 56px;
+  color: rgba(255, 255, 255, 0.2);
+  transform: rotate(-90deg);
+  text-transform: uppercase;
+  letter-spacing: 0px;
+  text-align: center;
+}
+
+.resizing {
+  position: relative;
+  width: 90%;
+  height: 100%;
+  padding: 0;
+  position: absolute;
+  left: 0; right: 0;
+  margin: auto;
+  bottom: 0;
+}

@@ -4,22 +4,69 @@
 		<meta charset="utf-8">
         <title>Login</title>
         <link rel="stylesheet" type="text/css" href="../style/main.css"/>
-        <link rel="stylesheet" type="text/css" href="../style/profile.css"/>
+        <link rel="stylesheet" type="text/css" href="../style/login.css"/>
 	</head>
 	<body>
-        <h1>login.html</h1>
-        <p>
-            So far there are 2 example users.<br>
-            email: bob@gmail.com,
-            pass: 1234<br>
-            email: tod@gmail.com,
-            pass: 1234
-        </p>
-        <form id="login-form">
-            <input name="email" id="email" type="email" placeholder="Your username" />
-            <input name="password" id="password" type="password" placeholder="Your password"/>
-            <input type="submit" id="submit-btn" value="Login" />
-        </form>
+        <!--
+  		This was created based on the Dribble shot by Deepak Yadav that you can find at https://goo.gl/XRALsw
+  		I am @hurickkrugner on Twitter or @hk95 on GitHub. Feel free to message me anytime.
+		-->
+		<section class="user">
+		  <div class="user_options-container">
+		    <div class="user_options-text">
+		      <div class="user_options-unregistered">
+		        <h2 class="user_unregistered-title">Don't have an account?</h2>
+		        <p class="user_unregistered-text">Art of Guessing is a multiplayer game where you can guess what others are drawing and then draw for others as well. </p>
+		        <button class="user_unregistered-signup" id="signup-button">Sign up</button>
+		      </div>
+
+		      <div class="user_options-registered">
+		        <h2 class="user_registered-title">Have an account?</h2>
+		        <p class="user_registered-text">Art of Guessing is a multiplayer game where you can guess what others are drawing and then draw for others as well.</p>
+		        <button class="user_registered-login" id="login-button">Login</button>
+		      </div>
+		    </div>
+		    
+		    <div class="user_options-forms" id="user_options-forms">
+		      <div class="user_forms-login">
+		        <h2 class="forms_title">Login</h2>
+		        <form class="forms_form">
+		          <fieldset class="forms_fieldset">
+		            <div class="forms_field">
+		              <input type="email" placeholder="Email" class="forms_field-input" id="login-email" required autofocus />
+		            </div>
+		            <div class="forms_field">
+		              <input type="password" placeholder="Password" class="forms_field-input" id="login-password" required />
+		            </div>
+		          </fieldset>
+		          <div class="forms_buttons">
+		            <button type="button" class="forms_buttons-forgot">Forgot password?</button>
+		            <input type="submit" value="Log In" class="forms_buttons-action" id="login-submit-btn">
+		          </div>
+		        </form>
+		      </div>
+		      <div class="user_forms-signup">
+		        <h2 class="forms_title">Sign Up</h2>
+		        <form class="forms_form">
+		          <fieldset class="forms_fieldset">
+		          	<div class="forms_field">
+		              		<input type="text" placeholder="Full Name" class="forms_field-input" id="full-name" required />
+		            </div>
+		            <div class="forms_field">
+		              <input type="email" placeholder="Email" class="forms_field-input" id="signup-email" required />
+		            </div>
+		            <div class="forms_field">
+		              <input type="password" placeholder="Password" class="forms_field-input" id="signup-password" required />
+		            </div>
+		          </fieldset>
+		          <div class="forms_buttons">
+		            <input type="submit" value="Sign up" class="forms_buttons-action" id="signup-submit-btn">
+		          </div>
+		        </form>
+		      </div>
+		    </div>
+		  </div>
+		</section>
 		
 		<script src="../js/api.js"></script>
 		<script src="../js/login.js"></script>

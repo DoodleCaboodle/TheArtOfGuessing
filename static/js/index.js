@@ -1,11 +1,25 @@
 (function(){
 	"use strict";
-    var user = api.getCurrentUser()
+    var user = api.getCurrentUser();
+    var firstName = '';
     console.log(user);
     if (!user || user === '') {
         window.location.href = '/login';
     }
-    
+    else {
+        api.getName(user, function(err, name) {
+            console.log(name);
+            if (err) console.log(err);
+            else {
+                firstName = name;
+                 Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d){
+                    console.log(firstName);
+                    d.innerHTML  = firstName;
+                });
+            }
+        });
+    }
+        
     var socket = io();
     
     window.onunload = function() {
@@ -14,9 +28,26 @@
     
     window.onload = function() {
 
+        try{
+            var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            var recognition = new SpeechRecognition();
+        } catch (e) {
+            document.getElementById('speech-rec-btns').style.display = "none";
+            postFeed("System", "Sorry, your browser does not support speech recognition. If you want to use this feature, try to use Chrome instead.", "red");
+        }
+
+        if (recognition) {
+            recognition.continous = true;
+
+            recognition.onresult = function(e) {
+                var transcript = e.results[e.resultIndex][0].transcript;
+                document.getElementById("feed-input").value = transcript;
+            }
+        }
+
     	document.getElementById('brushSize').value = 10;
 
-    	var offsetY = document.getElementById('toolbar').clientHeight;
+    	var offsetY = document.getElementById('toolbar').clientHeight + document.getElementById("header").clientHeight;
         
         // canvas setup
         var canvas = document.getElementById("myCanvas");
@@ -48,34 +79,44 @@
         };
         
         Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d){
-            d.innerHTML  = user.split('%40')[0];
+            console.log(firstName);
+            d.innerHTML  = firstName;
         });
         
-        document.getElementById("logout").addEventListener("click", function() {
-            window.location.href = "/signout"
+        
+
+        document.getElementById("start-record-btn").addEventListener('click', function(e) {
+            recognition.start();
+            console.log("Listening");
+        });
+
+        document.getElementById("pause-record-btn").addEventListener('click', function(e){
+            recognition.stop();
         });
         
         document.getElementById("feed-input").addEventListener("keypress", function(e){
+            var key = e.which || e.keyCode;
             if (canMessage) {
-                var key = e.which || e.keyCode;
                 if (key === 13) {
                     var msg = document.getElementById("feed-input").value;
-                    if (msg !== '') socket.emit('message', {name:user.split('%40')[0], msg:msg});
-                    postFeed(user.split('%40')[0], msg);
+                    if (msg !== '') socket.emit('message', {name:firstName, msg:msg});
+                    postFeed(firstName, msg);
                 }
             }
             else {
                 if (key === 13) {
-                    postFeed("you are currently drawing.");
+                    postFeed("System", "You are currently drawing.", "red");
                 }
             }
         });
         
-        function postFeed(name, msg) {
+        function postFeed(name, msg, colour="black") {
             if (msg === '') return;
+            console.log(name);
             var div = document.createElement('div');
             div.classList.add("message");
-            div.innerHTML = `<span class="user"> ${name} : </span> ${msg}`;
+            div.innerHTML = `<span class="message-name"> ${name}: </span> ${msg}`;
+            div.style.color = colour;
             document.getElementById("feed").appendChild(div);
             document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight;
             document.getElementById("feed-input").value = "";
@@ -313,24 +354,49 @@
                 drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
             }
 
-            offsetY = document.getElementById('toolbar').clientHeight;
+            offsetY = document.getElementById('toolbar').clientHeight + document.getElementById("header").clientHeight;
         }
         
         // queue setup
         document.getElementById('ready').addEventListener('click', function() {
-            socket.emit('ready', {name:user.split('%40')[0], email:user}); 
+            document.querySelectorAll(".inqueue").forEach(function(e){
+                e.style.display = 'flex';
+            });
+            document.getElementById("ready").style.display = 'none';
+            document.getElementById('queueTimer').style.display = 'none';
+            document.getElementById("cancel").style.display = 'flex';
+            socket.emit('ready', {name:firstName, email:user});             
             //socket.emit('gameStatus', {});
         });
         
+        document.getElementById('cancel').addEventListener('click', function() {
+            socket.emit('leaveQueue', {});
+            document.querySelectorAll(".inqueue").forEach(function(e){
+                e.style.display = 'none';
+            });
+            document.getElementById("ready").style.display = 'flex';
+            document.getElementById('queueTimer').style.display = 'none';
+            document.getElementById("cancel").style.display = 'none';
+        });
+        
+        // request info from server
+        socket.emit('getQueueStatus', {});
+        
         // handle server responses
         // queue timer
+        socket.on('stopQueueTimer', function(data){
+            console.log('stop timer');
+            document.getElementById('queue-time').innerHTML = '';
+            document.getElementById('queueTimer').style.display = 'none';
+        });
+        // queue timer stop
         socket.on('queueTimer', function(data){
             console.log('queue timer', data.time);
-            document.getElementById('queueTimer').innerHTML = data.time;
+            document.getElementById('queue-time').innerHTML = data.time;
+            document.getElementById('queueTimer').style.display = 'flex';
         });
         // round timer
         socket.on('roundTimer', function(data) {
-            console.log(offsetY);
             document.getElementById('time').innerHTML = data.time;
         });
         // mesages
@@ -340,6 +406,11 @@
         // update user list
         socket.on('', function(data) {
             
+        });
+        // queueupdated
+        socket.on('queueUpdated', function(data) {
+            if (data.numInQueue < 2) document.getElementById('queueTimer').style.display = 'none'
+            document.getElementById('num-in-queue').innerHTML = data.numInQueue;
         });
         // gameWinner
         socket.on('gameWinner', function(data) {
@@ -362,11 +433,16 @@
             canDraw = true;
             canMessage = false;
             getWord();
+            document.getElementById("speech-rec-btns").style.display = "none";
+            document.getElementById("feed-input").style.display = "none";
         });
         // no draw
         socket.on('noDraw', function(data) {
             canDraw = false;
             canMessage = true;
+            document.getElementById("speech-rec-btns").style.display = "flex";
+            document.getElementById("feed-input").style.display = "flex";
+            document.getElementById("word").innerHTML = "";
         });
         // startgame
         socket.on('startGame', function(data) {
@@ -386,22 +462,37 @@
                 document.getElementById('gameStatus').innerHTML = 'You are in queue for the next game';
             }
         });
+        // system message
+        socket.on('systemMessage', function(data) {
+            postFeed('System', data.msg, 'red');
+            
+            if (data.endGame) setTimeout(goBack,1000);;
+        });
         // current word
         socket.on('word', function(data) {
             document.getElementById("word").innerHTML = data.word;
-        });
+        });        
         
         function getWord() {
-            var word = prompt("Please enter what you will be drawing:", "HOUSE");
-            document.getElementById("word").innerHTML = word;
-            socket.emit('word', {word:word});
+            popup();
+        }
+        
+        function popup() {
+            document.getElementById('word-to-draw').value = '';
+            document.getElementById('popup').style.display = 'flex';
+            document.getElementById('submit-word').addEventListener('click', function() {
+                var word = document.getElementById('word-to-draw').value;
+                if (word !== '') {
+                    document.getElementById("word").innerHTML = word;
+                    socket.emit('word', {word:word});
+                    document.getElementById('word-to-draw').value = '';
+                    document.getElementById('popup').style.display = 'none';
+                }
+            });
         }
         
         function goBack() {
-            document.getElementById('queueTimer').innerHTML = '';
-            document.getElementById('gameStatus').innerHTML = '';
-            document.getElementById('start-container').style.display = 'flex';
-            document.getElementById('container').style.display = 'none';
+            window.location.href = '/';
         }
     }
 }());

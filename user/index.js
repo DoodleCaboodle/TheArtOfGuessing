@@ -62,7 +62,7 @@ var register = function(req, res, user, callback) {
                         // something
                     });
                 });
-                res.setHeader('Set-Cookie', cookie.serialize('email', user, {
+                res.setHeader('Set-Cookie', cookie.serialize('email', req.session.username, {
                       path : '/', 
                       maxAge: 60 * 60 * 24 * 7
                 }));
@@ -79,6 +79,22 @@ var logout = function(req, res, callback) {
           maxAge: 60 * 60 * 24 * 7
     }));
     callback(null, true);
+}
+
+var getStats = function(req, res, email, callback) {
+    User.getStats(email, function(err, result) {
+        console.log(email);
+        if (err || result.length < 1) return res.status(404).json("stats corupt");
+        else return res.json(result[0]);
+    });
+}
+
+var getFirstName = function(req, res, email, callback) {
+    User.findByEmail(email, function(err, result) {
+        console.log(email);
+        if (err || result.length < 1) return res.status(404).json("stats corupt");
+        else return res.json(result[0].firstname);
+    });
 }
 
 function init(app) {
@@ -121,6 +137,14 @@ function init(app) {
 
     app.get('/profile/', authenticateMiddleware, function(req, res, next){
         res.sendFile(config.filepath + 'profile/profile.html');
+    });
+
+    app.get('/stats/:email', authenticateMiddleware, function(req, res, next){
+        return getStats(req, res, req.params.email);
+    });
+    
+    app.get('/firstname/:email', function(req, res, next){
+        return getFirstName(req, res, req.params.email);
     });
 
     // update

@@ -2,11 +2,62 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-        <title>Test title</title>
+		<title>AOG: profile</title>
+		<link rel="stylesheet" href="../style/main.css" type="text/css"/>
+		<link rel="stylesheet" href="../style/profile.css" type="text/css"/>
 	</head>
 	<body>
-		<h1>profile.html</h1>
-        
+		<header>
+			<div id="header-container">
+				<div id="title-container">
+					<a id="header-logo" href="/"></a>
+					<a id="header-title" href="/"><span class="highlight">ART</span> of GUESSING</a>
+				</div>
+				<div id="nav-button-container">
+					<!-- icon credit: <div>Icons made by <a href="https://www.flaticon.com/authors/elias-bikbulatov" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
+					<a id="logout" class="nav-btn" href="/signout"></a> 
+				</div>
+			</div>
+		</header>
+
+		<div class="content">
+
+		  <div id="mainInfo">
+		  </div>
+
+		  <div class="matchStats">
+		    <!-- <div class="backgroundText">Games</div> -->
+		    <canvas id="gameStats" width="180" height="180"/>
+		  </div>
+
+		  <div class="matchStats">
+		    <!-- <div class="backgroundText">Rounds</div> -->
+		    <canvas id="roundsStats" width="180" height="180"/>
+		  </div>
+
+		  <div class="clearFix"></div>
+
+		  <div class="col">
+		    <!-- <h2>Words</h2> -->
+		    <div class="resizing">
+		      <canvas id="wordsData"/>
+		    </div>
+		  </div>
+
+		  <!-- <div class="col">
+		    <h2>Stats</h2>
+		    <ul class="playerStats">
+		      <li><span>Rounds Won:</span> 11,234</li>
+		      <li><span>Rounds Played:</span> 8.45</li>
+		      <li><span>Minion Kills:</span> 345,428</li>
+		      <li><span>Turrents Destroyed:</span> 2,350</li>
+		      <li><span>Gold Collected:</span> 2,486,934</li>
+		    </ul>
+		  </div> -->
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+		<script src="../js/api.js"></script>
 		<script src="../js/profile.js"></script>
 	</body>
 </html>

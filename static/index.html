@@ -1,55 +1,86 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
+        <meta charset="utf-8">
+        <title>AOG</title>
 		<link rel="stylesheet" href="style/main.css" type="text/css"/>
 	</head>
 	<body>
-        <header>
+        <header id="header">
             <div id="header-container">
                 <div id="title-container">
-                    <a id="header-logo" href="/"></a>
-                    <a id="header-title" href="/"><span class="highlight">ART</span>of GUESSING</a>
+                    <a id="header-title" href="/"><span class="highlight">ART</span> of GUESSING</a>
                 </div>
                 <div id="nav-button-container">
+                    <!-- icon credit: <div>Icons made by <a href="https://www.flaticon.com/authors/nice-and-serious" title="Nice and Serious">Nice and Serious</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
                     <a id="profile" class="nav-btn" href="/profile"></a>
-                    <a id="logout" class="nav-btn" href="/logout"></a> 
+                    <!-- icon credit: <div>Icons made by <a href="https://www.flaticon.com/authors/elias-bikbulatov" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
+                    <a id="logout" class="nav-btn" href="/signout"></a> 
                 </div>
             </div>
         </header>
+        <div id='popup'>
+            <div id="popup-label">What do you want to draw? </div>
+            <input id="word-to-draw" type="text" placeholder="Enter word" required/>
+            <button id="submit-word" class="tb-btn">OK</button>
+        </div>
         <div id="start-container">
-            <div id="gameStatus"></div>
-            <div id="queueTimer"></div>
-            <button id="ready" class="btn">Ready</button>
-            <button id="cancel" class="btn">cancel</button>
+            <div id="welcom-title">Hello! <span class="highlight"><span class="user"></span></span></div>
+            <div id="queue-container">
+                <div id="gameStatus" class="inqueue"></div>
+                <div id="queueStatus">People in queue: <span id="num-in-queue">0</span></div>
+                <div id="queueTimer" class="inqueue"><span id="queue-time-container"><span id="queue-time">45</span></span></div>
+                <button id="ready" class="btn" class="not-inqueue">Ready</button>
+                <button id="cancel" class="btn" class="inqueue">cancel</button>
+            </div>
         </div>
         <div id="container">
             <div id = "toolbar"> 
-                <input type="color" value="#000000" id="colourPanel">
-                <input type="range" min="1" max="20" id=brushSize>
-                <span id="undo">UNDO</span> 
-                <span id="redo">REDO</span> 
-                <span id="clear">CLEAR</span> 
-                <span class="user"></span> 
-                <span>Word to draw: <span id="word">House</span></span>
-                <span id="roundTime">Round Timer: <span id="time"></span></span>
-                <span id="roundWinner">Last round won by: <span id="rwinner"></span></span>
+                <div id="canvas-controls">
+                    <span class="label">Color: </span>
+                    <input type="color" value="#000000" id="colourPanel">
+                    <span class="label">Brush size: </span>
+                    <input type="range" min="1" max="20" id="brushSize">
+                    <span id="undo" class="tb-btn">UNDO</span> 
+                    <span id="redo" class="tb-btn">REDO</span> 
+                    <span id="clear" class="tb-btn">CLEAR</span>
+                </div> 
+                <div id="round-info">
+                    <span class="round-info-item">Word to draw: <span id="word"></span></span>
+                    <span class="round-info-item" id="roundTime">Round Timer: <span id="time-container"><span id="time">60</span></span></span>
+                    <span class="round-info-item" id="roundWinner">Last round won by: <span id="rwinner"></span></span>
+
+                </div>
             </div>
             <div id="canvas-container">
                 <div id="canvas-cont">
                     <canvas id="myCanvas"></canvas>
                 </div>
                 <div id="chat">
-                    <div id="feed">
-                        <!--<div class="message"><span class="user"></span>: test message</div>-->
+                    <div id="users-list">
+                        <!--
+                        <div class="user-icon">
+                            <div class="user-wins"><span class="wincount">2</span></div>
+                            <span class="user">bob</span>
+                        </div>
+                        -->
                     </div>
-                    <input id="feed-input" type="text" />
+                    <div id="feed">
+                        <!--
+                        <div class="message"><span class="user fd-user">bob</span>: test message</div>
+                        <div class="message"><span class="user fd-user">tod</span>: test message</div>
+                        -->
+                    </div>
+                    <div id="speech-rec-btns">
+                        <button class="tb-btn fd-btn" id="start-record-btn" title="Start Recording">Start Recognition</button>
+                        <button class="tb-btn fd-btn" id="pause-record-btn" title="Pause Recording">Pause Recognition</button>
+                    </div>
+                    <input id="feed-input" type="text" placeholder="Enter your guess"/>
                 </div>
             </div>
         </div>
-
 		<script src="socket.io/socket.io.js"></script>
 		<script src="js/api.js"></script>
-		<script src="js/index.js"></script>
+        <script src="js/index.js"></script>
 	</body>
 </html>

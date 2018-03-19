@@ -24,6 +24,11 @@ var api = (function(){
         return null;
     }
     
+    module.getName = function(email, callback) {
+        console.log(email);
+        send("GET", "/firstname/"+email, null, callback);
+    }
+    
     module.signin = function (email, password, callback){
         send("POST", "/signin/", {email: email, password: password}, callback);
     }
@@ -34,6 +39,10 @@ var api = (function(){
     
     module.logout = function (callback){
         send("POST", "/signout/", {}, callback);
+    }
+
+    module.getStats = function(email, callback) {
+        send("GET", "/stats/"+email, null, callback);
     }
     
     return module;
