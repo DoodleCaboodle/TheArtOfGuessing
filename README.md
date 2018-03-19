@@ -6,7 +6,7 @@
 
 The Art of Guessing is a multiplayer browser game that has 2 game modes. The first game mode consists of one person drawing and everyone else guessing the word that describes the drawing. Points would be awarded based on how fast the word was guessed. The second game mode consists of one person choosing a word and everyone else draws to the best of their ability. Points would be awarded based on how fast the AI matched the drawing to the word. This multiplayer game would also feature leaderboards, player statistics and the ability to use voice to guess.
 
-## Key Features for the Beta Version
+## Key Features for the Beta Version (https://art-of-guessing.herokuapp.com/)
 
 We will focus on three main features for the Beta release; the first game mode where every user will have the chance to enter a word that they will be drawing for all other users to guess, the ability for users to guess using a text-based system as well as voice input, and a working leaderboard and statistics. The beta implementation will consist of one lobby with 10 users and a queue of users.  Each game will consist of 10 rounds and each user will have the chance to draw. After a game has been completed, the next 10 users in the queue will occupy the next game. If there are less than 10 users in the queue, the game will begin after a 45 second wait period. However, the game will not begin if the queue only consists of one person. Users will have the option to guess the drawing using a text-based input as well as voice input where the game will register each word separately. Lastly, we will gather user statistics for the user leaderboards. 
 
