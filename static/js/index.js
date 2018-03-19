@@ -1,11 +1,25 @@
 (function(){
 	"use strict";
-    var user = api.getCurrentUser()
+    var user = api.getCurrentUser();
+    var firstName = '';
     console.log(user);
     if (!user || user === '') {
         window.location.href = '/login';
     }
-
+    else {
+        api.getName(user, function(err, name) {
+            console.log(name);
+            if (err) console.log(err);
+            else {
+                firstName = name;
+                 Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d){
+                    console.log(firstName);
+                    d.innerHTML  = firstName;
+                });
+            }
+        });
+    }
+        
     var socket = io();
     
     window.onunload = function() {
@@ -65,7 +79,8 @@
         };
         
         Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d){
-            d.innerHTML  = user.split('%40')[0];
+            console.log(firstName);
+            d.innerHTML  = firstName;
         });
         
         
@@ -84,8 +99,8 @@
             if (canMessage) {
                 if (key === 13) {
                     var msg = document.getElementById("feed-input").value;
-                    if (msg !== '') socket.emit('message', {name:user.split('%40')[0], msg:msg});
-                    postFeed(user.split('%40')[0], msg);
+                    if (msg !== '') socket.emit('message', {name:firstName, msg:msg});
+                    postFeed(firstName, msg);
                 }
             }
             else {
@@ -350,7 +365,7 @@
             document.getElementById("ready").style.display = 'none';
             document.getElementById('queueTimer').style.display = 'none';
             document.getElementById("cancel").style.display = 'flex';
-            socket.emit('ready', {name:user.split('%40')[0], email:user});             
+            socket.emit('ready', {name:firstName, email:user});             
             //socket.emit('gameStatus', {});
         });
         

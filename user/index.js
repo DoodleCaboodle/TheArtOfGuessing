@@ -89,6 +89,14 @@ var getStats = function(req, res, email, callback) {
     });
 }
 
+var getFirstName = function(req, res, email, callback) {
+    User.findByEmail(email, function(err, result) {
+        console.log(email);
+        if (err || result.length < 1) return res.status(404).json("stats corupt");
+        else return res.json(result[0].firstname);
+    });
+}
+
 function init(app) {
     // create
 
@@ -132,13 +140,11 @@ function init(app) {
     });
 
     app.get('/stats/:email', authenticateMiddleware, function(req, res, next){
-        console.log("getting stats");
         return getStats(req, res, req.params.email);
     });
     
-    app.get('/firstname/:email', authenticateMiddleware, function(req, res, next){
-        console.log("getting stats");
-        return getStats(req, res, req.params.email);
+    app.get('/firstname/:email', function(req, res, next){
+        return getFirstName(req, res, req.params.email);
     });
 
     // update
