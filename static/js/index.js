@@ -344,15 +344,41 @@
         
         // queue setup
         document.getElementById('ready').addEventListener('click', function() {
-            socket.emit('ready', {name:user.split('%40')[0], email:user}); 
+            document.querySelectorAll(".inqueue").forEach(function(e){
+                e.style.display = 'flex';
+            });
+            document.getElementById("ready").style.display = 'none';
+            document.getElementById('queueTimer').style.display = 'none';
+            document.getElementById("cancel").style.display = 'flex';
+            socket.emit('ready', {name:user.split('%40')[0], email:user});             
             //socket.emit('gameStatus', {});
         });
         
+        document.getElementById('cancel').addEventListener('click', function() {
+            socket.emit('leaveQueue', {});
+            document.querySelectorAll(".inqueue").forEach(function(e){
+                e.style.display = 'none';
+            });
+            document.getElementById("ready").style.display = 'flex';
+            document.getElementById('queueTimer').style.display = 'none';
+            document.getElementById("cancel").style.display = 'none';
+        });
+        
+        // request info from server
+        socket.emit('getQueueStatus', {});
+        
         // handle server responses
         // queue timer
+        socket.on('stopQueueTimer', function(data){
+            console.log('stop timer');
+            document.getElementById('queue-time').innerHTML = '';
+            document.getElementById('queueTimer').style.display = 'none';
+        });
+        // queue timer stop
         socket.on('queueTimer', function(data){
             console.log('queue timer', data.time);
-            document.getElementById('queueTimer').innerHTML = data.time;
+            document.getElementById('queue-time').innerHTML = data.time;
+            document.getElementById('queueTimer').style.display = 'flex';
         });
         // round timer
         socket.on('roundTimer', function(data) {
@@ -365,6 +391,11 @@
         // update user list
         socket.on('', function(data) {
             
+        });
+        // queueupdated
+        socket.on('queueUpdated', function(data) {
+            if (data.numInQueue < 2) document.getElementById('queueTimer').style.display = 'none'
+            document.getElementById('num-in-queue').innerHTML = data.numInQueue;
         });
         // gameWinner
         socket.on('gameWinner', function(data) {
@@ -416,22 +447,37 @@
                 document.getElementById('gameStatus').innerHTML = 'You are in queue for the next game';
             }
         });
+        // system message
+        socket.on('systemMessage', function(data) {
+            postFeed('System', data.msg, 'red');
+            
+            if (data.endGame) setTimeout(goBack,1000);;
+        });
         // current word
         socket.on('word', function(data) {
             document.getElementById("word").innerHTML = data.word;
-        });
+        });        
         
         function getWord() {
-            var word = prompt("Please enter what you will be drawing:", "HOUSE");
-            document.getElementById("word").innerHTML = word;
-            socket.emit('word', {word:word});
+            popup();
+        }
+        
+        function popup() {
+            document.getElementById('word-to-draw').value = '';
+            document.getElementById('popup').style.display = 'flex';
+            document.getElementById('submit-word').addEventListener('click', function() {
+                var word = document.getElementById('word-to-draw').value;
+                if (word !== '') {
+                    document.getElementById("word").innerHTML = word;
+                    socket.emit('word', {word:word});
+                    document.getElementById('word-to-draw').value = '';
+                    document.getElementById('popup').style.display = 'none';
+                }
+            });
         }
         
         function goBack() {
-            document.getElementById('queueTimer').innerHTML = '';
-            document.getElementById('gameStatus').innerHTML = '';
-            document.getElementById('start-container').style.display = 'flex';
-            document.getElementById('container').style.display = 'none';
+            window.location.href = '/';
         }
     }
 }());

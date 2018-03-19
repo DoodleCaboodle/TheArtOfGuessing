@@ -27,6 +27,7 @@ User.prototype.update = function(oldEmail, email, password, salt, firstname, las
 }
 
 User.findByEmail = function(email, callback) {
+    email = email.replace('%40', '@');
     MongoClient.connect(uri, function(err, client) {
         const collection = client.db("art-of-guessing").collection("users");
         
@@ -39,6 +40,7 @@ User.findByEmail = function(email, callback) {
 }
 
 User.getStats = function(email, callback) {
+    email = email.replace('%40', '@');
     MongoClient.connect(uri, function(err, client) {
         const collection = client.db("art-of-guessing").collection("user-stats");
         
@@ -51,6 +53,7 @@ User.getStats = function(email, callback) {
 }
 
 User.updateStats = function(email, roundsWon, roundsPlayed, gamesWon, gamesPlayed, newWords) {
+    email = email.replace('%40', '@');
     User.getStats(email, function(err, result) {
         if (err) console.log(err);
         else {

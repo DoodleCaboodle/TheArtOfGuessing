@@ -3,7 +3,10 @@
 }
 
 html, body {
+    width: 100%;
     height: 100vh;
+    min-width: 1000px;
+    min-height: 800px;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -12,10 +15,48 @@ html, body {
     background: linear-gradient(rgba(109, 109, 109, 0.35), rgba(90, 90, 90, 0.85)), url("../media/background_0.jpeg");
     background-size: 100% 100%;
     background-color: rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+html {
+    overflow-x: auto;
+    overflow-y: auto;
 }
 
 .highlight {
     font-weight: bold;
+}
+
+#popup {
+    position: absolute;
+    width: 550px;
+    height: 60px;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 30px;
+    border: 2px solid #fff;
+    color: #fff;
+    -webkit-box-shadow: 0px 0px 82px -13px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 82px -13px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 82px -13px rgba(0,0,0,0.75);
+}
+
+#submit-word {
+
+    color: #fff;
+    width: 80px;
+}
+
+#submit-word:hover {
+
+    color: #333;
 }
 
 header {
@@ -30,6 +71,7 @@ header {
     background: #fff;
     margin: 0;
     padding: 0;
+    min-height: 40px;
 }
 
 #header-container {
@@ -52,14 +94,6 @@ header a {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-}
-
-#header-logo {
-    width: 40px;
-    height: 40px;
-    background: url("../media/logo.png");
-    background-size: 100% 100%;
-    margin-right: 20px;
 }
 
 #header-title {
@@ -110,6 +144,7 @@ header a {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
 #welcom-title {
@@ -118,6 +153,11 @@ header a {
     padding: 0;
     margin: 0;
     margin-bottom: 100px;
+}
+
+#gameStatus {
+    flex-direction: row;
+    justify-content: center;
 }
 
 #queue-container {
@@ -155,6 +195,7 @@ header a {
     text-transform: uppercase;
     width: 200px;
     height: 50px;
+    justify-content: center;
 }
 
 .btn::before,
@@ -184,19 +225,24 @@ header a {
     height: 100px;
     text-align: center;
     line-height: 100px;
+    flex-direction: row;
+    justify-content: center;
 }
 
 #queue-time-container {
     width: 100px;
     height: 100px;
+    min-width: 100px;
     background: rgba(61, 232, 118, 1);
     box-shadow: 0 0 0 0 rgba(61, 232, 118, 0.7);
-    padding: 20px;
+    padding: 0px;
     border-radius: 100%;
     -webkit-animation: pulse 1s infinite cubic-bezier(0.66, 0, 0, 1);
     -moz-animation: pulse 1s infinite cubic-bezier(0.66, 0, 0, 1);
     -ms-animation: pulse 1s infinite cubic-bezier(0.66, 0, 0, 1);
     animation: pulse 1s infinite cubic-bezier(0.66, 0, 0, 1);
+    justify-content: center;
+    align-items: center;
 }
 
 #queue-time {
@@ -217,7 +263,7 @@ header a {
 #toolbar{
     width: 100%;
     height: 5%;
-    min-height: 40px;
+    min-height: 20px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -370,14 +416,17 @@ header a {
 .round-info-item {
     padding: 5px;
     border: 1px solid #fff;
-    min-width: 0;
     width: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
 }
 
 #time-container {
     background: #cc2e2e;
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
     padding: 5px;
     border-radius: 100%;
     box-shadow: 0 0 0 0 rgba(232, 87, 61, 0.7);
@@ -385,6 +434,11 @@ header a {
     -moz-animation: pulse-round 1s infinite cubic-bezier(0.36, 0, 0, 1);
     -ms-animation: pulse-round 1s infinite cubic-bezier(0.36, 0, 0, 1);
     animation: pulse-round 1s infinite cubic-bezier(0.36, 0, 0, 1);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
 }
 
 /* pulse animation */
@@ -399,7 +453,7 @@ header a {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: 90%;
 }
 
 #start-container {
@@ -411,7 +465,7 @@ header a {
     width: 20%;
     display: flex;
     flex-direction: column;
-    border-left: 1px solid #aaa;
+    align-items: center;
 }
 
 #canvas-container {
@@ -419,8 +473,8 @@ header a {
     height: 95%;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
     margin: 0;
     padding: 0;
 }
@@ -447,7 +501,7 @@ header a {
 
 #feed {
     width: 100%;
-    height: 64.5%;
+    height: 75%;
     display: flex;
     flex-direction: column;
     align-content: center;
@@ -494,10 +548,25 @@ header a {
 }
 
 .user-icon {
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     margin: 5px;
     padding: 0;
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    font-size: 10pt;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    border: 1px solid #fff;
+    border-radius: 100%;
+}
+
+.user-wins {
+    display: flex;
+    justify-content: center;
 }
 
 .wincount {
