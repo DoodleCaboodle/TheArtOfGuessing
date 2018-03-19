@@ -463,6 +463,7 @@
         }
         
         function popup() {
+            document.getElementById('word-to-draw').value = '';
             document.getElementById('popup').style.display = 'flex';
             document.getElementById('submit-word').addEventListener('click', function() {
                 var word = document.getElementById('word-to-draw').value;

@@ -24,6 +24,10 @@ var api = (function(){
         return null;
     }
     
+    module.getName = function(email, callback) {
+        send("GET", "/firstname/"+email, null, callback);
+    }
+    
     module.signin = function (email, password, callback){
         send("POST", "/signin/", {email: email, password: password}, callback);
     }

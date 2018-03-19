@@ -135,6 +135,11 @@ function init(app) {
         console.log("getting stats");
         return getStats(req, res, req.params.email);
     });
+    
+    app.get('/firstname/:email', authenticateMiddleware, function(req, res, next){
+        console.log("getting stats");
+        return getStats(req, res, req.params.email);
+    });
 
     // update
 
