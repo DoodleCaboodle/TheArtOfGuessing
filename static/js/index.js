@@ -469,6 +469,7 @@
                 if (word !== '') {
                     document.getElementById("word").innerHTML = word;
                     socket.emit('word', {word:word});
+                    document.getElementById('word-to-draw').value = '';
                     document.getElementById('popup').style.display = 'none';
                 }
             });
