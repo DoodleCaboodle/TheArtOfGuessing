@@ -69,11 +69,7 @@ exports.init = function(hio, hsocket) {
     });
     
     hsocket.on('disconnect', function(data) {
-//        if (socket.id == queue[currentDrawing]) endRound();
-//        queue.splice(queue.indexOf(socket.id), 1);
-//        gameQueue.splice(queue.indexOf(socket.id), 1);
-//        delete queueData[socket.id];
-//        //if (currentDrawing === socket.id) endRound();
+
         hsocket.leave(queueRoom);
         hsocket.leave(gameRoom);
         hsocket.leave(doneRoom);
