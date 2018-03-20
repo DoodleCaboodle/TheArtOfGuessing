@@ -44,11 +44,6 @@ exports.init = function(hio, hsocket) {
             io.emit('queueUpdated', {numInQueue: 0});
         queueData[hsocket.id] = data;
         queueData[hsocket.id].wincount = 0;
-        userModel.getStats(queueData[hsocket.id].email, function(err, result){
-            if (!err && result.length > 0) {
-                queueData[hsocket.id].stats = result[0];
-            }
-        });
         console.log(queueData);
         checkQueue();
     });
@@ -158,14 +153,14 @@ function endRound() {
         for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
             var word = {};
             word[currentWord] = {guessed:0, drawn:0};
-            userModel.updateStats(queueData[key].stats.email, 0, 1, 0, 0, word);
+            userModel.updateStats(queueData[key].email, 0, 1, 0, 0, word);
         }
     }
     if (io.sockets.adapter.rooms[doneRoom]) {
         for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
             var word = {};
             word[currentWord] = {guessed:0, drawn:0};
-            userModel.updateStats(queueData[key].stats.email, 0, 1, 0, 0, word);
+            userModel.updateStats(queueData[key].email, 0, 1, 0, 0, word);
         }
     }
     currentWord = '';
@@ -248,14 +243,14 @@ function endGame(immediate=false) {
                     winnerID = key;
                     winCount = queueData[key].wincount;
                 }
-                userModel.updateStats(queueData[key].stats.email, queueData[key].wincount, 0, 0, 1, {});
+                userModel.updateStats(queueData[key].email, queueData[key].wincount, 0, 0, 1, {});
             }
             for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
                 io.sockets.connected[key].emit('gameWinner', {name:gameWinner});
                 io.sockets.connected[key].leave(doneRoom);
             }
             io.sockets.connected[winnerID].emit('gameWon', {name:gameWinner, wincount:winCount});
-            userModel.updateStats(queueData[winnerID].stats.email, 0, 0, 1, 0, {});
+            userModel.updateStats(queueData[winnerID].email, 0, 0, 1, 0, {});
         }
         console.log("gamewon", gameWinner);
     }
