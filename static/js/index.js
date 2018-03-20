@@ -441,6 +441,13 @@
             canDraw = false;
             canMessage = true;
             document.getElementById("speech-rec-btns").style.display = "flex";
+            try{
+            	var check1 = window.SpeechRecognition || window.webkitSpeechRecognition;
+            	var check2 = new SpeechRecognition();
+        	} catch (e) {
+            	document.getElementById('speech-rec-btns').style.display = "none";
+            	//postFeed("System", "Sorry, your browser does not support speech recognition. If you want to use this feature, try to use Chrome instead.", "red");
+        	}
             document.getElementById("feed-input").style.display = "flex";
             document.getElementById("word").innerHTML = "";
         });
