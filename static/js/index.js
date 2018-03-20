@@ -359,13 +359,13 @@
         
         // queue setup
         document.getElementById('ready').addEventListener('click', function() {
+            socket.emit('ready', {name:firstName, email:user}); 
             document.querySelectorAll(".inqueue").forEach(function(e){
                 e.style.display = 'flex';
             });
             document.getElementById("ready").style.display = 'none';
             document.getElementById('queueTimer').style.display = 'none';
-            document.getElementById("cancel").style.display = 'flex';
-            socket.emit('ready', {name:firstName, email:user});             
+            document.getElementById("cancel").style.display = 'flex';            
             //socket.emit('gameStatus', {});
         });
         
@@ -441,6 +441,13 @@
             canDraw = false;
             canMessage = true;
             document.getElementById("speech-rec-btns").style.display = "flex";
+            try{
+            	var check1 = window.SpeechRecognition || window.webkitSpeechRecognition;
+            	var check2 = new SpeechRecognition();
+        	} catch (e) {
+            	document.getElementById('speech-rec-btns').style.display = "none";
+            	//postFeed("System", "Sorry, your browser does not support speech recognition. If you want to use this feature, try to use Chrome instead.", "red");
+        	}
             document.getElementById("feed-input").style.display = "flex";
             document.getElementById("word").innerHTML = "";
         });
@@ -464,7 +471,10 @@
         });
         // system message
         socket.on('systemMessage', function(data) {
-            postFeed('System', data.msg, 'red');
+            var color = 'red';
+            if (data.color)
+                color = data.color;
+            postFeed('System', data.msg, color);
             
             if (data.endGame) setTimeout(goBack,1000);;
         });
