@@ -359,13 +359,13 @@
         
         // queue setup
         document.getElementById('ready').addEventListener('click', function() {
+            socket.emit('ready', {name:firstName, email:user}); 
             document.querySelectorAll(".inqueue").forEach(function(e){
                 e.style.display = 'flex';
             });
             document.getElementById("ready").style.display = 'none';
             document.getElementById('queueTimer').style.display = 'none';
-            document.getElementById("cancel").style.display = 'flex';
-            socket.emit('ready', {name:firstName, email:user});             
+            document.getElementById("cancel").style.display = 'flex';            
             //socket.emit('gameStatus', {});
         });
         

@@ -35,13 +35,6 @@ exports.init = function(hio, hsocket) {
 
     hsocket.on('ready', function(data) {
 
-        queueData[hsocket.id] = data;
-        queueData[hsocket.id].wincount = 0;
-        userModel.getStats(queueData[hsocket.id].email, function(err, result){
-            if (!err && result.length > 0) {
-                queueData[hsocket.id].stats = result[0];
-            }
-        })
         hsocket.join(queueRoom);
         console.log(io.sockets.adapter.rooms[queueRoom], io.sockets.adapter.rooms[gameRoom], hsocket.id);
         hsocket.emit('gameStatus', {gameStarted: gameStarted});
@@ -49,12 +42,19 @@ exports.init = function(hio, hsocket) {
             io.emit('queueUpdated', {numInQueue: io.sockets.adapter.rooms[queueRoom].length});
         else
             io.emit('queueUpdated', {numInQueue: 0});
+        queueData[hsocket.id] = data;
+        queueData[hsocket.id].wincount = 0;
+        userModel.getStats(queueData[hsocket.id].email, function(err, result){
+            if (!err && result.length > 0) {
+                queueData[hsocket.id].stats = result[0];
+            }
+        });
+        console.log(queueData);
         checkQueue();
     });
     
     hsocket.on('leaveQueue', function(data) {
         hsocket.leave(queueRoom);
-        delete queueData[hsocket.id];
         if (io.sockets.adapter.rooms[queueRoom])
             io.emit('queueUpdated', {numInQueue: io.sockets.adapter.rooms[queueRoom].length});
         else
@@ -202,7 +202,7 @@ function startRoundTimer() {
     if (io.sockets.adapter.rooms[gameRoom]) gameRoomLength = io.sockets.adapter.rooms[gameRoom].length; 
     if (io.sockets.adapter.rooms[doneRoom]) donRoomLength = io.sockets.adapter.rooms[doneRoom].length; 
     if ((gameRoomLength + donRoomLength) < 2) {
-        if (donRoomLength == 1)
+        if (gameRoomLength == 1)
             io.sockets.connected[Object.keys(io.sockets.adapter.rooms[gameRoom].sockets)[0]].emit('systemMessage', {msg:"Ending game, not enough players in game.", endGame:true});
         if (donRoomLength == 1)
             io.sockets.connected[Object.keys(io.sockets.adapter.rooms[doneRoom].sockets)[0]].emit('systemMessage', {msg:"Ending game, not enough players in game.", endGame:true});
@@ -258,6 +258,11 @@ function endGame(immediate=false) {
             userModel.updateStats(queueData[winnerID].stats.email, 0, 0, 1, 0, {});
         }
         console.log("gamewon", gameWinner);
+    }
+    if (io.sockets.adapter.rooms[queueRoom]) {
+        for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
+            io.sockets.connected[key].emit('gameStatus', {gameStarted: gameStarted});
+        }
     }
     queueData = {};
 }
