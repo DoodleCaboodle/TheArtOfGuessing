@@ -9,7 +9,7 @@ app.use(express.static('static'));
 app.use(bodyParser.json());
 
 app.use(session({
-    secret: 'please change this secret',
+    secret: 'superdupersectrtpassword1234',
     resave: false,
     saveUninitialized: true,
 }));

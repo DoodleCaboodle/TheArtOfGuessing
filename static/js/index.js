@@ -100,7 +100,7 @@
                 if (key === 13) {
                     var msg = document.getElementById("feed-input").value;
                     if (msg !== '') socket.emit('message', {name:firstName, msg:msg});
-                    postFeed(firstName, msg);
+                    //postFeed(firstName, msg);
                 }
             }
             else {
@@ -365,7 +365,7 @@
             });
             document.getElementById("ready").style.display = 'none';
             document.getElementById('queueTimer').style.display = 'none';
-            document.getElementById("cancel").style.display = 'flex';            
+            document.getElementById("cancel").style.display = 'flex'; 
             //socket.emit('gameStatus', {});
         });
         
@@ -455,12 +455,7 @@
         });
         // gameStatus
         socket.on('gameStatus', function(data) {
-            if (data.gameStarted) {
-                document.getElementById('gameStatus').innerHTML = 'Please wait for the current game to finish';
-            } 
-            else {
-                document.getElementById('gameStatus').innerHTML = 'You are in queue for the next game';
-            }
+            document.getElementById('gameStatus').innerHTML = 'You are in queue for the next game';
         });
         // system message
         socket.on('systemMessage', function(data) {
