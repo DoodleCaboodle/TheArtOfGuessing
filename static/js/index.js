@@ -427,6 +427,7 @@
         // round won
         socket.on('won', function(data) {
             document.getElementById('rwinner').innerHTML = data.name;
+            document.getElementById(data.email).innerHTML = data.wincount;
         });
         // draw
         socket.on('draw', function(data) {
@@ -458,6 +459,7 @@
             document.getElementById('gameStatus').innerHTML = '';
             document.getElementById('start-container').style.display = 'none';
             document.getElementById('container').style.display = 'flex';
+            addPlayers(data.playerList);
             onResize();
         });
         // gameStatus
@@ -478,6 +480,16 @@
             document.getElementById("word").innerHTML = data.word;
         });        
         
+        function addPlayers(players) {
+            players.forEach(function(p) {
+                 var div = document.createElement('div');
+                 div.classList.add("user-icon");
+                 div.innerHTML = `<div class="user-wins"><span id=${p.email} class="wincount">${p.wincount}</span></div>
+                            <span class="user">${p.name}</span>`;
+                 document.getElementById("users-list").appendChild(div);
+            });
+        }
+
         function getWord() {
             popup();
         }

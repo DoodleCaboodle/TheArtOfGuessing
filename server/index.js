@@ -194,6 +194,7 @@ function startQueueTimer() {
 function startGame(privateQueue=null) {
     var gameRoom;
     var doneRoom;
+    var playerList = [];
     if (privateQueue == null) {
         gameRoom = "gameRoom" + roomId;
         doneRoom = gameRoom + "done";
@@ -201,13 +202,18 @@ function startGame(privateQueue=null) {
             for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
                 io.sockets.connected[key].leave(queueRoom);
                 io.sockets.connected[key].join(gameRoom);
+                playerList.push({
+                    name: queueData[key].name,
+                    wincount: 0,
+                    email: queueData[key].email
+                });
                 queueData[key].gameRoom = gameRoom;
                 queueData[key].doneRoom = doneRoom;
             }
         }
         if (io.sockets.adapter.rooms[gameRoom]) {
             for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
-                io.sockets.connected[key].emit('startGame', {});
+                io.sockets.connected[key].emit('startGame', {playerList:playerList});
             }
         }
         roomId ++;
@@ -321,11 +327,14 @@ function startRoundTimer(gameRoom, doneRoom) {
 }
 
 function userWon(id, gameRoom, doneRoom) {
+    queueData[id].wincount++;
     if (io.sockets.adapter.rooms[gameRoom]) {
         for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
             io.sockets.connected[key].emit('won', {
                 name: queueData[id].name,
-                word: words[gameRoom]
+                word: words[gameRoom],
+                email: queueData[id].email,
+                wincount: queueData[id].wincount
             });
             io.sockets.connected[key].emit('systemMessage', {
                 msg: queueData[id].name + " won the round.",
@@ -338,7 +347,9 @@ function userWon(id, gameRoom, doneRoom) {
         for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
             io.sockets.connected[key].emit('won', {
                 name: queueData[id].name,
-                word: words[gameRoom]
+                word: words[gameRoom],
+                email: queueData[id].email,
+                wincount: queueData[id].wincount
             });
             io.sockets.connected[key].emit('systemMessage', {
                 msg: queueData[id].name + " won the round.",
@@ -347,7 +358,6 @@ function userWon(id, gameRoom, doneRoom) {
             });
         }
     }
-    queueData[id].wincount++;
     endRound(gameRoom, doneRoom);
 }
 
