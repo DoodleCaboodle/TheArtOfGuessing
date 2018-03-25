@@ -100,7 +100,7 @@
                 if (key === 13) {
                     var msg = document.getElementById("feed-input").value;
                     if (msg !== '') socket.emit('message', {name:firstName, msg:msg});
-                    postFeed(firstName, msg);
+                    //postFeed(firstName, msg);
                 }
             }
             else {
@@ -365,7 +365,7 @@
             });
             document.getElementById("ready").style.display = 'none';
             document.getElementById('queueTimer').style.display = 'none';
-            document.getElementById("cancel").style.display = 'flex';            
+            document.getElementById("cancel").style.display = 'flex'; 
             //socket.emit('gameStatus', {});
         });
         
@@ -427,6 +427,7 @@
         // round won
         socket.on('won', function(data) {
             document.getElementById('rwinner').innerHTML = data.name;
+            document.getElementById(data.email).innerHTML = data.wincount;
         });
         // draw
         socket.on('draw', function(data) {
@@ -458,16 +459,12 @@
             document.getElementById('gameStatus').innerHTML = '';
             document.getElementById('start-container').style.display = 'none';
             document.getElementById('container').style.display = 'flex';
+            addPlayers(data.playerList);
             onResize();
         });
         // gameStatus
         socket.on('gameStatus', function(data) {
-            if (data.gameStarted) {
-                document.getElementById('gameStatus').innerHTML = 'Please wait for the current game to finish';
-            } 
-            else {
-                document.getElementById('gameStatus').innerHTML = 'You are in queue for the next game';
-            }
+            document.getElementById('gameStatus').innerHTML = 'You are in queue for the next game';
         });
         // system message
         socket.on('systemMessage', function(data) {
@@ -483,6 +480,16 @@
             document.getElementById("word").innerHTML = data.word;
         });        
         
+        function addPlayers(players) {
+            players.forEach(function(p) {
+                 var div = document.createElement('div');
+                 div.classList.add("user-icon");
+                 div.innerHTML = `<div class="user-wins"><span id=${p.email} class="wincount">${p.wincount}</span></div>
+                            <span class="user">${p.name}</span>`;
+                 document.getElementById("users-list").appendChild(div);
+            });
+        }
+
         function getWord() {
             popup();
         }
