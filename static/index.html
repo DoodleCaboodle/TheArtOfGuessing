@@ -26,12 +26,50 @@
         </div>
         <div id="start-container">
             <div id="welcom-title">Hello! <span class="highlight"><span class="user"></span></span></div>
-            <div id="queue-container">
-                <div id="gameStatus" class="inqueue"></div>
-                <div id="queueStatus">People in queue: <span id="num-in-queue">0</span></div>
-                <div id="queueTimer" class="inqueue"><span id="queue-time-container"><span id="queue-time">45</span></span></div>
-                <button id="ready" class="btn" class="not-inqueue">Ready</button>
-                <button id="cancel" class="btn" class="inqueue">cancel</button>
+            <div id="start-content">
+                <div id="lobby-controls">
+                    <div class="queue-container">
+                        <div id="gameStatus" class="inqueue"></div>
+                        <div id="queueStatus">People in queue: <span id="num-in-queue">0</span></div>
+                        <div id="queueTimer" class="inqueue"><span id="queue-time-container"><span id="queue-time">45</span></span></div>
+                        <button id="ready" class="btn" class="not-inqueue">Ready</button>
+                        <button id="cancel" class="btn" class="inqueue">Cancel</button>
+                    </div>
+                    <div class="queue-container" id="pl-lobby-join">
+                        <div id="pl-title" class="label">Join Game</div>
+                        <div class="pl-item">
+                            <div class="label pl-sub-item">Lobby Name </div>
+                            <input type="text" class="pl-input pl-sub-item" id="lobby-name" />
+                        </div>
+                        <div class="pl-item">
+                            <div class="label pl-sub-item">Password </div>
+                            <input type="text" class="pl-input pl-sub-item" id="lobby-name" />
+                        </div>
+                        <div id="pl-brn-container" class="pl-item">
+                            <button id="pl-join" class="btn" class="not-inqueue">Join</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="private-lobby-container">
+                    <div id="pl-title" class="label">Create game</div>
+                    <div class="pl-item">
+                        <div class="label pl-sub-item">Lobby Name </div>
+                        <input type="text" class="pl-input pl-sub-item" id="lobby-name" />
+                    </div>
+                    <div class="pl-item">
+                        <div class="label pl-sub-item">Lobby Password </div>
+                        <input type="text" class="pl-input pl-sub-item" id="lobby-name" />
+                    </div>
+                    <div id="pl-btn-container" class="pl-item">
+                        <button id="pl-create" class="btn" class="not-inqueue">Create</button>
+                        <button id="pl-disband" class="btn" class="inqueue">Disband</button>
+                    </div>
+                    <div id="pl-users-list">
+                        <div class="pl-user">
+                            <div class="pl-user-name">Bob</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="container">

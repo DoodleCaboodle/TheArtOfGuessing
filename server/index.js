@@ -3,6 +3,7 @@ var userModel = require("../user/user.js");
 var roomId = 0;
 var queueRoom = 'queue';
 var queueData = {};
+var lobbyData = {};
 var queueStarted = false;
 var roundTimer = 60;
 var queueTimer = 45;
@@ -17,32 +18,19 @@ exports.init = function(hio, hsocket) {
     hsocket.on('drawing', function(data) {
         if (queueData[hsocket.id]) {
             var gameRoom = queueData[hsocket.id].gameRoom;
-            var doneRoom = queueData[hsocket.id].doneRoom;
             if (io.sockets.adapter.rooms[gameRoom]) {
                 for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
                     io.sockets.connected[key].emit('drawing', data);
                 }
             }
-            if (io.sockets.adapter.rooms[doneRoom]) {
-                for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
-                    io.sockets.connected[key].emit('drawing', data);
-                }
-            }
-            console.log(gameRoom);
         }
 	});
     
     hsocket.on('clear', function(data) {
         if (queueData[hsocket.id]) {
             var gameRoom = queueData[hsocket.id].gameRoom;
-            var doneRoom = queueData[hsocket.id].doneRoom;
             if (io.sockets.adapter.rooms[gameRoom]) {
                 for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
-                    io.sockets.connected[key].emit('clear', data);
-                }
-            }
-            if (io.sockets.adapter.rooms[doneRoom]) {
-                for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
                     io.sockets.connected[key].emit('clear', data);
                 }
             }
@@ -52,14 +40,8 @@ exports.init = function(hio, hsocket) {
     hsocket.on('undo', function(data) {
         if (queueData[hsocket.id]) {
             var gameRoom = queueData[hsocket.id].gameRoom;
-            var doneRoom = queueData[hsocket.id].doneRoom;
             if (io.sockets.adapter.rooms[gameRoom]) {
                 for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
-                    io.sockets.connected[key].emit('undo', data);
-                }
-            }
-            if (io.sockets.adapter.rooms[doneRoom]) {
-                for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
                     io.sockets.connected[key].emit('undo', data);
                 }
             }
@@ -69,14 +51,8 @@ exports.init = function(hio, hsocket) {
     hsocket.on('redo', function(data) {
         if (queueData[hsocket.id]) {
             var gameRoom = queueData[hsocket.id].gameRoom;
-            var doneRoom = queueData[hsocket.id].doneRoom;
             if (io.sockets.adapter.rooms[gameRoom]) {
                 for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
-                    io.sockets.connected[key].emit('redo', data);
-                }
-            }
-            if (io.sockets.adapter.rooms[doneRoom]) {
-                for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
                     io.sockets.connected[key].emit('redo', data);
                 }
             }
@@ -95,7 +71,6 @@ exports.init = function(hio, hsocket) {
         queueData[hsocket.id] = data;
         queueData[hsocket.id].wincount = 0;
         queueData[hsocket.id].gameRoom = '';
-        queueData[hsocket.id].doneRoom = '';
         checkQueue();
     });
     
@@ -116,18 +91,12 @@ exports.init = function(hio, hsocket) {
 
     hsocket.on('message', function(data) {
         var gameRoom = queueData[hsocket.id].gameRoom;
-        var doneRoom = queueData[hsocket.id].doneRoom;
         if (io.sockets.adapter.rooms[gameRoom]) {
             for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
                 io.sockets.connected[key].emit('message', data);
             }
         }
-        if (io.sockets.adapter.rooms[doneRoom]) {
-            for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
-                io.sockets.connected[key].emit('message', data);
-            }
-        }
-        checkMessage(hsocket.id, gameRoom, doneRoom, data.msg.toLowerCase());
+        checkMessage(hsocket.id, gameRoom, data.msg.toLowerCase());
     });
     
     hsocket.on('disconnect', function(data) {
@@ -135,7 +104,7 @@ exports.init = function(hio, hsocket) {
         hsocket.leave(queueRoom);
         if (queueData[hsocket.id]) {
             hsocket.leave(queueData[hsocket.id].gameRoom);
-            hsocket.leave(queueData[hsocket.id].doneRoom);
+            lobbyData[gameRoom].sockets.splice(lobbyData[gameRoom].sockets.indexOf(hsocket.id), 1);
         }
     });
     
@@ -150,8 +119,8 @@ exports.init = function(hio, hsocket) {
     });
 }
 
-function checkMessage(id, gameRoom, doneRoom, msg) {
-    if (words[gameRoom] && msg.includes(words[gameRoom].toLowerCase())) userWon(id, gameRoom, doneRoom);
+function checkMessage(id, gameRoom, msg) {
+    if (words[gameRoom] && msg.includes(words[gameRoom].toLowerCase())) userWon(id, gameRoom);
 }
 
 function checkQueue() {
@@ -193,11 +162,10 @@ function startQueueTimer() {
 
 function startGame(privateQueue=null) {
     var gameRoom;
-    var doneRoom;
     var playerList = [];
-    if (privateQueue == null) {
+    if (privateQueue == null) {;
         gameRoom = "gameRoom" + roomId;
-        doneRoom = gameRoom + "done";
+        lobbyData[gameRoom] = {sockets:[], matchNum:2, i:0};
         if (io.sockets.adapter.rooms[queueRoom]) {
             for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
                 io.sockets.connected[key].leave(queueRoom);
@@ -208,7 +176,7 @@ function startGame(privateQueue=null) {
                     email: queueData[key].email
                 });
                 queueData[key].gameRoom = gameRoom;
-                queueData[key].doneRoom = doneRoom;
+                lobbyData[gameRoom].sockets.push(key);
             }
         }
         if (io.sockets.adapter.rooms[gameRoom]) {
@@ -228,11 +196,12 @@ function startGame(privateQueue=null) {
         });
     console.log(io.sockets.adapter.rooms[queueRoom], io.sockets.adapter.rooms[gameRoom]);
     queueStarted = false;
+    lobbyData[gameRoom].matchNum--;
     roundTimer = 60;
-    startNextRound(gameRoom, doneRoom);
+    startNextRound(gameRoom);
 }
 
-function endRound(gameRoom, doneRoom) {
+function endRound(gameRoom) {
     
     clearInterval(roundIntervals[gameRoom]);
     // update stats
@@ -244,34 +213,30 @@ function endRound(gameRoom, doneRoom) {
             userModel.updateStats(queueData[key].email, 0, 1, 0, 0, word);
         }
     }
-    if (io.sockets.adapter.rooms[doneRoom]) {
-        for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
-            io.sockets.connected[key].emit('clear', {});
-            var word = {};
-            word[words[gameRoom]] = {guessed:0, drawn:0};
-            userModel.updateStats(queueData[key].email, 0, 1, 0, 0, word);   
-        }
-    }
     delete words[gameRoom];
     roundIntervals[gameRoom + 'Timer'] = 60;
-    console.log("round end");
-    if (!io.sockets.adapter.rooms[gameRoom]) {
-        endGame(gameRoom, doneRoom);
+    console.log("round end", gameRoom);
+    console.log(lobbyData[gameRoom].matchNum);
+    if (lobbyData[gameRoom].i >= lobbyData[gameRoom].sockets.length) {
+        if (lobbyData[gameRoom].matchNum <= 0) endGame(gameRoom);
+        else {
+            lobbyData[gameRoom].matchNum--;
+            lobbyData[gameRoom].i = 0;
+            startNextRound(gameRoom);
+        }
     }
     else {
-        startNextRound(gameRoom, doneRoom);
+        startNextRound(gameRoom);
     }
 }
 
-function startNextRound(gameRoom, doneRoom) {
+function startNextRound(gameRoom) {
     if (io.sockets.adapter.rooms[gameRoom].length == 0) {
         endGame();
         return;
     }
-    var drawing = Object.keys(io.sockets.adapter.rooms[gameRoom].sockets)[0];
-    io.sockets.connected[drawing].emit('draw', {});
-    io.sockets.connected[drawing].leave(gameRoom);
-    io.sockets.connected[drawing].join(doneRoom);
+    var drawing = lobbyData[gameRoom].sockets[lobbyData[gameRoom].i];
+    lobbyData[gameRoom].i++;
     if (io.sockets.adapter.rooms[gameRoom]) {
         for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
             io.sockets.connected[key].emit('systemMessage', {
@@ -282,32 +247,17 @@ function startNextRound(gameRoom, doneRoom) {
             if (key != drawing) io.sockets.connected[key].emit('noDraw', {});
         }
     }
-    if (io.sockets.adapter.rooms[doneRoom]) {
-        for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
-            io.sockets.connected[key].emit('systemMessage', {
-                msg: queueData[drawing].name + " will draw next.",
-                endGame: false,
-                color: '#33aa33'
-            });
-            if (key != drawing) io.sockets.connected[key].emit('noDraw', {});
-        }
-    }
+    io.sockets.connected[drawing].emit("draw", {});
     // round robin
     roundIntervals[gameRoom+'Timer'] = 60;
-    roundIntervals[gameRoom] = setInterval(function(){startRoundTimer(gameRoom, doneRoom);}, 1000);
+    roundIntervals[gameRoom] = setInterval(function(){startRoundTimer(gameRoom);}, 1000);
 }
 
-function startRoundTimer(gameRoom, doneRoom) {
+function startRoundTimer(gameRoom) {
     var gameRoomLength = 0;
-    var donRoomLength = 0;
-    if (io.sockets.adapter.rooms[gameRoom]) gameRoomLength = io.sockets.adapter.rooms[gameRoom].length; 
-    if (io.sockets.adapter.rooms[doneRoom]) donRoomLength = io.sockets.adapter.rooms[doneRoom].length; 
-    if ((gameRoomLength + donRoomLength) < 2) {
-        if (gameRoomLength == 1)
-            io.sockets.connected[Object.keys(io.sockets.adapter.rooms[gameRoom].sockets)[0]].emit('systemMessage', {msg:"Ending game, not enough players in game.", endGame:true});
-        if (donRoomLength == 1)
-            io.sockets.connected[Object.keys(io.sockets.adapter.rooms[doneRoom].sockets)[0]].emit('systemMessage', {msg:"Ending game, not enough players in game.", endGame:true});
-        endGame(gameRoom, doneRoom, true);
+    if (io.sockets.adapter.rooms[gameRoom]) gameRoomLength = io.sockets.adapter.rooms[gameRoom].length;     if ((gameRoomLength) < 2) {
+        io.sockets.connected[Object.keys(io.sockets.adapter.rooms[gameRoom].sockets)[0]].emit('systemMessage', {msg:"Ending game, not enough players in game.", endGame:true});
+        endGame(gameRoom, true);
     }
     if (words[gameRoom]) roundIntervals[gameRoom + 'Timer'] -= 1;
     console.log(roundIntervals[gameRoom + 'Timer']);
@@ -316,17 +266,12 @@ function startRoundTimer(gameRoom, doneRoom) {
             io.sockets.connected[key].emit('roundTimer', {time: roundIntervals[gameRoom+'Timer']});
         }
     }
-    if (io.sockets.adapter.rooms[doneRoom]) {
-        for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
-            io.sockets.connected[key].emit('roundTimer', {time: roundIntervals[gameRoom+'Timer']});
-        }
-    }
     if (roundIntervals[gameRoom + 'Timer'] <= 0) {
-        endRound(gameRoom, doneRoom);
+        endRound(gameRoom);
     }
 }
 
-function userWon(id, gameRoom, doneRoom) {
+function userWon(id, gameRoom) {
     queueData[id].wincount++;
     if (io.sockets.adapter.rooms[gameRoom]) {
         for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
@@ -343,25 +288,10 @@ function userWon(id, gameRoom, doneRoom) {
             });
         }
     }
-    if (io.sockets.adapter.rooms[doneRoom]) {
-        for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
-            io.sockets.connected[key].emit('won', {
-                name: queueData[id].name,
-                word: words[gameRoom],
-                email: queueData[id].email,
-                wincount: queueData[id].wincount
-            });
-            io.sockets.connected[key].emit('systemMessage', {
-                msg: queueData[id].name + " won the round.",
-                endGame: false,
-                color: '#3333aa'
-            });
-        }
-    }
-    endRound(gameRoom, doneRoom);
+    endRound(gameRoom);
 }
 
-function endGame(gameRoom, doneRoom, immediate=false) {
+function endGame(gameRoom, immediate=false) {
     clearInterval(roundIntervals[gameRoom]);
     //pickWinner
     if (!immediate) {
@@ -369,24 +299,25 @@ function endGame(gameRoom, doneRoom, immediate=false) {
         var winnerEmail = '';
         var winnerID;
         var winCount = 0;
-        if (!io.sockets.adapter.rooms[gameRoom] && io.sockets.adapter.rooms[doneRoom]) {
-            for (var key in queueData) {
-                if (queueData[key].wincount >= winCount) {
-                    gameWinner = queueData[key].name; 
-                    winnerID = key;
-                    winCount = queueData[key].wincount;
-                    winnerEmail = queueData[winnerID].email;
-                }
-                userModel.updateStats(queueData[key].email, queueData[key].wincount, 0, 0, 1, {});
+        for (var key in queueData) {
+            if (queueData[key].wincount >= winCount) {
+                gameWinner = queueData[key].name; 
+                winnerID = key;
+                winCount = queueData[key].wincount;
+                winnerEmail = queueData[winnerID].email;
             }
-            for (var key in io.sockets.adapter.rooms[doneRoom].sockets) {
-                io.sockets.connected[key].emit('gameWinner', {name:gameWinner});
-                io.sockets.connected[key].leave(doneRoom);
-                delete queueData[key];
-            }
-            io.sockets.connected[winnerID].emit('gameWon', {name:gameWinner, wincount:winCount});
-            userModel.updateStats(winnerEmail, 0, 0, 1, 0, {});
+            userModel.updateStats(queueData[key].email, queueData[key].wincount, 0, 0, 1, {});
         }
+        for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
+            io.sockets.connected[key].emit("gameWinner", {
+            name: gameWinner
+            });
+            io.sockets.connected[key].leave(gameRoom);
+            delete lobbyData[gameRoom];
+            delete queueData[key];
+        }
+        io.sockets.connected[winnerID].emit('gameWon', {name:gameWinner, wincount:winCount});
+        userModel.updateStats(winnerEmail, 0, 0, 1, 0, {});
         console.log("gamewon", gameWinner);
     }
     if (io.sockets.adapter.rooms[queueRoom]) {
