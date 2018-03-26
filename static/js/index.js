@@ -484,7 +484,7 @@
             players.forEach(function(p) {
                  var div = document.createElement('div');
                  div.classList.add("user-icon");
-                 div.innerHTML = `<div class="user-wins"><span id=${p.email} class="wincount">${p.wincount}</span></div>
+                 div.innerHTML = `<div class="user-wins"><span id="${p.email}" class="wincount">${p.wincount}</span></div>
                             <span class="user">${p.name}</span>`;
                  document.getElementById("users-list").appendChild(div);
             });

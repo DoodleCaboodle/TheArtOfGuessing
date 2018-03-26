@@ -5,6 +5,7 @@
 html, body {
     width: 100%;
     height: 100vh;
+    min-width: 1200px;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -226,12 +227,38 @@ header a {
     padding-left: 5px;
 }
 
+.pl-item .btn {
+    width: 130px;
+}
+
 #pl-btn-container {
     margin-top: 20px;
 }
 
 #pl-users-list {
+    width: 80%;
+    height: 55%;
+    background: rgba(0, 0, 0, 0.2);
+    margin-top: 5%;
+    border: 1px solid #aaa;
+    border-radius: 5px; 
+    overflow-y: auto;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
 
+}
+
+.pl-user {
+    width: 95%;
+    height: 40px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    line-height: 40px;
+    color: #fff;
 }
 
 #lobby-controls {
@@ -247,6 +274,12 @@ header a {
     height: 45%;
     min-height: 260px;
     padding-bottom: 100px; 
+}
+
+#pl-lobby-join .pl-sub-item {
+    font-size: 11pt;
+    min-width: 100px;
+    line-height: 11pt;
 }
 
 .queue-container {
@@ -672,4 +705,11 @@ header a {
     margin: 0;
     padding: 2px;
     background: #555;
+}
+
+@media (max-width: 1366px) {
+
+    #start-container {
+        width: 100%;
+    }
 }
