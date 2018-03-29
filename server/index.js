@@ -4,6 +4,7 @@ var roomId = 0;
 var queueRoom = 'queue';
 var queueData = {};
 var lobbyData = {};
+var privateLobbies = {};
 var queueStarted = false;
 var roundTimer = 60;
 var queueTimer = 45;
@@ -105,6 +106,8 @@ exports.init = function(hio, hsocket) {
         if (queueData[hsocket.id]) {
             hsocket.leave(queueData[hsocket.id].gameRoom);
             lobbyData[gameRoom].sockets.splice(lobbyData[gameRoom].sockets.indexOf(hsocket.id), 1);
+            leaveLobby(hsocket.id);
+            updateGameRoom(hsocket.id, queueData[hsocket.id].gameRoom, queueData[hsocket.id].name);
         }
     });
     
@@ -117,6 +120,80 @@ exports.init = function(hio, hsocket) {
     hsocket.on('gameStatus', function(data) {
         hsocket.emit('gameStatus', {});
     });
+
+    hsocket.on('createLobby', function(data) {
+        if (privateLobbies[data.name]) {
+            hsocket.emit('lobbyExists', {});
+        }
+        else {
+            clearSocket(hsocket.id, data);
+            privateLobbies[data.name] = {name: data.name, pass: data.pass, numRounds: data.numRounds, owner:hsocket.id, users:[hsocket.id]};
+        }
+    });
+
+    hsocket.on('leaveLobby', function(data) {
+        if (leaveLobby(hsocket.id)) hsocket.id.emit('notification', {msg:'Successfully left private lobby.'});
+    });
+
+    hsocket.on('startLobby', function(data) {
+        if (privateLobbies[data.name] && privateLobbies[data.name].owner == hsocket.id) {
+            if (privateLobbies[data.name].users > 1) startGame(privateLobbies[data.name]);
+            else hsocket.emit('notification', {msg:'Not enough people to start the game.'});
+        }
+        else hsocket.emit('notification', {msg:'You are not the owner of the lobby.'});
+    });
+
+    hsocket.on('joinLobby', function(data) {
+        if (privateLobbies[data.name]) {
+            if (privateLobbies[data.name].pass == data.pass) {
+                privateLobbies[data.name].users.push(hsocket.id);
+                privateLobbies[data.name].users.forEach(function(hid) {
+                    io.sockets.connected[hid].emit("updatePl", {users:privateLobbies[data.name].users});
+                });
+                hsocket.emit('joinedLobby', {});
+            }
+            else hsocket.emit('notification', {msg:'Invalid password.'});
+        }
+        else hsocket.emit('notification', {msg:'Invalid lobby.'});
+    });
+}
+
+function updateGameRoom(id, gameRoom, name) {
+    if (lobbyData[gameRoom]) {
+        lobbyData[gameRoom].playerList.splice(lobbyData[gameRoom].playerList.map(function(e) { return e.name; }).indexOf(name), 1);
+        lobbyData[gameRoom].sockets.forEach
+    }
+}
+
+function clearSocket(id, data) {
+    
+    if (queueData[id]) {
+        hsocket.leave(queueRoom);
+        if (io.sockets.adapter.rooms[queueRoom])
+            io.emit('queueUpdated', {numInQueue: io.sockets.adapter.rooms[queueRoom].length});
+        else
+            io.emit('queueUpdated', {numInQueue: 0});
+        if (queueData[id].pl && queueData[id].pl !== '') {
+            leaveLobby(id, data);
+        }
+    }
+    else {
+        queueData[id] = data.userData;
+        queueData[id].wincount = 0;
+        queueData[id].gameRoom = '';
+    }
+
+}
+
+function leaveLobby (id) {
+    if (privateLobbies[queueData[id].pl] && privateLobbies[queueData[id].pl].users.indexOf(id) > -1) {
+        privateLobbies[queueData[id].pl].users.splice(privateLobbies[queueData[id].pl].users.indexOf(id), 1);
+        privateLobbies[queueData[id].pl].users.forEach(function(hid) {
+            io.sockets.connected[hid].emit("updatePl", {users:privateLobbies[queueData[id].pl].users});
+        });
+        return true;
+    }
+    else return false;
 }
 
 function checkMessage(id, gameRoom, msg) {
@@ -179,12 +256,35 @@ function startGame(privateQueue=null) {
                 lobbyData[gameRoom].sockets.push(key);
             }
         }
+        lobbyData[gameRoom].playerList = playerList;
         if (io.sockets.adapter.rooms[gameRoom]) {
             for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
                 io.sockets.connected[key].emit('startGame', {playerList:playerList});
             }
         }
         roomId ++;
+    }
+    else {
+        gameRoom = privateQueue.name;
+        lobbyData[gameRoom] = {sockets:privateQueue.users, matchNum:privateQueue.numRounds, i:0};
+        for (var i = 0; i < lobbyData[gameRoom].sockets.length; i++) {
+            var key = lobbyData[gameRoom].sockets[i];
+            io.sockets.connected[key].leave(queueRoom);
+            io.sockets.connected[key].join(gameRoom);
+            playerList.push({
+                name: queueData[key].name,
+                wincount: 0,
+                email: queueData[key].email
+            });
+            queueData[key].gameRoom = gameRoom;
+            lobbyData[gameRoom].sockets.push(key);
+        }
+        lobbyData[gameRoom].playerList = playerList;
+        if (io.sockets.adapter.rooms[gameRoom]) {
+            for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
+                io.sockets.connected[key].emit('startGame', {playerList:playerList});
+            }
+        }
     }
     if (io.sockets.adapter.rooms[queueRoom])
         io.emit('queueUpdated', {
