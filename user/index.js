@@ -193,7 +193,8 @@ function init(app) {
     });
 
     app.get('/login/', authenticateMiddleware, function(req, res, next){
-        res.sendFile(config.filepath + 'profile/profile.html');
+        //res.sendFile(config.filepath + '/');
+        res.redirect('/');
     });
 
     app.get('/profile/', authenticateMiddleware, function(req, res, next){
