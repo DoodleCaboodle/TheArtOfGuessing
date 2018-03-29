@@ -12,10 +12,46 @@ var uri = config.uri;
 
 passport.use(new FacebookStrategy({
         clientID: "605074963161695",
-        clientSecret: "0913f6785932df1be87fbe9a35",
-        callbackURL: "https://art-of-guessing.herokuapp.com/login/facebook/return"
+        clientSecret: "0913f6785932df1be87fbe9a35bc26af",
+        callbackURL: "https://localhost:3000/login/facebook/callback",
+        passReqToCallback: true,
+        profileFields: ['id', 'emails', 'name']
     },
-    function(accessToken, refreshToken, profile, callback) {
+    function(req, accessToken, refreshToken, profile, callback) {
+        // console.log(req.user);
+        // console.log(profile);
+        var facebookUsername = profile.username;
+        var facebookName = profile.name; // Dictionary with structure: {familyName : "Caboodle", givenName: "Doodle", middleName: undefined}
+        var facebookEmail = profile.emails[0].value; // Array
+
+        
+        User.findByEmail(facebookEmail, function(err, result) {
+            if (!result.length > 0) {
+                MongoClient.connect(uri, function(err, client) {
+                    const collection = client.db("art-of-guessing").collection("users");
+                    collection.insertOne({email:facebookEmail, password:"", salt:"", firstname:facebookName.givenName, lastname:facebookName.familyName}).then(function(result){
+                        // something
+                    });
+                    const collectionStats = client.db("art-of-guessing").collection("user-stats");
+                    collectionStats.insertOne({email:facebookEmail,
+                                              roundsWon: 0,
+                                              roundsPlayed: 0,
+                                              gamesWon: 0,
+                                              gamesPlayed: 0,
+                                              words: {}
+                                             }).then(function(result){
+                        // something
+                    });
+                });
+            }
+        });
+        
+        req.session.username = facebookEmail;
+        // req.session.username = facebookEmails[0];
+        // res.setHeader('Set-Cookie', cookie.serialize('email', email, {
+        //     path: '/',
+        //     maxAge: 60 * 60 * 24 * 7
+        // }));
         return callback(null, profile);
     }
 ));
@@ -172,11 +208,9 @@ function init(app) {
         return getFirstName(req, res, req.params.email);
     });
 
-    app.get('/login/facebook', passport.authenticate('facebook'));
+    app.get('/login/facebook', passport.authenticate('facebook', {scope: ['email']}));
 
-    app.get('/login/facebook/return', passport.authenticate('facebook', {failureRedirect: '/login'}), function(req, res) {
-        res.redirect('/');
-    });
+    app.get('/login/facebook/callback', passport.authenticate('facebook', {failureRedirect: '/login', successRedirect: '/'}));
 
     // update
 
