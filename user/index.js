@@ -2,10 +2,31 @@ const bcrypt = require('bcrypt');
 const cookie = require('cookie');
 const User = require('./user');
 const config = require('../config.js');
+const connectEnsureLogin = require('connect-ensure-login');
+
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
 
 var MongoClient = require('mongodb').MongoClient;
 var uri = config.uri;
 
+passport.use(new FacebookStrategy({
+        clientID: "605074963161695",
+        clientSecret: "0913f6785932df1be87fbe9a35",
+        callbackURL: "https://art-of-guessing.herokuapp.com/login/facebook/return"
+    },
+    function(accessToken, refreshToken, profile, callback) {
+        return callback(null, profile);
+    }
+));
+
+passport.serializeUser(function(user, callback){
+    callback(null, user);
+});
+
+passport.deserializeUser(function(object, callback){
+    callback(null, object);
+});
 
 var authenticateMiddleware = function(req, res, next) {
     console.log(req.session.username);
@@ -98,6 +119,10 @@ var getFirstName = function(req, res, email, callback) {
 }
 
 function init(app) {
+
+    app.use(passport.initialize());
+    app.use(passport.session());
+
     // create
 
     app.post('/signin/', function(req, res, next) {
@@ -145,6 +170,16 @@ function init(app) {
     
     app.get('/firstname/:email', function(req, res, next){
         return getFirstName(req, res, req.params.email);
+    });
+
+    app.get('/login/facebook', passport.authenticate('facebook'));
+
+    app.get('/login/facebook/return', passport.authenticate('facebook', {failureRedirect: '/login'}), function(req, res) {
+        res.redirect('/profile/facebook');
+    });
+
+    app.get('profile/facebook', connectEnsureLogin.ensureLoggedIn(), function(req, res){
+        console.log(req.user);
     });
 
     // update
