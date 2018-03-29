@@ -175,11 +175,7 @@ function init(app) {
     app.get('/login/facebook', passport.authenticate('facebook'));
 
     app.get('/login/facebook/return', passport.authenticate('facebook', {failureRedirect: '/login'}), function(req, res) {
-        res.redirect('/profile/facebook');
-    });
-
-    app.get('profile/facebook', connectEnsureLogin.ensureLoggedIn(), function(req, res){
-        console.log(req.user);
+        res.redirect('/');
     });
 
     // update
