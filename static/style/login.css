@@ -394,7 +394,6 @@ input::placeholder {
   flex-direction: row;
   flex-wrap: wrap;
   padding-bottom: 60px; 
-  background: red;
 }
 
 /* Shared */
