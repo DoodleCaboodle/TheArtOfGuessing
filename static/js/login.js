@@ -3,6 +3,25 @@
 
         var userForms = document.getElementById('user_options-forms');
         
+        if (annyang) {
+            var commands = {
+                'login': function() {
+                    userForms.classList.remove('bounceLeft');
+                    userForms.classList.add('bounceRight');
+                },
+                'sign up': function() {
+                    userForms.classList.remove('bounceRight');
+                    userForms.classList.add('bounceLeft');
+                },
+                'signup': function() {
+                    userForms.classList.remove('bounceRight');
+                    userForms.classList.add('bounceLeft');
+                }
+            };
+            annyang.addCommands(commands);
+            annyang.start();
+        }
+
         function loginSubmit() {
             var email = document.getElementById("login-email").value;
             var pass = document.getElementById("login-password").value;

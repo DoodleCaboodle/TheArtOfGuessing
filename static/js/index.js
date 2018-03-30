@@ -82,8 +82,6 @@
             console.log(firstName);
             d.innerHTML  = firstName;
         });
-        
-        
 
         document.getElementById("start-record-btn").addEventListener('click', function(e) {
             recognition.start();
@@ -145,22 +143,47 @@
             }
         }
 
+        var changePanelColour = function(newColour){
+        	var temp = document.createElement('div');
+        	temp.style.color = newColour;
+        	document.body.appendChild(temp);
+        	var rgb = window.getComputedStyle(temp).color;
+        	document.body.removeChild(temp);
+        	rgb = rgb.replace(/[^\d,]/g, '').split(',');
+        	var hex = "#" + ((1 << 24) + (parseInt(rgb[0]) << 16) + (parseInt(rgb[1]) << 8) + parseInt(rgb[2])).toString(16).slice(1);
+        	colourPanel.value = hex;
+        }
+
+        var changeColour = function(newColour) {
+        	if (canDraw) {
+        		curr.colour = newColour;
+        		changePanelColour(newColour);
+        	}
+        }
+
         colourPanel.addEventListener("input", function(e){
-            if (canDraw) curr.colour = e.target.value;
+            changeColour(e.target.value);
         });
 
         colourPanel.addEventListener("change", function(e){
-            if (canDraw) curr.colour = e.target.value;
+           	changeColour(e.target.value);
         });
 
         colourPanel.select();
 
+        var changeBrushSize = function(newBrushSize) {
+        	if (canDraw) {
+        		curr.brushSize = newBrushSize;
+        		brushSelector.value = newBrushSize;
+        	}
+        }
+
         brushSelector.addEventListener("input", function(e){
-            if (canDraw) curr.brushSize = e.target.value;
+            changeBrushSize(e.target.value);
         });
 
-        undoButton.addEventListener("click", function(e){
-            if (canDraw) {
+        var undoFunc = function() {
+        	if (canDraw) {
                 if (displayedPoints.length > 0 || undoClearPoints.length > 0){
                     if (undoClearPoints.length > 0) {
                         displayedPoints = undoClearPoints.slice();
@@ -179,12 +202,15 @@
 
                     socket.emit('undo', {});
                 }
-
             }
+        }
+
+        undoButton.addEventListener("click", function(e){
+            undoFunc();
         });
 
-        redoButton.addEventListener("click", function(e){
-            if (canDraw) {
+        var redoFunc = function() {
+        	if (canDraw) {
                 if(displayedRedoPoints.length > 0){
 
                     displayedPoints.push(displayedRedoPoints.pop());
@@ -200,17 +226,27 @@
                     socket.emit('redo', {});
                 }
             }
+        }
+
+        redoButton.addEventListener("click", function(e){
+            redoFunc();
         });
 
+        var clearFunc = function() {
+        	if (canDraw) {
+        		undoClearPoints = displayedPoints.slice();
+
+            	displayedPoints = [];
+            	displayedRedoPoints = [];
+
+            	context.clearRect(0, 0, canvas.width, canvas.height);
+
+            	socket.emit('clear', {});
+            }
+        }
+
         clearButton.addEventListener("click", function(e){
-            undoClearPoints = displayedPoints.slice();
-
-            displayedPoints = [];
-            displayedRedoPoints = [];
-
-            context.clearRect(0, 0, canvas.width, canvas.height);
-
-            socket.emit('clear', {});
+            clearFunc();
         });
 
         //pen on paper
@@ -356,10 +392,10 @@
 
             offsetY = document.getElementById('toolbar').clientHeight + document.getElementById("header").clientHeight;
         }
-        
-        // queue setup
-        document.getElementById('ready').addEventListener('click', function() {
-            socket.emit('ready', {name:firstName, email:user}); 
+
+        var readyFunc = function() {
+        	console.log("here");
+        	socket.emit('ready', {name:firstName, email:user}); 
             document.querySelectorAll(".inqueue").forEach(function(e){
                 e.style.display = 'flex';
             });
@@ -367,17 +403,21 @@
             document.getElementById('queueTimer').style.display = 'none';
             document.getElementById("cancel").style.display = 'flex'; 
             //socket.emit('gameStatus', {});
-        });
+        }
         
-        document.getElementById('cancel').addEventListener('click', function() {
-            socket.emit('leaveQueue', {});
+        // queue setup
+        document.getElementById('ready').addEventListener('click', readyFunc);
+
+        var cancelFunc = function() {
+        	console.log("cancel");
+        	socket.emit('leaveQueue', {});
             document.querySelectorAll(".inqueue").forEach(function(e){
                 e.style.display = 'none';
             });
             document.getElementById("ready").style.display = 'flex';
             document.getElementById('queueTimer').style.display = 'none';
             document.getElementById("cancel").style.display = 'none';
-        });
+        }
 
         document.getElementById("alert").addEventListener('click', function() {
             document.getElementById("alert").style.display = 'none';
@@ -458,6 +498,61 @@
             var name = document.getElementById("lobby-name").value;
             socket.emit("startLobby", {name:name});
         });
+        
+        document.getElementById('cancel').addEventListener('click', cancelFunc);
+
+        var logoutFunc = function() {
+        	window.location.href = "/signout";
+        }
+
+        var profileFunc = function() {
+        	window.location.href = "/profile";
+        }
+
+        var homeFunc = function() {
+        	window.location.href = "/";
+        }
+
+        var backFunc = function() {
+        	window.history.back();
+        }
+
+        var nextFunc = function() {
+        	window.history.forward();
+        }
+
+        var sendMessage = function(msg) {
+        	if (!canDraw) {
+        		if (msg !== '') socket.emit('message', {name:firstName, msg:msg});
+        	}
+        }
+
+        //VOICE REC
+        if (annyang) {
+        	var commands = {
+        		'ready': readyFunc,
+        		'queue up': readyFunc,
+        		'cancel': cancelFunc,
+        		'logout': logoutFunc,
+        		'log out': logoutFunc,
+        		'sign out': logoutFunc,
+        		'signout': logoutFunc,
+        		'profile': profileFunc,
+        		'home': homeFunc,
+        		'back': backFunc,
+        		'next': nextFunc,
+        		'forward': nextFunc,
+        		'change color to :newColour': changeColour,
+        		'change brush size to :newBrushSize': changeBrushSize,
+        		'undo': undoFunc,
+        		'redo': redoFunc,
+        		'clear': clearFunc,
+        		'send *message': sendMessage
+        	};
+
+        	annyang.addCommands(commands);
+        	annyang.start();
+        }
         
         // request info from server
         socket.emit('getQueueStatus', {});
