@@ -20,6 +20,7 @@
                 </div>
             </div>
         </header>
+        <div id="alert" class="slideDown"><div id="alert-icon"></div><div id="alert-msg"></div></div>
         <div id='popup'>
             <div id="popup-label">What do you want to draw? </div>
             <input id="word-to-draw" type="text" placeholder="Enter word" required/>
@@ -40,11 +41,11 @@
                         <div id="pl-title" class="label">Join Game</div>
                         <div class="pl-item">
                             <div class="label pl-sub-item">Lobby Name </div>
-                            <input type="text" class="pl-input pl-sub-item" id="lobby-name" />
+                            <input type="text" class="pl-input pl-sub-item" id="join-lobby-name" />
                         </div>
                         <div class="pl-item">
                             <div class="label pl-sub-item">Password </div>
-                            <input type="text" class="pl-input pl-sub-item" id="lobby-name" />
+                            <input type="text" class="pl-input pl-sub-item" id="join-lobby-pass" />
                         </div>
                         <div id="pl-brn-container" class="pl-item">
                             <button id="pl-join" class="btn" class="not-inqueue">Join</button>
@@ -55,17 +56,18 @@
                     <div id="pl-title" class="label">Create game</div>
                     <div class="pl-item">
                         <div class="label pl-sub-item">Lobby Name </div>
-                        <input type="text" class="pl-input pl-sub-item" id="lobby-name" />
+                        <input type="text" class="pl-input pl-sub-item" id="lobby-name" minlength="1" />
                     </div>
                     <div class="pl-item">
                         <div class="label pl-sub-item">Lobby Password </div>
-                        <input type="text" class="pl-input pl-sub-item" id="lobby-name" />
+                        <input type="text" class="pl-input pl-sub-item" id="lobby-pass" minlength="1" />
                     </div>
                     <div class="pl-item">
                         <div class="label pl-sub-item">Number of rounds </div>
-                        <input type="number" class="pl-input pl-sub-item" id="Number of rounds" value="1" min="1" />
+                        <input type="number" class="pl-input pl-sub-item" id="num-rounds" value="1" min="1" />
                     </div>
                     <div id="pl-btn-container" class="pl-item">
+                        <button id="pl-leave" class="btn" class="not-inqueue">Leave</button>
                         <button id="pl-create" class="btn" class="not-inqueue">Create</button>
                         <button id="pl-disband" class="btn" class="inqueue">Disband</button>
                         <button id="pl-start" class="btn" class="inqueue">Start Game</button>
@@ -125,7 +127,8 @@
                 </div>
             </div>
         </div>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+        <script src="https://unpkg.com/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
 		<script src="socket.io/socket.io.js"></script>
 		<script src="js/api.js"></script>
         <script src="js/index.js"></script>

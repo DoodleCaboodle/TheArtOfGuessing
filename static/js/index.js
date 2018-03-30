@@ -378,11 +378,142 @@
             document.getElementById('queueTimer').style.display = 'none';
             document.getElementById("cancel").style.display = 'none';
         });
+
+        document.getElementById("alert").addEventListener('click', function() {
+            document.getElementById("alert").style.display = 'none';
+        });
+
+        function initPL() {
+            document.getElementById("pl-leave").style.display = "none";
+            document.getElementById("pl-create").style.display = "flex";
+            document.getElementById("pl-disband").style.display = "flex";
+            document.getElementById("pl-start").style.display = "flex";
+            document.getElementById("pl-create").disabled = false;
+            document.getElementById("pl-disband").disabled = false;
+            document.getElementById("pl-start").disabled = false;
+            document.getElementById("lobby-name").value = "";
+            document.getElementById("lobby-pass").value = "";
+            document.getElementById("num-rounds").value = "1";
+            document.getElementById("lobby-name").readOnly = false;
+            document.getElementById("lobby-pass").readOnly = false;
+            document.getElementById("num-rounds").readOnly = false;
+            // clean user list
+            var paras = document.getElementsByClassName('pl-user');
+            while(paras[0]) {
+                paras[0].parentNode.removeChild(paras[0]);
+            }
+        }
+
+        initPL();
+
+        function lockPL() {
+            document.getElementById("pl-create").disabled = true;
+            document.getElementById("pl-disband").disabled = true;
+            document.getElementById("pl-start").disabled = true;
+            document.getElementById("lobby-name").readOnly = true;
+            document.getElementById("lobby-pass").readOnly = true;
+            document.getElementById("num-rounds").readOnly = true;
+        }
+
+        document.getElementById("pl-join").addEventListener('click', function() {
+            var name = document.getElementById("join-lobby-name").value;
+            var pass = document.getElementById("join-lobby-pass").value;
+            socket.emit("joinLobby", {
+              name: name,
+              pass: pass,
+              userData: { email: user, name: firstName }
+            });
+            initPL();
+            document.getElementById("alert-msg").innerHTML = "Joining lobby!";
+            document.getElementById("alert").style.display = "flex";
+        });
+
+        document.getElementById("pl-leave").addEventListener('click', function() {
+            document.getElementById("alert-msg").innerHTML = "Leaving lobby!";
+            document.getElementById("alert").style.display = "flex";
+            socket.emit("leaveLobby", {});
+            initPL();
+        });
+
+        document.getElementById("pl-create").addEventListener('click', function() {
+            document.getElementById("alert-msg").innerHTML = "Creating lobby!";
+            document.getElementById("alert").style.display = "flex";
+            var name = document.getElementById("lobby-name").value;
+            var pass = document.getElementById("lobby-pass").value;
+            var numRounds = document.getElementById("num-rounds").value;
+            var data = { userData: { email: user, name: firstName }, name: name, pass: pass, numRounds: numRounds };
+            socket.emit("createLobby", data);
+        });
+
+        document.getElementById("pl-disband").addEventListener('click', function() {
+            document.getElementById("alert-msg").innerHTML = "Removing lobby!";
+            document.getElementById("alert").style.display = "flex";
+            var name = document.getElementById("lobby-name").value;
+            socket.emit("disbandPL", {name:name});
+        });
+
+        document.getElementById("pl-start").addEventListener('click', function() {
+            document.getElementById("alert-msg").innerHTML = "Starting lobby!";
+            document.getElementById("alert").style.display = "flex";
+            var name = document.getElementById("lobby-name").value;
+            socket.emit("startLobby", {name:name});
+        });
         
         // request info from server
         socket.emit('getQueueStatus', {});
         
         // handle server responses
+        // handle private lobby responses
+
+        socket.on("updatePl", function(data) {
+            // clean user list
+            var paras = document.getElementsByClassName('pl-user');
+            while(paras[0]) {
+                paras[0].parentNode.removeChild(paras[0]);
+            }
+
+            data.users.forEach(function(user) {
+                var div = document.createElement("div");
+                div.classList.add("pl-user");
+                div.innerHTML = `<div class="pl-user-name">${user}</div>`;
+                document.getElementById("pl-users-list").appendChild(div);
+            }); 
+        });
+
+        socket.on("createLobby", function(data) {
+            document.getElementById("alert").style.display = 'none';
+        });
+
+        socket.on("leaveLobby", function(data) {
+            document.getElementById("alert").style.display = 'none';
+            initPL();
+        });
+
+        socket.on("startLobby", function(data) {
+            document.getElementById("alert").style.display = 'none';
+        });
+
+        socket.on("joinedLobby", function(data) {
+            document.getElementById("alert").style.display = "none";
+            if (data.valid) {
+                document.getElementById("join-lobby-name").value = "";
+                document.getElementById("join-lobby-pass").value = "";
+                lockPL();
+                document.getElementById("pl-leave").style.display = "flex";
+                document.getElementById("pl-create").style.display = "none";
+                document.getElementById("lobby-name").value = data.name;
+                document.getElementById("lobby-pass").value = data.pass;
+            } else initPL();
+        });
+
+        socket.on("disbandPL", function(data) {
+            document.getElementById("alert").style.display = "none";
+            initPL();
+        });
+
+        socket.on("notification", function(data) {
+            swal(data.msg);
+        });
         // queue timer
         socket.on('stopQueueTimer', function(data){
             console.log('stop timer');
@@ -415,9 +546,14 @@
         // gameWinner
         socket.on('gameWinner', function(data) {
             // do a popup
-            alert(data.name+" won!");
-            goBack();
+            swal({
+                title:"Game Over!", 
+                text: data.name + " won!",
+                buttons:{}
+            });
+            setTimeout(function(){goBack();}, 5000);
         });
+
         // game won
         socket.on('gameWon', function(data) {
             
@@ -454,6 +590,7 @@
         });
         // startgame
         socket.on('startGame', function(data) {
+            initPL();
             // reset start-container
             document.getElementById('queueTimer').innerHTML = '';
             document.getElementById('gameStatus').innerHTML = '';
