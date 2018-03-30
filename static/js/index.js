@@ -552,7 +552,28 @@
 
         	annyang.addCommands(commands);
         	annyang.start();
+            document.getElementById('pauseVoice').style.display = "flex";
         }
+
+        var pauseVoice = function() {
+            annyang.pause();
+            document.getElementById('pauseVoice').style.display = "none";
+            document.getElementById('resumeVoice').style.display = "flex";
+        }
+
+        var resumeVoice = function() {
+            annyang.resume();
+            document.getElementById('pauseVoice').style.display = "flex";
+            document.getElementById('resumeVoice').style.display = "none";
+        }
+
+        document.getElementById('pauseVoice').addEventListener('click', function() {
+            pauseVoice();
+        });
+
+        document.getElementById('resumeVoice').addEventListener('click', function() {
+            resumeVoice();
+        });
         
         // request info from server
         socket.emit('getQueueStatus', {});

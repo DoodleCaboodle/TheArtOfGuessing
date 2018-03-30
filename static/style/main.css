@@ -160,6 +160,22 @@ header a {
     background-repeat: no-repeat;
 }
 
+#pauseVoice {
+    display: none;
+    background: url("../media/pause.png");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#resumeVoice {
+    display: none;
+    background: url("../media/microphone.png");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 #profile {
     background: url("../media/profile.png");
     background-size: 100% 100%;

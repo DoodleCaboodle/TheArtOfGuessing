@@ -64,6 +64,22 @@ body {
     height: auto;
 }
 
+#pauseVoice {
+    display: none;
+    background: url("../media/pause.png");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#resumeVoice {
+    display: none;
+    background: url("../media/microphone.png");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 #gameStats,
 #roundsStats {
     top: 0;
