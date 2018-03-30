@@ -21,7 +21,7 @@ app.use(function (req, res, next){
           path : '/', 
           maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
     }));
-    console.log("HTTP request", req.method, req.url, req.body);
+    console.log("HTTPS request", req.method, req.url, req.body);
     next();
 });
 
@@ -42,18 +42,28 @@ app.use(function(error, req, res, next) {
 });
 
 app.use(function (req, res, next){
-    console.log("HTTP Response", res.statusCode);
+    console.log("HTTPS Response", res.statusCode);
 });
 
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const fs = require('fs');
+const https = require('https');
+var privateKey = fs.readFileSync('server.key');
+var certificate = fs.readFileSync('server.crt');
+var config = {
+    key: privateKey,
+    cert: certificate
+};
+const httpsServer = https.createServer(config, app);
+
+const io = require('socket.io')(httpsServer);
+
 const PORT = process.env.PORT || 3000;
 
 io.on('connection', function(socket) {
     server.init(io, socket);
 });
 
-http.listen(PORT, function (err) {
+httpsServer.listen(PORT, function (err) {
     if (err) console.log(err);
-    else console.log("HTTP server on http://localhost:%s", PORT);
+    else console.log("HTTPS server on https://localhost:%s", PORT);
 });

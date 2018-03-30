@@ -12,61 +12,71 @@
   		I am @hurickkrugner on Twitter or @hk95 on GitHub. Feel free to message me anytime.
 		-->
 		<section class="user">
-		  <div class="user_options-container">
-		    <div class="user_options-text">
-		      <div class="user_options-unregistered">
-		        <h2 class="user_unregistered-title">Don't have an account?</h2>
-		        <p class="user_unregistered-text">Art of Guessing is a multiplayer game where you can guess what others are drawing and then draw for others as well. </p>
-		        <button class="user_unregistered-signup" id="signup-button">Sign up</button>
-		      </div>
+			<div id="other_login_mediums">
+				<button class="loginBtn loginBtn--facebook" onclick="window.location.href='/login/facebook'">Login with Facebook</button>
 
-		      <div class="user_options-registered">
-		        <h2 class="user_registered-title">Have an account?</h2>
-		        <p class="user_registered-text">Art of Guessing is a multiplayer game where you can guess what others are drawing and then draw for others as well.</p>
-		        <button class="user_registered-login" id="login-button">Login</button>
-		      </div>
-		    </div>
-		    
-		    <div class="user_options-forms" id="user_options-forms">
-		      <div class="user_forms-login">
-		        <h2 class="forms_title">Login</h2>
-		        <form class="forms_form">
-		          <fieldset class="forms_fieldset">
-		            <div class="forms_field">
-		              <input type="email" placeholder="Email" class="forms_field-input" id="login-email" required autofocus />
-		            </div>
-		            <div class="forms_field">
-		              <input type="password" placeholder="Password" class="forms_field-input" id="login-password" required />
-		            </div>
-		          </fieldset>
-		          <div class="forms_buttons">
-		            <button type="button" class="forms_buttons-forgot">Forgot password?</button>
-		            <input type="submit" value="Log In" class="forms_buttons-action" id="login-submit-btn">
-		          </div>
-		        </form>
-		      </div>
-		      <div class="user_forms-signup">
-		        <h2 class="forms_title">Sign Up</h2>
-		        <form class="forms_form">
-		          <fieldset class="forms_fieldset">
-		          	<div class="forms_field">
-		              		<input type="text" placeholder="Full Name" class="forms_field-input" id="full-name" required />
-		            </div>
-		            <div class="forms_field">
-		              <input type="email" placeholder="Email" class="forms_field-input" id="signup-email" required />
-		            </div>
-		            <div class="forms_field">
-		              <input type="password" placeholder="Password" class="forms_field-input" id="signup-password" required />
-		            </div>
-		          </fieldset>
-		          <div class="forms_buttons">
-		            <input type="submit" value="Sign up" class="forms_buttons-action" id="signup-submit-btn">
-		          </div>
-		        </form>
-		      </div>
-		    </div>
-		  </div>
+				<button class="loginBtn loginBtn--google" onclick="window.location.href='/login/google'">Login with Google</button>
+			</div>
+
+		  	<div class="user_options-container">
+			    <div class="user_options-text">
+			      <div class="user_options-unregistered">
+			        <h2 class="user_unregistered-title">Don't have an account?</h2>
+			        <p class="user_unregistered-text">Art of Guessing is a multiplayer game where you can guess what others are drawing and then draw for others as well. </p>
+			        <button class="user_unregistered-signup" id="signup-button">Sign up</button>
+			      </div>
+
+			      <div class="user_options-registered">
+			        <h2 class="user_registered-title">Have an account?</h2>
+			        <p class="user_registered-text">Art of Guessing is a multiplayer game where you can guess what others are drawing and then draw for others as well.</p>
+			        <button class="user_registered-login" id="login-button">Login</button>
+			      </div>
+			    </div>
+			    
+			    <div class="user_options-forms" id="user_options-forms">
+			      <div class="user_forms-login">
+			        <h2 class="forms_title">Login</h2>
+			        <form class="forms_form">
+			          <fieldset class="forms_fieldset">
+			            <div class="forms_field">
+			              <input type="email" placeholder="Email" class="forms_field-input" id="login-email" required autofocus />
+			            </div>
+			            <div class="forms_field">
+			              <input type="password" placeholder="Password" class="forms_field-input" id="login-password" required />
+			            </div>
+			          </fieldset>
+			          <div class="forms_buttons">
+			            <button type="button" class="forms_buttons-forgot">Forgot password?</button>
+			            <input type="submit" value="Log In" class="forms_buttons-action" id="login-submit-btn">
+			          </div>
+			        </form>
+			      </div>
+			      <div class="user_forms-signup">
+			        <h2 class="forms_title">Sign Up</h2>
+			        <form class="forms_form">
+			          <fieldset class="forms_fieldset">
+			          	<div class="forms_field">
+			              		<input type="text" placeholder="Full Name" class="forms_field-input" id="full-name" required />
+			            </div>
+			            <div class="forms_field">
+			              <input type="email" placeholder="Email" class="forms_field-input" id="signup-email" required />
+			            </div>
+			            <div class="forms_field">
+			              <input type="password" placeholder="Password" class="forms_field-input" id="signup-password" required />
+			            </div>
+			          </fieldset>
+			          <div class="forms_buttons">
+			            <input type="submit" value="Sign up" class="forms_buttons-action" id="signup-submit-btn">
+			          </div>
+			        </form>
+			      </div>
+			    </div>
+		  	</div>
 		</section>
+
+		<!-- <a href="/login/facebook/">Login with Facebook</a> -->
+
+		<!-- <a href="/login/google/">Login with Google</a> -->
 		
 		<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
 		<script src="../js/api.js"></script>
