@@ -16,6 +16,12 @@
                 'signup': function() {
                     userForms.classList.remove('bounceRight');
                     userForms.classList.add('bounceLeft');
+                },
+                'login with facebook': function() {
+                    window.location.href = "/login/facebook"
+                },
+                'login with google': function() {
+                    window.location.href = "/login/google"
                 }
             };
             annyang.addCommands(commands);
