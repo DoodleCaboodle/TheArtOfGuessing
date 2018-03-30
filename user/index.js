@@ -6,6 +6,7 @@ const connectEnsureLogin = require('connect-ensure-login');
 
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 var MongoClient = require('mongodb').MongoClient;
 var uri = config.uri;
@@ -20,7 +21,7 @@ passport.use(new FacebookStrategy({
     function(req, accessToken, refreshToken, profile, callback) {
         // console.log(req.user);
         // console.log(profile);
-        var facebookUsername = profile.username;
+        // var facebookUsername = profile.username;
         var facebookName = profile.name; // Dictionary with structure: {familyName : "Caboodle", givenName: "Doodle", middleName: undefined}
         var facebookEmail = profile.emails[0].value; // Array
 
@@ -52,6 +53,46 @@ passport.use(new FacebookStrategy({
         //     path: '/',
         //     maxAge: 60 * 60 * 24 * 7
         // }));
+        return callback(null, profile);
+    }
+));
+
+passport.use(new GoogleStrategy({
+        clientID:"180635629804-s9k3fktikglmn06f32u6mpktql5qlhg8.apps.googleusercontent.com",
+        clientSecret:"VEvqMnJOZACYEkD2fn1amlcE",
+        callbackURL:"https://localhost:3000/login/google/callback",
+        passReqToCallback: true,
+        profileFields: ['id', 'emails', 'name']
+    },
+    function(req, accessToken, refreshToken, profile, callback) {
+        // console.log(profile);
+        // var googleUsername = profile.username;
+        var googleName = profile.name; // Dictionary with structure: {familyName : "Caboodle", givenName: "Doodle", middleName: undefined}
+        var googleEmail = profile.emails[0].value; // Array
+
+        
+        User.findByEmail(googleEmail, function(err, result) {
+            if (!result.length > 0) {
+                MongoClient.connect(uri, function(err, client) {
+                    const collection = client.db("art-of-guessing").collection("users");
+                    collection.insertOne({email:googleEmail, password:"", salt:"", firstname:googleName.givenName, lastname:googleName.familyName}).then(function(result){
+                        // something
+                    });
+                    const collectionStats = client.db("art-of-guessing").collection("user-stats");
+                    collectionStats.insertOne({email:googleEmail,
+                                              roundsWon: 0,
+                                              roundsPlayed: 0,
+                                              gamesWon: 0,
+                                              gamesPlayed: 0,
+                                              words: {}
+                                             }).then(function(result){
+                        // something
+                    });
+                });
+            }
+        });
+        
+        req.session.username = googleEmail;
         return callback(null, profile);
     }
 ));
@@ -212,6 +253,10 @@ function init(app) {
     app.get('/login/facebook', passport.authenticate('facebook', {scope: ['email']}));
 
     app.get('/login/facebook/callback', passport.authenticate('facebook', {failureRedirect: '/login', successRedirect: '/'}));
+
+    app.get('/login/google', passport.authenticate('google', {scope: ['email']}));
+
+    app.get('/login/google/callback', passport.authenticate('google', {failureRedirect: '/login', successRedirect: '/'}));
 
     // update
 
