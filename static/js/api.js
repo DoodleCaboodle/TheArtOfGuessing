@@ -25,7 +25,6 @@ var api = (function(){
     }
     
     module.getName = function(email, callback) {
-        console.log(email);
         send("GET", "/firstname/"+email, null, callback);
     }
     

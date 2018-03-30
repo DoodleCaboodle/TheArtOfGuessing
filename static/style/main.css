@@ -690,17 +690,6 @@ header a {
     padding-top: 15px; 
 }
 
-#speech-rec-btns {
-    width: 100%;
-    height: 5%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    background: #444;
-    border-top: 1px solid #aaa;
-}
-
 .fd-btn {
     width: 200px;
     color: #fff;

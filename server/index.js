@@ -63,7 +63,6 @@ exports.init = function(hio, hsocket) {
     hsocket.on('ready', function(data) {
         clearSocket(hsocket.id, {userData:data});
         hsocket.join(queueRoom);
-        //console.log(io.sockets.adapter.rooms[queueRoom], hsocket.id);
         hsocket.emit('gameStatus', {});
         if (io.sockets.adapter.rooms[queueRoom])
             io.emit('queueUpdated', {numInQueue: io.sockets.adapter.rooms[queueRoom].length});
@@ -286,7 +285,6 @@ function checkMessage(id, gameRoom, msg) {
 }
 
 function checkQueue() {
-    console.log("checkign queue");
     if (!queueStarted && io.sockets.adapter.rooms[queueRoom].length > 1) {
         queueStarted = true;
         startQueue();
@@ -294,7 +292,6 @@ function checkQueue() {
 }
 
 function startQueue() {
-    console.log("queue started");
     queueTimer = 45;
     queueInterval = setInterval(function(){startQueueTimer();}, 1000);
 }
@@ -310,14 +307,12 @@ function startQueueTimer() {
         return;
     }
     queueTimer -= 1;
-    console.log(queueTimer);
     for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
         io.sockets.connected[key].emit('queueTimer', {time:queueTimer});
     }
     if (queueTimer <= 0) {
         clearInterval(queueInterval);
         queueTimer = 45;
-        console.log("queue over, starting game");
         startGame();
     }
 }
@@ -353,7 +348,6 @@ function startGame(privateQueue=null) {
         gameRoom = privateLobbies[privateQueue].name;
         lobbyData[gameRoom] = { sockets: privateLobbies[gameRoom].users, matchNum: privateLobbies[gameRoom].numRounds, i: 0 };
         for (var i = 0; i < lobbyData[gameRoom].sockets.length; i++) {
-            console.log("loop", i, lobbyData[gameRoom].sockets.length);
             var key = lobbyData[gameRoom].sockets[i];
             io.sockets.connected[key].leave(queueRoom);
             io.sockets.connected[key].join(gameRoom);
@@ -380,7 +374,6 @@ function startGame(privateQueue=null) {
         io.emit('queueUpdated', {
             numInQueue: 0
         });
-    console.log(io.sockets.adapter.rooms[queueRoom], io.sockets.adapter.rooms[gameRoom]);
     queueStarted = false;
     lobbyData[gameRoom].matchNum--;
     roundTimer = 60;
@@ -401,8 +394,6 @@ function endRound(gameRoom) {
     }
     delete words[gameRoom];
     roundIntervals[gameRoom + 'Timer'] = 60;
-    console.log("round end", gameRoom);
-    console.log(lobbyData[gameRoom].matchNum);
     if (lobbyData[gameRoom].i >= lobbyData[gameRoom].sockets.length) {
         if (lobbyData[gameRoom].matchNum <= 0) endGame(gameRoom);
         else {
@@ -446,7 +437,6 @@ function startRoundTimer(gameRoom) {
         endGame(gameRoom, true);
     }
     if (words[gameRoom]) roundIntervals[gameRoom + 'Timer'] -= 1;
-    console.log(roundIntervals[gameRoom + 'Timer']);
     if (io.sockets.adapter.rooms[gameRoom]) {
         for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
             io.sockets.connected[key].emit('roundTimer', {time: roundIntervals[gameRoom+'Timer']});
@@ -504,7 +494,6 @@ function endGame(gameRoom, immediate=false) {
         }
         io.sockets.connected[winnerID].emit('gameWon', {name:gameWinner, wincount:winCount});
         userModel.updateStats(winnerEmail, 0, 0, 1, 0, {});
-        console.log("gamewon", gameWinner);
     }
     if (io.sockets.adapter.rooms[queueRoom]) {
         for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {

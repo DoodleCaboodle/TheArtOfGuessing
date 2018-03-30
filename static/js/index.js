@@ -2,18 +2,15 @@
 	"use strict";
     var user = api.getCurrentUser();
     var firstName = '';
-    console.log(user);
     if (!user || user === '') {
         window.location.href = '/login';
     }
     else {
         api.getName(user, function(err, name) {
-            console.log(name);
             if (err) console.log(err);
             else {
                 firstName = name;
                  Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d){
-                    console.log(firstName);
                     d.innerHTML  = firstName;
                 });
             }
@@ -27,23 +24,6 @@
     }
     
     window.onload = function() {
-
-        try{
-            var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            var recognition = new SpeechRecognition();
-        } catch (e) {
-            document.getElementById('speech-rec-btns').style.display = "none";
-            postFeed("System", "Sorry, your browser does not support speech recognition. If you want to use this feature, try to use Chrome instead.", "red");
-        }
-
-        if (recognition) {
-            recognition.continous = true;
-
-            recognition.onresult = function(e) {
-                var transcript = e.results[e.resultIndex][0].transcript;
-                document.getElementById("feed-input").value = transcript;
-            }
-        }
 
     	document.getElementById('brushSize').value = 10;
 
@@ -79,17 +59,7 @@
         };
         
         Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d){
-            console.log(firstName);
             d.innerHTML  = firstName;
-        });
-
-        document.getElementById("start-record-btn").addEventListener('click', function(e) {
-            recognition.start();
-            console.log("Listening");
-        });
-
-        document.getElementById("pause-record-btn").addEventListener('click', function(e){
-            recognition.stop();
         });
         
         document.getElementById("feed-input").addEventListener("keypress", function(e){
@@ -110,7 +80,6 @@
         
         function postFeed(name, msg, colour="black") {
             if (msg === '') return;
-            console.log(name);
             var div = document.createElement('div');
             div.classList.add("message");
             div.innerHTML = `<span class="message-name"> ${name}: </span> ${msg}`;
@@ -377,7 +346,6 @@
         });
 
         window.addEventListener('resize', onResize);
-        //onResize();
 
         function onResize() {
 
@@ -394,7 +362,6 @@
         }
 
         var readyFunc = function() {
-        	console.log("here");
         	socket.emit('ready', {name:firstName, email:user}); 
             document.querySelectorAll(".inqueue").forEach(function(e){
                 e.style.display = 'flex';
@@ -409,7 +376,6 @@
         document.getElementById('ready').addEventListener('click', readyFunc);
 
         var cancelFunc = function() {
-        	console.log("cancel");
         	socket.emit('leaveQueue', {});
             document.querySelectorAll(".inqueue").forEach(function(e){
                 e.style.display = 'none';
@@ -632,13 +598,11 @@
         });
         // queue timer
         socket.on('stopQueueTimer', function(data){
-            console.log('stop timer');
             document.getElementById('queue-time').innerHTML = '';
             document.getElementById('queueTimer').style.display = 'none';
         });
         // queue timer stop
         socket.on('queueTimer', function(data){
-            console.log('queue timer', data.time);
             document.getElementById('queue-time').innerHTML = data.time;
             document.getElementById('queueTimer').style.display = 'flex';
         });
@@ -686,21 +650,12 @@
             canDraw = true;
             canMessage = false;
             getWord();
-            document.getElementById("speech-rec-btns").style.display = "none";
             document.getElementById("feed-input").style.display = "none";
         });
         // no draw
         socket.on('noDraw', function(data) {
             canDraw = false;
             canMessage = true;
-            document.getElementById("speech-rec-btns").style.display = "flex";
-            try{
-            	var check1 = window.SpeechRecognition || window.webkitSpeechRecognition;
-            	var check2 = new SpeechRecognition();
-        	} catch (e) {
-            	document.getElementById('speech-rec-btns').style.display = "none";
-            	//postFeed("System", "Sorry, your browser does not support speech recognition. If you want to use this feature, try to use Chrome instead.", "red");
-        	}
             document.getElementById("feed-input").style.display = "flex";
             document.getElementById("word").innerHTML = "";
         });
