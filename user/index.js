@@ -12,9 +12,9 @@ var MongoClient = require('mongodb').MongoClient;
 var uri = config.uri;
 
 passport.use(new FacebookStrategy({
-        clientID: "605074963161695",
-        clientSecret: "0913f6785932df1be87fbe9a35bc26af",
-        callbackURL: "https://localhost:3000/login/facebook/callback",
+        clientID: "1018938084949411",
+        clientSecret: "d9714e57a4e79daf4d233f38f3d63d33",
+        callbackURL: "https://art-of-guessing.herokuapp.com/login/facebook/callback",
         passReqToCallback: true,
         profileFields: ['id', 'emails', 'name']
     },
@@ -60,7 +60,7 @@ passport.use(new FacebookStrategy({
 passport.use(new GoogleStrategy({
         clientID:"180635629804-s9k3fktikglmn06f32u6mpktql5qlhg8.apps.googleusercontent.com",
         clientSecret:"VEvqMnJOZACYEkD2fn1amlcE",
-        callbackURL:"https://localhost:3000/login/google/callback",
+        callbackURL:"https://art-of-guessing.herokuapp.com/google/callback",
         passReqToCallback: true,
         profileFields: ['id', 'emails', 'name']
     },
