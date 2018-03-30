@@ -4,7 +4,6 @@ const cookie = require('cookie');
 const bodyParser = require('body-parser');
 // the APP
 const app = express();
-require('sweetalert');
 
 app.use(express.static('static'));
 app.use(bodyParser.json());
