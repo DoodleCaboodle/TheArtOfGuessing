@@ -60,7 +60,7 @@ passport.use(new FacebookStrategy({
 passport.use(new GoogleStrategy({
         clientID:"180635629804-s9k3fktikglmn06f32u6mpktql5qlhg8.apps.googleusercontent.com",
         clientSecret:"VEvqMnJOZACYEkD2fn1amlcE",
-        callbackURL:"https://art-of-guessing.herokuapp.com/google/callback",
+        callbackURL:"https://art-of-guessing.herokuapp.com/login/google/callback",
         passReqToCallback: true,
         profileFields: ['id', 'emails', 'name']
     },
