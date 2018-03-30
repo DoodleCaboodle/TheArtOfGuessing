@@ -647,7 +647,7 @@
         });
         // draw
         socket.on('draw', function(data) {
-            canDraw = true;
+            // canDraw = true;
             canMessage = false;
             getWord();
             document.getElementById("feed-input").style.display = "none";
@@ -712,6 +712,7 @@
                     socket.emit('word', {word:word});
                     document.getElementById('word-to-draw').value = '';
                     document.getElementById('popup').style.display = 'none';
+                    canDraw = true;
                 }
             });
         }
