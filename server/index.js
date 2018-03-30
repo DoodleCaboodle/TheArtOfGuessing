@@ -102,7 +102,7 @@ exports.init = function(hio, hsocket) {
         hsocket.leave(queueRoom);
         if (queueData[hsocket.id]) {
             hsocket.leave(queueData[hsocket.id].gameRoom);
-            lobbyData[queueData[hsocket.id].gameRoom].sockets.splice(lobbyData[queueData[hsocket.id].gameRoom].sockets.indexOf(hsocket.id), 1);
+            if (lobbyData[queueData[hsocket.id].gameRoom]) lobbyData[queueData[hsocket.id].gameRoom].sockets.splice(lobbyData[queueData[hsocket.id].gameRoom].sockets.indexOf(hsocket.id), 1);
             leaveLobby(hsocket.id);
             updateGameRoom(queueData[hsocket.id].gameRoom, queueData[hsocket.id].name);
         }
