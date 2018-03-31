@@ -2,26 +2,27 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     width: 100%;
     height: 100vh;
     min-width: 1200px;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    font-family: Verdana,Geneva,sans-serif; 
+    font-family: Verdana, Geneva, sans-serif;
     /* background credit : Photo by Alicia Zinn from Pexels https://www.pexels.com/photo/woman-with-red-nails-painting-green-stripe-on-canvas-159983/ */
     background: linear-gradient(rgba(109, 109, 109, 0.35), rgba(90, 90, 90, 0.85)), url("../media/background_0.jpeg");
     background-size: 100% 100%;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    
 }
 
-html, body {
+html,
+body {
     overflow-x: auto;
     overflow-y: auto;
 }
@@ -65,7 +66,7 @@ html, body {
     position: absolute;
     width: 650px;
     height: 60px;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     display: none;
     flex-direction: row;
     align-items: center;
@@ -73,19 +74,17 @@ html, body {
     border-radius: 30px;
     border: 2px solid #fff;
     color: #fff;
-    -webkit-box-shadow: 0px 0px 82px -13px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 0px 82px -13px rgba(0,0,0,0.75);
-    box-shadow: 0px 0px 82px -13px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 0px 82px -13px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 82px -13px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 82px -13px rgba(0, 0, 0, 0.75);
 }
 
 #submit-word {
-
     color: #fff;
     width: 80px;
 }
 
 #submit-word:hover {
-
     color: #333;
 }
 
@@ -93,9 +92,9 @@ header {
     width: 100%;
     height: 10%;
     background: none;
-    -webkit-box-shadow: 0px 1px 2px -1px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 1px 2px -1px rgba(0,0,0,0.75);
-    box-shadow: 0px 1px 2px -1px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.75);
     display: flex;
     justify-content: center;
     background: #fff;
@@ -110,8 +109,9 @@ header {
     justify-content: space-between;
     align-items: center;
     width: 70%;
-    height: 100%; 
-    /*min-width: 1150px;*/
+    height: 100%;
+    /*min-width: 1150px;
+    */
 }
 
 header a {
@@ -155,6 +155,13 @@ header a {
 
 #logout {
     background: url("../media/logout.png");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#edit-profile {
+    background: url("../media/settings.png");
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -263,7 +270,7 @@ header a {
 
 .pl-item input {
     text-align: left;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -284,13 +291,12 @@ header a {
     background: rgba(0, 0, 0, 0.2);
     margin-top: 5%;
     border: 1px solid #aaa;
-    border-radius: 5px; 
+    border-radius: 5px;
     overflow-y: auto;
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
     align-items: center;
-
 }
 
 .pl-user {
@@ -320,7 +326,7 @@ header a {
 #pl-lobby-join {
     height: 45%;
     min-height: 260px;
-    padding-bottom: 100px; 
+    padding-bottom: 100px;
 }
 
 #pl-lobby-join .pl-sub-item {
@@ -332,7 +338,7 @@ header a {
 .queue-container {
     width: 100%;
     height: 45%;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -392,7 +398,7 @@ header a {
 }
 
 #cancel {
-    display: none; 
+    display: none;
 }
 
 #cancel:hover {
@@ -438,12 +444,32 @@ header a {
 }
 
 /* pulse animation */
-@-webkit-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
-@-moz-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
-@-ms-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
-@keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
 
-#toolbar{
+@-webkit-keyframes pulse {
+    to {
+        box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);
+    }
+}
+
+@-moz-keyframes pulse {
+    to {
+        box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);
+    }
+}
+
+@-ms-keyframes pulse {
+    to {
+        box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);
+    }
+}
+
+@keyframes pulse {
+    to {
+        box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);
+    }
+}
+
+#toolbar {
     width: 100%;
     height: 5%;
     min-height: 20px;
@@ -497,15 +523,15 @@ header a {
     height: 30px;
     width: 250px;
     margin: 5px;
-    border: 1px solid #fff; 
+    border: 1px solid #fff;
     padding-left: 5px;
     padding-right: 5px;
-    color: #fff; 
+    color: #fff;
 }
 
 #brushSize::-webkit-slider-thumb {
     -webkit-appearance: none;
-            appearance: none;
+    appearance: none;
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -562,21 +588,21 @@ header a {
     cursor: crosshair;
 }
 
-#undo{
+#undo {
     display: inline-block;
     background: #eee;
     border: 1px solid #e7e7e7;
     padding: 5px;
 }
 
-#redo{
+#redo {
     display: inline-block;
     background: #eee;
     border: 1px solid #e7e7e7;
     padding: 5px;
 }
 
-#clear{
+#clear {
     display: inline-block;
     background: #eee;
     border: 1px solid #e7e7e7;
@@ -622,10 +648,30 @@ header a {
 }
 
 /* pulse animation */
-@-webkit-keyframes pulse-round {to {box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);}}
-@-moz-keyframes pulse-round {to {box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);}}
-@-ms-keyframes pulse-round {to {box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);}}
-@keyframes pulse-round {to {box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);}}
+
+@-webkit-keyframes pulse-round {
+    to {
+        box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);
+    }
+}
+
+@-moz-keyframes pulse-round {
+    to {
+        box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);
+    }
+}
+
+@-ms-keyframes pulse-round {
+    to {
+        box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);
+    }
+}
+
+@keyframes pulse-round {
+    to {
+        box-shadow: 0 0 0 10px rgba(232, 76, 61, 0);
+    }
+}
 
 #container {
     display: none;
@@ -671,7 +717,7 @@ header a {
     height: 15%;
     width: 100%;
     border: 2px solid #000;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -686,8 +732,8 @@ header a {
     flex-direction: column;
     align-content: center;
     overflow-y: auto;
-    background: #fff;   
-    padding-top: 15px; 
+    background: #fff;
+    padding-top: 15px;
 }
 
 .fd-btn {
@@ -721,7 +767,7 @@ header a {
     height: 50px;
     margin: 5px;
     padding: 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0, 0, 0, 0.4);
     color: #fff;
     font-size: 10pt;
     display: flex;
@@ -751,7 +797,6 @@ header a {
 }
 
 @media (max-width: 1366px) {
-
     #start-container {
         width: 100%;
     }

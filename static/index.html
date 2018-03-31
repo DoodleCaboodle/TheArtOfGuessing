@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
-	<head>
+
+    <head>
         <meta charset="utf-8">
         <title>AOG</title>
-        <link rel="stylesheet" href="style/main.css" type="text/css"/>
+        <link rel="stylesheet" href="style/main.css" type="text/css" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	</head>
-	<body>
+    </head>
+
+    <body>
         <header id="header">
             <div id="header-container">
                 <div id="title-container">
-                    <a id="header-title" href="/"><span class="highlight">ART</span> of GUESSING</a>
+                    <a id="header-title" href="/">
+                        <span class="highlight">ART</span> of GUESSING</a>
                 </div>
                 <div id="nav-button-container">
                     <!-- <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
@@ -19,24 +22,37 @@
                     <!-- icon credit: <div>Icons made by <a href="https://www.flaticon.com/authors/nice-and-serious" title="Nice and Serious">Nice and Serious</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
                     <a id="profile" class="nav-btn" href="/profile"></a>
                     <!-- icon credit: <div>Icons made by <a href="https://www.flaticon.com/authors/elias-bikbulatov" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
-                    <a id="logout" class="nav-btn" href="/signout"></a> 
+                    <a id="logout" class="nav-btn" href="/signout"></a>
                 </div>
             </div>
         </header>
-        <div id="alert" class="slideDown"><div id="alert-icon"></div><div id="alert-msg"></div></div>
+        <div id="alert" class="slideDown">
+            <div id="alert-icon"></div>
+            <div id="alert-msg"></div>
+        </div>
         <div id='popup'>
             <div id="popup-label">What do you want to draw? </div>
             <input id="word-to-draw" type="text" placeholder="Enter word" required/>
             <button id="submit-word" class="tb-btn">OK</button>
         </div>
         <div id="start-container">
-            <div id="welcom-title">Hello! <span class="highlight"><span class="user"></span></span></div>
+            <div id="welcom-title">Hello!
+                <span class="highlight">
+                    <span class="user"></span>
+                </span>
+            </div>
             <div id="start-content">
                 <div id="lobby-controls">
                     <div class="queue-container">
                         <div id="gameStatus" class="inqueue"></div>
-                        <div id="queueStatus">People in queue: <span id="num-in-queue">0</span></div>
-                        <div id="queueTimer" class="inqueue"><span id="queue-time-container"><span id="queue-time">45</span></span></div>
+                        <div id="queueStatus">People in queue:
+                            <span id="num-in-queue">0</span>
+                        </div>
+                        <div id="queueTimer" class="inqueue">
+                            <span id="queue-time-container">
+                                <span id="queue-time">45</span>
+                            </span>
+                        </div>
                         <button id="ready" class="btn" class="not-inqueue">Ready</button>
                         <button id="cancel" class="btn" class="inqueue">Cancel</button>
                     </div>
@@ -75,7 +91,7 @@
                         <button id="pl-disband" class="btn" class="inqueue">Disband</button>
                         <button id="pl-start" class="btn" class="inqueue">Start Game</button>
                     </div>
-                    
+
                     <div id="pl-users-list">
                         <div class="label">Player list</div>
                     </div>
@@ -83,20 +99,28 @@
             </div>
         </div>
         <div id="container">
-            <div id = "toolbar"> 
+            <div id="toolbar">
                 <div id="canvas-controls">
                     <span class="label">Color: </span>
                     <input type="color" value="#000000" id="colourPanel">
                     <span class="label">Brush size: </span>
                     <input type="range" min="1" max="20" id="brushSize">
-                    <span id="undo" class="tb-btn">UNDO</span> 
-                    <span id="redo" class="tb-btn">REDO</span> 
+                    <span id="undo" class="tb-btn">UNDO</span>
+                    <span id="redo" class="tb-btn">REDO</span>
                     <span id="clear" class="tb-btn">CLEAR</span>
-                </div> 
+                </div>
                 <div id="round-info">
-                    <span class="round-info-item">Word to draw: <span id="word"></span></span>
-                    <span class="round-info-item" id="roundTime">Round Timer: <span id="time-container"><span id="time">60</span></span></span>
-                    <span class="round-info-item" id="roundWinner">Last round won by: <span id="rwinner"></span></span>
+                    <span class="round-info-item">Word to draw:
+                        <span id="word"></span>
+                    </span>
+                    <span class="round-info-item" id="roundTime">Round Timer:
+                        <span id="time-container">
+                            <span id="time">60</span>
+                        </span>
+                    </span>
+                    <span class="round-info-item" id="roundWinner">Last round won by:
+                        <span id="rwinner"></span>
+                    </span>
 
                 </div>
             </div>
@@ -109,15 +133,16 @@
                     </div>
                     <div id="feed">
                     </div>
-                    <input id="feed-input" type="text" placeholder="Enter your guess"/>
+                    <input id="feed-input" type="text" placeholder="Enter your guess" />
                 </div>
             </div>
         </div>
 
-        <script src="https://unpkg.com/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
-		<script src="socket.io/socket.io.js"></script>
+        <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
+        <script src="socket.io/socket.io.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
-		<script src="js/api.js"></script>
+        <script src="js/api.js"></script>
         <script src="js/index.js"></script>
-	</body>
+    </body>
+
 </html>

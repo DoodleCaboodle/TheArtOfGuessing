@@ -65,7 +65,7 @@ exports.init = function(hio, hsocket) {
     hsocket.on('ready', function(data) {
         clearSocket(hsocket.id, {
             userData: data
-        });
+        }, true);
         hsocket.join(queueRoom);
         hsocket.emit('gameStatus', {});
         if (io.sockets.adapter.rooms[queueRoom])
@@ -279,18 +279,20 @@ function updateGameRoom(gameRoom, name) {
     }
 }
 
-function clearSocket(id, data) {
+function clearSocket(id, data, notInQueue = false) {
 
     if (queueData[id]) {
-        io.sockets.connected[id].leave(queueRoom);
-        if (io.sockets.adapter.rooms[queueRoom])
-            io.emit('queueUpdated', {
-                numInQueue: io.sockets.adapter.rooms[queueRoom].length
-            });
-        else
-            io.emit('queueUpdated', {
-                numInQueue: 0
-            });
+        if (!notInQueue) {
+            io.sockets.connected[id].leave(queueRoom);
+            if (io.sockets.adapter.rooms[queueRoom])
+                io.emit('queueUpdated', {
+                    numInQueue: io.sockets.adapter.rooms[queueRoom].length
+                });
+            else
+                io.emit('queueUpdated', {
+                    numInQueue: 0
+                });
+        }
         if (queueData[id].pl && queueData[id].pl !== '') {
             if (privateLobbies[queueData[id].pl].owner == id) disbandPL(id, {
                 name: queueData[id].pl

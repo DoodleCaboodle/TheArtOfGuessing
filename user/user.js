@@ -11,13 +11,12 @@ function User(email, password, salt, firstname, lastname) {
     this.lastname = lastname;
 }
 
-User.prototype.update = function(oldEmail, email, password, salt, firstname, lastname) {
-    this.email = email;
-    this.password = password;
-    this.salt = salt;
-    this.firstname = firstname;
-    this.lastname = lastname;
+User.updateUser = function(oldEmail, email, password, salt, firstname, lastname, callback) {
     MongoClient.connect(uri, function(err, client) {
+        if (err) {
+            callback(err, null);
+            return;
+        }
         const collection = client.db("art-of-guessing").collection("users");
         collection.updateOne({
             email: oldEmail
@@ -32,13 +31,17 @@ User.prototype.update = function(oldEmail, email, password, salt, firstname, las
             $currentDate: {
                 lastModified: true
             }
-        }).then(function(result) {});
+        }).then(function(result) {callback(null, result)});
     });
 }
 
 User.findByEmail = function(email, callback) {
     email = email.replace('%40', '@');
     MongoClient.connect(uri, function(err, client) {
+        if (err) {
+            callback(err, null);
+            return;
+        }
         const collection = client.db("art-of-guessing").collection("users");
 
         collection.find({
@@ -54,6 +57,10 @@ User.findByEmail = function(email, callback) {
 User.getStats = function(email, callback) {
     email = email.replace('%40', '@');
     MongoClient.connect(uri, function(err, client) {
+        if (err) {
+            callback(err, null);
+            return;
+        }
         const collection = client.db("art-of-guessing").collection("user-stats");
 
         collection.find({

@@ -1,56 +1,79 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>AOG: profile</title>
-		<link rel="stylesheet" href="../style/main.css" type="text/css"/>
-		<link rel="stylesheet" href="../style/profile.css" type="text/css"/>
-	</head>
-	<body>
+
+    <head>
+        <meta charset="utf-8">
+        <title>AOG: profile</title>
+        <link rel="stylesheet" href="../style/main.css" type="text/css" />
+        <link rel="stylesheet" href="../style/profile.css" type="text/css" />
+    </head>
+
+    <body>
         <!--
-           profile graphs css template created by : https://codepen.io/Ruddy/pen/xbJXyQ?q=Statistics&limit=all&type=type-pens 
-        -->
-		<header>
-			<div id="header-container">
-				<div id="title-container">
-					<a id="header-logo" href="/"></a>
-					<a id="header-title" href="/"><span class="highlight">ART</span> of GUESSING</a>
-				</div>
-				<div id="nav-button-container">
-					<!-- <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
-					<a id="pauseVoice" class="nav-btn"></a>
-          <a id="resumeVoice" class="nav-btn"></a>
-					<!-- icon credit: <div>Icons made by <a href="https://www.flaticon.com/authors/elias-bikbulatov" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
-					<a id="logout" class="nav-btn" href="/signout"></a> 
-				</div>
-			</div>
-		</header>
+            profile graphs css template created by : https://codepen.io/Ruddy/pen/xbJXyQ?q=Statistics&limit=all&type=type-pens 
+            -->
+        <header>
+            <div id="header-container">
+                <div id="title-container">
+                    <a id="header-logo" href="/"></a>
+                    <a id="header-title" href="/">
+                        <span class="highlight">ART</span> of GUESSING</a>
+                </div>
+                <div id="nav-button-container">
+                    <!-- <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
+                    <a id="pauseVoice" class="nav-btn"></a>
+                    <a id="resumeVoice" class="nav-btn"></a>
+                    <!-- div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div -->
+                    <a id="edit-profile" class="nav-btn" href="#"></a>
+                    <!--<div>Icons made by <a href="https://www.flaticon.com/authors/elias-bikbulatov" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
+                    <a id="logout" class="nav-btn" href="/signout"></a>
+                </div>
+            </div>
+        </header>
+        <div class="content" id="profile-stats">
+            <div id="mainInfo">
+            </div>
+            <div class="matchStats">
+                <canvas id="gameStats" width="180" height="180" />
+            </div>
+            <div class="matchStats">
+                <canvas id="roundsStats" width="180" height="180" />
+            </div>
+            <div class="clearFix"></div>
+            <div class="col">
+                <div class="resizing">
+                    <canvas id="wordsData" />
+                </div>
+            </div>
+        </div>
+        <form class="content" id="edit-profile-container">
+            <div class="pl-item">
+                <div class="label pl-sub-item">Email </div>
+                <input type="email" class="pl-input pl-sub-item" id="profile-email" required/>
+            </div>
+            <div class="pl-item">
+                <div class="label pl-sub-item">Password </div>
+                <input type="password" class="pl-input pl-sub-item" id="profile-pass" required/>
+            </div>
+            <div class="pl-item">
+                <div class="label pl-sub-item">First Name </div>
+                <input type="text" class="pl-input pl-sub-item" id="profile-first-name" required/>
+            </div>
+            <div class="pl-item">
+                <div class="label pl-sub-item">Last Name </div>
+                <input type="text" class="pl-input pl-sub-item" id="profile-last-name" required/>
+            </div>
+            <div id="pl-brn-container" class="pl-item">
+                <button id="profile-cancel" class="btn">Cancel</button>
+                <button id="profile-update" class="btn" type="submit">Update</button>
+            </div>
+        </form>
 
-		<div class="content">
+        <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+        <script src="../js/api.js"></script>
+        <script src="../js/profile.js"></script>
+    </body>
 
-		  <div id="mainInfo">
-		  </div>
-
-		  <div class="matchStats">
-		    <canvas id="gameStats" width="180" height="180"/>
-		  </div>
-
-		  <div class="matchStats">
-		    <canvas id="roundsStats" width="180" height="180"/>
-		  </div>
-
-		  <div class="clearFix"></div>
-
-		  <div class="col">
-		    <div class="resizing">
-		      <canvas id="wordsData"/>
-		    </div>
-		  </div>
-		</div>
-
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
-		<script src="../js/api.js"></script>
-		<script src="../js/profile.js"></script>
-	</body>
 </html>

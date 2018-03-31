@@ -1,20 +1,34 @@
 (function() {
     "use strict";
-    var user = api.getCurrentUser();
-    var firstName = '';
-    if (!user || user === '') {
-        window.location.href = '/login';
-    } else {
-        api.getName(user, function(err, name) {
-            if (err) console.log(err);
-            else {
-                firstName = name;
-                Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d) {
-                    d.innerHTML = firstName;
+    var user = "";
+    var firstName = "";
+    var lastName = "";
+    api.getCurrentUser(function(err, result) {
+        if (err || !result) window.location.href = "/login";
+        else {
+            user = result;
+            if (!user || user === '') {
+                window.location.href = '/login';
+            } else {
+                api.getName(function(err, name) {
+                    if (err) console.log(err);
+                    else {
+                        firstName = name;
+                        loadWindow();
+                        Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d) {
+                            d.innerHTML = firstName;
+                        });
+                        api.getLastName(function(err, lname) {
+                            if (err) console.log(err);
+                            else {
+                                lastName = lname;
+                            }
+                        });
+                    }
                 });
             }
-        });
-    }
+        }
+    });
 
     var socket = io();
 
@@ -22,7 +36,7 @@
         socket.close();
     }
 
-    window.onload = function() {
+    var loadWindow = function() {
 
         document.getElementById('brushSize').value = 10;
 
@@ -579,7 +593,7 @@
             while (paras[0]) {
                 paras[0].parentNode.removeChild(paras[0]);
             }
-
+            console.log(data.users);
             data.users.forEach(function(user) {
                 var div = document.createElement("div");
                 div.classList.add("pl-user");
@@ -653,13 +667,14 @@
         socket.on('gameWinner', function(data) {
             // do a popup
             swal({
-                title: "Game Over!",
-                text: data.name + " won!",
-                buttons: {}
-            });
-            setTimeout(function() {
+              title: "Game Over!",
+              text: data.name + " won!"
+            }).then(result => {
+              if (result.value) {
                 goBack();
-            }, 5000);
+                //swal("Deleted!", "Your file has been deleted.", "success");
+              }
+            });
         });
 
         // game won

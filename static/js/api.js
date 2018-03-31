@@ -6,7 +6,14 @@ var api = (function(){
         var xhr = new XMLHttpRequest();
         xhr.onload = function() {
             if (xhr.status !== 200) callback("[" + xhr.status + "] " + xhr.responseText, null);
-            else callback(null, JSON.parse(xhr.responseText));
+            else{ 
+                try{
+                    callback(null, JSON.parse(xhr.responseText));
+                }
+                catch(err) {
+                    callback(null, "");
+                }
+            }
         };
         xhr.open(method, url, true);
         if (!data) xhr.send();
@@ -18,14 +25,16 @@ var api = (function(){
     
     var module = {};
     
-    module.getCurrentUser = function(){
-        var l = document.cookie.split("email=");
-        if (l.length > 1) return l[1];
-        return null;
+    module.getCurrentUser = function(callback){
+        send("GET", "/user/", null, callback);
     }
     
-    module.getName = function(email, callback) {
-        send("GET", "/firstname/"+email, null, callback);
+    module.getName = function(callback) {
+        send("GET", "/firstname/", null, callback);
+    }
+
+    module.getLastName = function(callback) {
+        send("GET", "/lastname/", null, callback);
     }
     
     module.signin = function (email, password, callback){
@@ -42,6 +51,11 @@ var api = (function(){
 
     module.getStats = function(email, callback) {
         send("GET", "/stats/"+email, null, callback);
+    }
+
+    module.updateUser = function(email, pass, fname, lname, callback) {
+        console.log({email:email, pass:pass, firstname:fname, lastname:lname});
+        send("POST", "/user/", {email:email, pass:pass, firstname:fname, lastname:lname}, callback);
     }
     
     return module;

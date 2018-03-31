@@ -12,6 +12,27 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+#edit-profile-container {
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#pl-brn-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100px;
+    width: 80%;
+}
+
+.btn {
+    padding: 0;
+    margin: 0;
+    margin-left: 40px;
+}
+
 .content {
     min-width: 1000px;
     width: 60%;

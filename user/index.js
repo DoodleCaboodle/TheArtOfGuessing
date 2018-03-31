@@ -215,6 +215,23 @@ var getFirstName = function(req, res, email, callback) {
     });
 }
 
+var updateUser = function(req, res, callback) {
+    var salt = getSalt();
+    console.log(req.body);
+    console.log(req.body.pass);
+    var hash = getSaltedHash(req.body.pass, salt);
+    User.updateUser(req.session.username, req.body.email, hash, salt, req.body.firstname, req.body.lastname, function(err, result) {
+        if (result.length > 0) {
+            req.session.username = result[0].email;
+            res.setHeader('Set-Cookie', cookie.serialize('email', req.session.username, {
+                path: '/',
+                maxAge: 60 * 60 * 24 * 7
+            }));
+        }
+        return callback(err, result);
+    });
+}
+
 function init(app) {
 
     app.use(passport.initialize());
@@ -233,7 +250,6 @@ function init(app) {
     });
 
     app.post('/signup/', function(req, res, next) {
-        console.log(User);
         var salt = getSalt();
         var hash = getSaltedHash(req.body.password, salt);
         var newUser = new User(req.body.email, hash, salt, req.body.firstname, req.body.lastname);
@@ -288,7 +304,38 @@ function init(app) {
         successRedirect: '/'
     }));
 
+    app.get("/user/", authenticateMiddleware, function(req, res, next) {
+        User.findByEmail(req.session.username, function(err, result) {
+            if (err) return res.status(500).end(err);
+            if (result.length < 1) return res.status(404).end("User not found!");
+            else return res.json(result[0].email);
+        });
+    });
+
+    app.get("/lastname/", authenticateMiddleware, function(req, res, next) {
+        User.findByEmail(req.session.username, function(err, result) {
+            if (err) return res.status(500).end(err);
+            if (result.length < 1) return res.status(404).end("User not found!");
+            else return res.json(result[0].lastname);
+        });
+    });
+
+    app.get("/firstname/", authenticateMiddleware, function(req, res, next) {
+        User.findByEmail(req.session.username, function(err, result) {
+            if (err) return res.status(500).end(err);
+            if (result.length < 1) return res.status(404).end("User not found!");
+            else return res.json(result[0].firstname);
+        });
+    });
     // update
+
+    app.post("/user/", authenticateMiddleware, function(req, res, next) {
+        updateUser(req, res, function(err, success) {
+            if (err) return res.status(500).end(err);
+            if (!success) return res.status(403).end("Access Denied!");
+            return res.json(success);
+        });
+    });
 
     // delete
 }
