@@ -1,34 +1,33 @@
-(function(){
-	"use strict";
+(function() {
+    "use strict";
     var user = api.getCurrentUser();
     var firstName = '';
     if (!user || user === '') {
         window.location.href = '/login';
-    }
-    else {
+    } else {
         api.getName(user, function(err, name) {
             if (err) console.log(err);
             else {
                 firstName = name;
-                 Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d){
-                    d.innerHTML  = firstName;
+                Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d) {
+                    d.innerHTML = firstName;
                 });
             }
         });
     }
-        
+
     var socket = io();
-    
+
     window.onunload = function() {
-        socket.close();    
+        socket.close();
     }
-    
+
     window.onload = function() {
 
-    	document.getElementById('brushSize').value = 10;
+        document.getElementById('brushSize').value = 10;
 
-    	var offsetY = document.getElementById('toolbar').clientHeight + document.getElementById("header").clientHeight;
-        
+        var offsetY = document.getElementById('toolbar').clientHeight + document.getElementById("header").clientHeight;
+
         // canvas setup
         var canvas = document.getElementById("myCanvas");
         var context = canvas.getContext("2d");
@@ -57,28 +56,30 @@
             colour: "#000000",
             brushSize: 10
         };
-        
-        Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d){
-            d.innerHTML  = firstName;
+
+        Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d) {
+            d.innerHTML = firstName;
         });
-        
-        document.getElementById("feed-input").addEventListener("keypress", function(e){
+
+        document.getElementById("feed-input").addEventListener("keypress", function(e) {
             var key = e.which || e.keyCode;
             if (canMessage) {
                 if (key === 13) {
                     var msg = document.getElementById("feed-input").value;
-                    if (msg !== '') socket.emit('message', {name:firstName, msg:msg});
+                    if (msg !== '') socket.emit('message', {
+                        name: firstName,
+                        msg: msg
+                    });
                     //postFeed(firstName, msg);
                 }
-            }
-            else {
+            } else {
                 if (key === 13) {
                     postFeed("System", "You are currently drawing.", "red");
                 }
             }
         });
-        
-        function postFeed(name, msg, colour="black") {
+
+        function postFeed(name, msg, colour = "black") {
             if (msg === '') return;
             var div = document.createElement('div');
             div.classList.add("message");
@@ -112,61 +113,61 @@
             }
         }
 
-        var changePanelColour = function(newColour){
-        	var temp = document.createElement('div');
-        	temp.style.color = newColour;
-        	document.body.appendChild(temp);
-        	var rgb = window.getComputedStyle(temp).color;
-        	document.body.removeChild(temp);
-        	rgb = rgb.replace(/[^\d,]/g, '').split(',');
-        	var hex = "#" + ((1 << 24) + (parseInt(rgb[0]) << 16) + (parseInt(rgb[1]) << 8) + parseInt(rgb[2])).toString(16).slice(1);
-        	colourPanel.value = hex;
+        var changePanelColour = function(newColour) {
+            var temp = document.createElement('div');
+            temp.style.color = newColour;
+            document.body.appendChild(temp);
+            var rgb = window.getComputedStyle(temp).color;
+            document.body.removeChild(temp);
+            rgb = rgb.replace(/[^\d,]/g, '').split(',');
+            var hex = "#" + ((1 << 24) + (parseInt(rgb[0]) << 16) + (parseInt(rgb[1]) << 8) + parseInt(rgb[2])).toString(16).slice(1);
+            colourPanel.value = hex;
         }
 
         var changeColour = function(newColour) {
-        	if (canDraw) {
-        		curr.colour = newColour;
-        		changePanelColour(newColour);
-        	}
+            if (canDraw) {
+                curr.colour = newColour;
+                changePanelColour(newColour);
+            }
         }
 
-        colourPanel.addEventListener("input", function(e){
+        colourPanel.addEventListener("input", function(e) {
             changeColour(e.target.value);
         });
 
-        colourPanel.addEventListener("change", function(e){
-           	changeColour(e.target.value);
+        colourPanel.addEventListener("change", function(e) {
+            changeColour(e.target.value);
         });
 
         colourPanel.select();
 
         var changeBrushSize = function(newBrushSize) {
-        	if (canDraw) {
-        		curr.brushSize = newBrushSize;
-        		brushSelector.value = newBrushSize;
-        	}
+            if (canDraw) {
+                curr.brushSize = newBrushSize;
+                brushSelector.value = newBrushSize;
+            }
         }
 
-        brushSelector.addEventListener("input", function(e){
+        brushSelector.addEventListener("input", function(e) {
             changeBrushSize(e.target.value);
         });
 
         var undoFunc = function() {
-        	if (canDraw) {
-                if (displayedPoints.length > 0 || undoClearPoints.length > 0){
+            if (canDraw) {
+                if (displayedPoints.length > 0 || undoClearPoints.length > 0) {
                     if (undoClearPoints.length > 0) {
                         displayedPoints = undoClearPoints.slice();
                         undoClearPoints = [];
                     } else {
                         displayedRedoPoints.push(displayedPoints.pop());
-                    }   
+                    }
 
                     context.clearRect(0, 0, canvas.width, canvas.height);
 
                     var point;
-                    for (var i=0; i < displayedPoints.length; i++) {
+                    for (var i = 0; i < displayedPoints.length; i++) {
                         point = displayedPoints[i];
-                        drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
+                        drawLine(point.fromx * canvas.width, point.fromy * canvas.height, point.tox * canvas.width, point.toy * canvas.height, point.colour, point.brushSize, false);
                     }
 
                     socket.emit('undo', {});
@@ -174,22 +175,22 @@
             }
         }
 
-        undoButton.addEventListener("click", function(e){
+        undoButton.addEventListener("click", function(e) {
             undoFunc();
         });
 
         var redoFunc = function() {
-        	if (canDraw) {
-                if(displayedRedoPoints.length > 0){
+            if (canDraw) {
+                if (displayedRedoPoints.length > 0) {
 
                     displayedPoints.push(displayedRedoPoints.pop());
 
                     context.clearRect(0, 0, canvas.width, canvas.height);
 
                     var point;
-                    for (var i=0; i < displayedPoints.length; i++) {
+                    for (var i = 0; i < displayedPoints.length; i++) {
                         point = displayedPoints[i];
-                        drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
+                        drawLine(point.fromx * canvas.width, point.fromy * canvas.height, point.tox * canvas.width, point.toy * canvas.height, point.colour, point.brushSize, false);
                     }
 
                     socket.emit('redo', {});
@@ -197,29 +198,29 @@
             }
         }
 
-        redoButton.addEventListener("click", function(e){
+        redoButton.addEventListener("click", function(e) {
             redoFunc();
         });
 
         var clearFunc = function() {
-        	if (canDraw) {
-        		undoClearPoints = displayedPoints.slice();
+            if (canDraw) {
+                undoClearPoints = displayedPoints.slice();
 
-            	displayedPoints = [];
-            	displayedRedoPoints = [];
+                displayedPoints = [];
+                displayedRedoPoints = [];
 
-            	context.clearRect(0, 0, canvas.width, canvas.height);
+                context.clearRect(0, 0, canvas.width, canvas.height);
 
-            	socket.emit('clear', {});
+                socket.emit('clear', {});
             }
         }
 
-        clearButton.addEventListener("click", function(e){
+        clearButton.addEventListener("click", function(e) {
             clearFunc();
         });
 
         //pen on paper
-        canvas.addEventListener('mousedown', function(e){
+        canvas.addEventListener('mousedown', function(e) {
             if (canDraw) {
                 drawing = true;
                 curr.x = e.clientX;
@@ -228,36 +229,38 @@
         });
 
         //pen up
-        canvas.addEventListener('mouseup', function(e){
+        canvas.addEventListener('mouseup', function(e) {
             if (canDraw) {
                 if (drawing) {
                     drawing = false;
                     drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
                     displayedPoints.push({
-                        fromx:curr.x / canvas.width, 
-                        fromy:curr.y / canvas.height, 
-                        tox:e.clientX / canvas.width, 
-                        toy:(e.clientY - offsetY) / canvas.height, 
-                        colour:curr.colour, 
-                        brushSize:curr.brushSize});
+                        fromx: curr.x / canvas.width,
+                        fromy: curr.y / canvas.height,
+                        tox: e.clientX / canvas.width,
+                        toy: (e.clientY - offsetY) / canvas.height,
+                        colour: curr.colour,
+                        brushSize: curr.brushSize
+                    });
                     displayedRedoPoints = [];
                     undoClearPoints = [];
                 }
             }
         });
 
-        canvas.addEventListener('mouseout', function(e){
+        canvas.addEventListener('mouseout', function(e) {
             if (canDraw) {
                 if (drawing) {
                     drawing = false;
                     drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
                     displayedPoints.push({
-                        fromx:curr.x / canvas.width, 
-                        fromy:curr.y / canvas.height, 
-                        tox:e.clientX / canvas.width, 
-                        toy:(e.clientY - offsetY) / canvas.height, 
-                        colour:curr.colour, 
-                        brushSize:curr.brushSize});
+                        fromx: curr.x / canvas.width,
+                        fromy: curr.y / canvas.height,
+                        tox: e.clientX / canvas.width,
+                        toy: (e.clientY - offsetY) / canvas.height,
+                        colour: curr.colour,
+                        brushSize: curr.brushSize
+                    });
                     displayedRedoPoints = [];
                     undoClearPoints = [];
                 }
@@ -267,19 +270,20 @@
         var lastEmit = Date.now();
 
         //drawing
-        canvas.addEventListener('mousemove', function(e){
+        canvas.addEventListener('mousemove', function(e) {
             if (canDraw) {
                 if ((Date.now() - lastEmit) >= 10) {
-                    if(drawing) {
+                    if (drawing) {
 
                         drawLine(curr.x, curr.y, e.clientX, e.clientY - offsetY, curr.colour, curr.brushSize, true);
                         displayedPoints.push({
-                            fromx:curr.x / canvas.width, 
-                            fromy:curr.y / canvas.height, 
-                            tox:e.clientX / canvas.width, 
-                            toy:(e.clientY - offsetY) / canvas.height, 
-                            colour:curr.colour, 
-                            brushSize:curr.brushSize});
+                            fromx: curr.x / canvas.width,
+                            fromy: curr.y / canvas.height,
+                            tox: e.clientX / canvas.width,
+                            toy: (e.clientY - offsetY) / canvas.height,
+                            colour: curr.colour,
+                            brushSize: curr.brushSize
+                        });
 
                         displayedRedoPoints = [];
                         undoClearPoints = [];
@@ -292,20 +296,21 @@
             }
         });
 
-        socket.on('drawing', function(data){
-            drawLine(data.fromx*canvas.width, data.fromy*canvas.height, data.tox*canvas.width, data.toy*canvas.height, data.colour, data.brushSize, false);
+        socket.on('drawing', function(data) {
+            drawLine(data.fromx * canvas.width, data.fromy * canvas.height, data.tox * canvas.width, data.toy * canvas.height, data.colour, data.brushSize, false);
             displayedPoints.push({
-                        fromx:data.fromx, 
-                        fromy:data.fromy, 
-                        tox:data.tox, 
-                        toy:data.toy, 
-                        colour:data.colour, 
-                        brushSize:data.brushSize});
+                fromx: data.fromx,
+                fromy: data.fromy,
+                tox: data.tox,
+                toy: data.toy,
+                colour: data.colour,
+                brushSize: data.brushSize
+            });
             displayedRedoPoints = [];
             undoClearPoints = [];
         });
 
-        socket.on('clear', function(data){
+        socket.on('clear', function(data) {
             undoClearPoints = displayedPoints.slice();
 
             displayedPoints = [];
@@ -313,23 +318,23 @@
 
             context.clearRect(0, 0, canvas.width, canvas.height);
         });
-        
+
         // canvas setup end
 
-        socket.on('redo', function(data){
-        	displayedPoints.push(displayedRedoPoints.pop());
+        socket.on('redo', function(data) {
+            displayedPoints.push(displayedRedoPoints.pop());
 
             context.clearRect(0, 0, canvas.width, canvas.height);
 
             var point;
-            for (var i=0; i < displayedPoints.length; i++) {
+            for (var i = 0; i < displayedPoints.length; i++) {
                 point = displayedPoints[i];
-                drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
+                drawLine(point.fromx * canvas.width, point.fromy * canvas.height, point.tox * canvas.width, point.toy * canvas.height, point.colour, point.brushSize, false);
             }
         });
 
-        socket.on('undo', function(data){
-        	if (undoClearPoints.length > 0){
+        socket.on('undo', function(data) {
+            if (undoClearPoints.length > 0) {
                 displayedPoints = undoClearPoints.slice();
                 undoClearPoints = [];
             } else {
@@ -339,9 +344,9 @@
             context.clearRect(0, 0, canvas.width, canvas.height);
 
             var point;
-            for (var i=0; i < displayedPoints.length; i++) {
+            for (var i = 0; i < displayedPoints.length; i++) {
                 point = displayedPoints[i];
-                drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
+                drawLine(point.fromx * canvas.width, point.fromy * canvas.height, point.tox * canvas.width, point.toy * canvas.height, point.colour, point.brushSize, false);
             }
         });
 
@@ -353,31 +358,34 @@
             canvas.height = document.getElementById("canvas-cont").clientHeight;
 
             var point;
-            for (var i=0; i < displayedPoints.length; i++) {
+            for (var i = 0; i < displayedPoints.length; i++) {
                 point = displayedPoints[i];
-                drawLine(point.fromx*canvas.width, point.fromy*canvas.height, point.tox*canvas.width, point.toy*canvas.height, point.colour, point.brushSize, false);
+                drawLine(point.fromx * canvas.width, point.fromy * canvas.height, point.tox * canvas.width, point.toy * canvas.height, point.colour, point.brushSize, false);
             }
 
             offsetY = document.getElementById('toolbar').clientHeight + document.getElementById("header").clientHeight;
         }
 
         var readyFunc = function() {
-        	socket.emit('ready', {name:firstName, email:user}); 
-            document.querySelectorAll(".inqueue").forEach(function(e){
+            socket.emit('ready', {
+                name: firstName,
+                email: user
+            });
+            document.querySelectorAll(".inqueue").forEach(function(e) {
                 e.style.display = 'flex';
             });
             document.getElementById("ready").style.display = 'none';
             document.getElementById('queueTimer').style.display = 'none';
-            document.getElementById("cancel").style.display = 'flex'; 
+            document.getElementById("cancel").style.display = 'flex';
             //socket.emit('gameStatus', {});
         }
-        
+
         // queue setup
         document.getElementById('ready').addEventListener('click', readyFunc);
 
         var cancelFunc = function() {
-        	socket.emit('leaveQueue', {});
-            document.querySelectorAll(".inqueue").forEach(function(e){
+            socket.emit('leaveQueue', {});
+            document.querySelectorAll(".inqueue").forEach(function(e) {
                 e.style.display = 'none';
             });
             document.getElementById("ready").style.display = 'flex';
@@ -405,7 +413,7 @@
             document.getElementById("num-rounds").readOnly = false;
             // clean user list
             var paras = document.getElementsByClassName('pl-user');
-            while(paras[0]) {
+            while (paras[0]) {
                 paras[0].parentNode.removeChild(paras[0]);
             }
         }
@@ -425,9 +433,12 @@
             var name = document.getElementById("join-lobby-name").value;
             var pass = document.getElementById("join-lobby-pass").value;
             socket.emit("joinLobby", {
-              name: name,
-              pass: pass,
-              userData: { email: user, name: firstName }
+                name: name,
+                pass: pass,
+                userData: {
+                    email: user,
+                    name: firstName
+                }
             });
             initPL();
             document.getElementById("alert-msg").innerHTML = "Joining lobby!";
@@ -447,7 +458,15 @@
             var name = document.getElementById("lobby-name").value;
             var pass = document.getElementById("lobby-pass").value;
             var numRounds = document.getElementById("num-rounds").value;
-            var data = { userData: { email: user, name: firstName }, name: name, pass: pass, numRounds: numRounds };
+            var data = {
+                userData: {
+                    email: user,
+                    name: firstName
+                },
+                name: name,
+                pass: pass,
+                numRounds: numRounds
+            };
             socket.emit("createLobby", data);
         });
 
@@ -455,69 +474,76 @@
             document.getElementById("alert-msg").innerHTML = "Removing lobby!";
             document.getElementById("alert").style.display = "flex";
             var name = document.getElementById("lobby-name").value;
-            socket.emit("disbandPL", {name:name});
+            socket.emit("disbandPL", {
+                name: name
+            });
         });
 
         document.getElementById("pl-start").addEventListener('click', function() {
             document.getElementById("alert-msg").innerHTML = "Starting lobby!";
             document.getElementById("alert").style.display = "flex";
             var name = document.getElementById("lobby-name").value;
-            socket.emit("startLobby", {name:name});
+            socket.emit("startLobby", {
+                name: name
+            });
         });
-        
+
         document.getElementById('cancel').addEventListener('click', cancelFunc);
 
         var logoutFunc = function() {
-        	window.location.href = "/signout";
+            window.location.href = "/signout";
         }
 
         var profileFunc = function() {
-        	window.location.href = "/profile";
+            window.location.href = "/profile";
         }
 
         var homeFunc = function() {
-        	window.location.href = "/";
+            window.location.href = "/";
         }
 
         var backFunc = function() {
-        	window.history.back();
+            window.history.back();
         }
 
         var nextFunc = function() {
-        	window.history.forward();
+            window.history.forward();
         }
 
         var sendMessage = function(msg) {
-        	if (!canDraw) {
-        		if (msg !== '') socket.emit('message', {name:firstName, msg:msg});
-        	}
+            if (!canDraw) {
+                if (msg !== '') socket.emit('message', {
+                    name: firstName,
+                    msg: msg
+                });
+            }
         }
 
         //VOICE REC
         if (annyang) {
-        	var commands = {
-        		'ready': readyFunc,
-        		'queue up': readyFunc,
-        		'cancel': cancelFunc,
-        		'logout': logoutFunc,
-        		'log out': logoutFunc,
-        		'sign out': logoutFunc,
-        		'signout': logoutFunc,
-        		'profile': profileFunc,
-        		'home': homeFunc,
-        		'back': backFunc,
-        		'next': nextFunc,
-        		'forward': nextFunc,
-        		'change color to :newColour': changeColour,
-        		'change brush size to :newBrushSize': changeBrushSize,
-        		'undo': undoFunc,
-        		'redo': redoFunc,
-        		'clear': clearFunc,
-        		'send *message': sendMessage
-        	};
+            var commands = {
+                'ready': readyFunc,
+                'queue up': readyFunc,
+                'cancel': cancelFunc,
+                'logout': logoutFunc,
+                'log out': logoutFunc,
+                'sign out': logoutFunc,
+                'signout': logoutFunc,
+                'profile': profileFunc,
+                'home': homeFunc,
+                'back': backFunc,
+                'next': nextFunc,
+                'forward': nextFunc,
+                'change color to :newColour': changeColour,
+                'change brush size to :newBrushSize': changeBrushSize,
+                'undo': undoFunc,
+                'redo': redoFunc,
+                'clear': clearFunc,
+                'send *message': sendMessage
+            };
 
-        	annyang.addCommands(commands);
-        	annyang.start();
+            annyang.addCommands(commands);
+            annyang.start();
             document.getElementById('pauseVoice').style.display = "flex";
         }
 
@@ -540,17 +566,17 @@
         document.getElementById('resumeVoice').addEventListener('click', function() {
             resumeVoice();
         });
-        
+
         // request info from server
         socket.emit('getQueueStatus', {});
-        
+
         // handle server responses
         // handle private lobby responses
 
         socket.on("updatePl", function(data) {
             // clean user list
             var paras = document.getElementsByClassName('pl-user');
-            while(paras[0]) {
+            while (paras[0]) {
                 paras[0].parentNode.removeChild(paras[0]);
             }
 
@@ -559,7 +585,7 @@
                 div.classList.add("pl-user");
                 div.innerHTML = `<div class="pl-user-name">${user}</div>`;
                 document.getElementById("pl-users-list").appendChild(div);
-            }); 
+            });
         });
 
         socket.on("createLobby", function(data) {
@@ -597,12 +623,12 @@
             swal(data.msg);
         });
         // queue timer
-        socket.on('stopQueueTimer', function(data){
+        socket.on('stopQueueTimer', function(data) {
             document.getElementById('queue-time').innerHTML = '';
             document.getElementById('queueTimer').style.display = 'none';
         });
         // queue timer stop
-        socket.on('queueTimer', function(data){
+        socket.on('queueTimer', function(data) {
             document.getElementById('queue-time').innerHTML = data.time;
             document.getElementById('queueTimer').style.display = 'flex';
         });
@@ -616,7 +642,7 @@
         });
         // update user list
         socket.on('', function(data) {
-            
+
         });
         // queueupdated
         socket.on('queueUpdated', function(data) {
@@ -627,16 +653,18 @@
         socket.on('gameWinner', function(data) {
             // do a popup
             swal({
-                title:"Game Over!", 
+                title: "Game Over!",
                 text: data.name + " won!",
-                buttons:{}
+                buttons: {}
             });
-            setTimeout(function(){goBack();}, 5000);
+            setTimeout(function() {
+                goBack();
+            }, 5000);
         });
 
         // game won
         socket.on('gameWon', function(data) {
-            
+
             // special pop up for you won the game
             console.log("gamewon: ", data.gameWinner);
         });
@@ -680,28 +708,28 @@
             if (data.color)
                 color = data.color;
             postFeed('System', data.msg, color);
-            
-            if (data.endGame) setTimeout(goBack,1000);;
+
+            if (data.endGame) setTimeout(goBack, 1000);;
         });
         // current word
         socket.on('word', function(data) {
             document.getElementById("word").innerHTML = data.word;
-        });        
-        
+        });
+
         function addPlayers(players) {
             players.forEach(function(p) {
-                 var div = document.createElement('div');
-                 div.classList.add("user-icon");
-                 div.innerHTML = `<div class="user-wins"><span id="${p.email}" class="wincount">${p.wincount}</span></div>
+                var div = document.createElement('div');
+                div.classList.add("user-icon");
+                div.innerHTML = `<div class="user-wins"><span id="${p.email}" class="wincount">${p.wincount}</span></div>
                             <span class="user">${p.name}</span>`;
-                 document.getElementById("users-list").appendChild(div);
+                document.getElementById("users-list").appendChild(div);
             });
         }
 
         function getWord() {
             popup();
         }
-        
+
         function popup() {
             document.getElementById('word-to-draw').value = '';
             document.getElementById('popup').style.display = 'flex';
@@ -709,14 +737,16 @@
                 var word = document.getElementById('word-to-draw').value;
                 if (word !== '') {
                     document.getElementById("word").innerHTML = word;
-                    socket.emit('word', {word:word});
+                    socket.emit('word', {
+                        word: word
+                    });
                     document.getElementById('word-to-draw').value = '';
                     document.getElementById('popup').style.display = 'none';
                     canDraw = true;
                 }
             });
         }
-        
+
         function goBack() {
             window.location.href = '/';
         }

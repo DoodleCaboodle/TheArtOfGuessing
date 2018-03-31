@@ -14,12 +14,12 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-app.use(function (req, res, next){
-    req.session.username = ('username' in req.session)? req.session.username : null;
-    var email = (req.session.username)? req.session.username : '';
+app.use(function(req, res, next) {
+    req.session.username = ('username' in req.session) ? req.session.username : null;
+    var email = (req.session.username) ? req.session.username : '';
     res.setHeader('Set-Cookie', cookie.serialize('email', email, {
-          path : '/', 
-          maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
     }));
     console.log("HTTP request", req.method, req.url, req.body);
     next();
@@ -41,7 +41,7 @@ app.use(function(error, req, res, next) {
     return res.status(500).send('500: Internal Server Error');
 });
 
-app.use(function (req, res, next){
+app.use(function(req, res, next) {
     console.log("HTTP Response", res.statusCode);
 });
 
@@ -65,7 +65,7 @@ io.on('connection', function(socket) {
     server.init(io, socket);
 });
 
-http.listen(PORT, function (err) {
+http.listen(PORT, function(err) {
     if (err) console.log(err);
     else console.log("HTTP server on http://localhost:%s", PORT);
 });

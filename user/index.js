@@ -25,28 +25,35 @@ passport.use(new FacebookStrategy({
         var facebookName = profile.name; // Dictionary with structure: {familyName : "Caboodle", givenName: "Doodle", middleName: undefined}
         var facebookEmail = profile.emails[0].value; // Array
 
-        
+
         User.findByEmail(facebookEmail, function(err, result) {
             if (!result.length > 0) {
                 MongoClient.connect(uri, function(err, client) {
                     const collection = client.db("art-of-guessing").collection("users");
-                    collection.insertOne({email:facebookEmail, password:"", salt:"", firstname:facebookName.givenName, lastname:facebookName.familyName}).then(function(result){
+                    collection.insertOne({
+                        email: facebookEmail,
+                        password: "",
+                        salt: "",
+                        firstname: facebookName.givenName,
+                        lastname: facebookName.familyName
+                    }).then(function(result) {
                         // something
                     });
                     const collectionStats = client.db("art-of-guessing").collection("user-stats");
-                    collectionStats.insertOne({email:facebookEmail,
-                                              roundsWon: 0,
-                                              roundsPlayed: 0,
-                                              gamesWon: 0,
-                                              gamesPlayed: 0,
-                                              words: {}
-                                             }).then(function(result){
+                    collectionStats.insertOne({
+                        email: facebookEmail,
+                        roundsWon: 0,
+                        roundsPlayed: 0,
+                        gamesWon: 0,
+                        gamesPlayed: 0,
+                        words: {}
+                    }).then(function(result) {
                         // something
                     });
                 });
             }
         });
-        
+
         req.session.username = facebookEmail;
         // req.session.username = facebookEmails[0];
         // res.setHeader('Set-Cookie', cookie.serialize('email', email, {
@@ -58,9 +65,9 @@ passport.use(new FacebookStrategy({
 ));
 
 passport.use(new GoogleStrategy({
-        clientID:"180635629804-s9k3fktikglmn06f32u6mpktql5qlhg8.apps.googleusercontent.com",
-        clientSecret:"VEvqMnJOZACYEkD2fn1amlcE",
-        callbackURL:"https://art-of-guessing.herokuapp.com/login/google/callback",
+        clientID: "180635629804-s9k3fktikglmn06f32u6mpktql5qlhg8.apps.googleusercontent.com",
+        clientSecret: "VEvqMnJOZACYEkD2fn1amlcE",
+        callbackURL: "https://art-of-guessing.herokuapp.com/login/google/callback",
         passReqToCallback: true,
         profileFields: ['id', 'emails', 'name']
     },
@@ -70,38 +77,45 @@ passport.use(new GoogleStrategy({
         var googleName = profile.name; // Dictionary with structure: {familyName : "Caboodle", givenName: "Doodle", middleName: undefined}
         var googleEmail = profile.emails[0].value; // Array
 
-        
+
         User.findByEmail(googleEmail, function(err, result) {
             if (!result.length > 0) {
                 MongoClient.connect(uri, function(err, client) {
                     const collection = client.db("art-of-guessing").collection("users");
-                    collection.insertOne({email:googleEmail, password:"", salt:"", firstname:googleName.givenName, lastname:googleName.familyName}).then(function(result){
+                    collection.insertOne({
+                        email: googleEmail,
+                        password: "",
+                        salt: "",
+                        firstname: googleName.givenName,
+                        lastname: googleName.familyName
+                    }).then(function(result) {
                         // something
                     });
                     const collectionStats = client.db("art-of-guessing").collection("user-stats");
-                    collectionStats.insertOne({email:googleEmail,
-                                              roundsWon: 0,
-                                              roundsPlayed: 0,
-                                              gamesWon: 0,
-                                              gamesPlayed: 0,
-                                              words: {}
-                                             }).then(function(result){
+                    collectionStats.insertOne({
+                        email: googleEmail,
+                        roundsWon: 0,
+                        roundsPlayed: 0,
+                        gamesWon: 0,
+                        gamesPlayed: 0,
+                        words: {}
+                    }).then(function(result) {
                         // something
                     });
                 });
             }
         });
-        
+
         req.session.username = googleEmail;
         return callback(null, profile);
     }
 ));
 
-passport.serializeUser(function(user, callback){
+passport.serializeUser(function(user, callback) {
     callback(null, user);
 });
 
-passport.deserializeUser(function(object, callback){
+passport.deserializeUser(function(object, callback) {
     callback(null, object);
 });
 
@@ -120,18 +134,17 @@ var getSaltedHash = function(pass, salt) {
 }
 
 var authenticate = function(req, res, email, pass, callback) {
-    User.findByEmail(email, function(err, result){
+    User.findByEmail(email, function(err, result) {
         if (err) callback(err, null);
         if (result.length == 1 && result[0].email === email && bcrypt.compareSync(pass, result[0].password)) {
-            
+
             req.session.username = email;
             res.setHeader('Set-Cookie', cookie.serialize('email', email, {
-                  path : '/', 
-                  maxAge: 60 * 60 * 24 * 7
+                path: '/',
+                maxAge: 60 * 60 * 24 * 7
             }));
             callback(null, true);
-        }
-        else {
+        } else {
             callback(null, false);
         }
     });
@@ -146,23 +159,30 @@ var register = function(req, res, user, callback) {
                 req.session.username = user.email;
                 MongoClient.connect(uri, function(err, client) {
                     const collection = client.db("art-of-guessing").collection("users");
-                    collection.insertOne({email:user.email, password:user.password, salt:user.salt, firstname:user.firstname, lastname:user.lastname}).then(function(result){
+                    collection.insertOne({
+                        email: user.email,
+                        password: user.password,
+                        salt: user.salt,
+                        firstname: user.firstname,
+                        lastname: user.lastname
+                    }).then(function(result) {
                         // something
                     });
                     const collectionStats = client.db("art-of-guessing").collection("user-stats");
-                    collectionStats.insertOne({email:user.email,
-                                              roundsWon: 0,
-                                              roundsPlayed: 0,
-                                              gamesWon: 0,
-                                              gamesPlayed: 0,
-                                              words: {}
-                                             }).then(function(result){
+                    collectionStats.insertOne({
+                        email: user.email,
+                        roundsWon: 0,
+                        roundsPlayed: 0,
+                        gamesWon: 0,
+                        gamesPlayed: 0,
+                        words: {}
+                    }).then(function(result) {
                         // something
                     });
                 });
                 res.setHeader('Set-Cookie', cookie.serialize('email', req.session.username, {
-                      path : '/', 
-                      maxAge: 60 * 60 * 24 * 7
+                    path: '/',
+                    maxAge: 60 * 60 * 24 * 7
                 }));
                 callback(null, true);
             }
@@ -173,8 +193,8 @@ var register = function(req, res, user, callback) {
 var logout = function(req, res, callback) {
     req.session.username = '';
     res.setHeader('Set-Cookie', cookie.serialize('email', '', {
-          path : '/', 
-          maxAge: 60 * 60 * 24 * 7
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7
     }));
     callback(null, true);
 }
@@ -211,8 +231,8 @@ function init(app) {
             else return res.status(401).end("access denied");
         });
     });
-    
-    app.post('/signup/', function(req, res, next){
+
+    app.post('/signup/', function(req, res, next) {
         console.log(User);
         var salt = getSalt();
         var hash = getSaltedHash(req.body.password, salt);
@@ -225,38 +245,48 @@ function init(app) {
     });
 
     // retrieve
-    
-    app.get('/signout/', function(req, res, next){
+
+    app.get('/signout/', function(req, res, next) {
         logout(req, res, function(err, success) {
             if (success) res.redirect('/');
             else res.redirect('/login');
         });
     });
 
-    app.get('/login/', authenticateMiddleware, function(req, res, next){
+    app.get('/login/', authenticateMiddleware, function(req, res, next) {
         //res.sendFile(config.filepath + '/');
         res.redirect('/');
     });
 
-    app.get('/profile/', authenticateMiddleware, function(req, res, next){
+    app.get('/profile/', authenticateMiddleware, function(req, res, next) {
         res.sendFile(config.filepath + 'profile/profile.html');
     });
 
-    app.get('/stats/:email', authenticateMiddleware, function(req, res, next){
+    app.get('/stats/:email', authenticateMiddleware, function(req, res, next) {
         return getStats(req, res, req.params.email);
     });
-    
-    app.get('/firstname/:email', function(req, res, next){
+
+    app.get('/firstname/:email', function(req, res, next) {
         return getFirstName(req, res, req.params.email);
     });
 
-    app.get('/login/facebook', passport.authenticate('facebook', {scope: ['email']}));
+    app.get('/login/facebook', passport.authenticate('facebook', {
+        scope: ['email']
+    }));
 
-    app.get('/login/facebook/callback', passport.authenticate('facebook', {failureRedirect: '/login', successRedirect: '/'}));
+    app.get('/login/facebook/callback', passport.authenticate('facebook', {
+        failureRedirect: '/login',
+        successRedirect: '/'
+    }));
 
-    app.get('/login/google', passport.authenticate('google', {scope: ['email']}));
+    app.get('/login/google', passport.authenticate('google', {
+        scope: ['email']
+    }));
 
-    app.get('/login/google/callback', passport.authenticate('google', {failureRedirect: '/login', successRedirect: '/'}));
+    app.get('/login/google/callback', passport.authenticate('google', {
+        failureRedirect: '/login',
+        successRedirect: '/'
+    }));
 
     // update
 
@@ -264,4 +294,6 @@ function init(app) {
 }
 
 
-module.exports = {init: init};
+module.exports = {
+    init: init
+};
