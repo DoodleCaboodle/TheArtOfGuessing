@@ -27,7 +27,7 @@ passport.use(new FacebookStrategy({
 
 
         User.findByEmail(facebookEmail, function(err, result) {
-            if (!result.length > 0) {
+            if (result.length <= 0) {
                 MongoClient.connect(uri, function(err, client) {
                     const collection = client.db("art-of-guessing").collection("users");
                     collection.insertOne({
@@ -79,7 +79,7 @@ passport.use(new GoogleStrategy({
 
 
         User.findByEmail(googleEmail, function(err, result) {
-            if (!result.length > 0) {
+            if (result.length <= 0) {
                 MongoClient.connect(uri, function(err, client) {
                     const collection = client.db("art-of-guessing").collection("users");
                     collection.insertOne({
@@ -123,15 +123,15 @@ var authenticateMiddleware = function(req, res, next) {
     console.log(req.session.username);
     if (!req.session.username || req.session.username == '') res.sendFile(config.filepath + 'profile/login.html');
     else next();
-}
+};
 
 var getSalt = function() {
     return bcrypt.genSaltSync(10);
-}
+};
 
 var getSaltedHash = function(pass, salt) {
     return bcrypt.hashSync(pass, salt);
-}
+};
 
 var authenticate = function(req, res, email, pass, callback) {
     User.findByEmail(email, function(err, result) {
@@ -148,7 +148,7 @@ var authenticate = function(req, res, email, pass, callback) {
             callback(null, false);
         }
     });
-}
+};
 
 var register = function(req, res, user, callback) {
     if (!user) callback(null, false);
@@ -188,7 +188,7 @@ var register = function(req, res, user, callback) {
             }
         });
     }
-}
+};
 
 var logout = function(req, res, callback) {
     req.session.username = '';
@@ -197,7 +197,7 @@ var logout = function(req, res, callback) {
         maxAge: 60 * 60 * 24 * 7
     }));
     callback(null, true);
-}
+};
 
 var getStats = function(req, res, email, callback) {
     User.getStats(email, function(err, result) {
@@ -205,7 +205,7 @@ var getStats = function(req, res, email, callback) {
         if (err || result.length < 1) return res.status(404).json("stats corupt");
         else return res.json(result[0]);
     });
-}
+};
 
 var getFirstName = function(req, res, email, callback) {
     User.findByEmail(email, function(err, result) {
@@ -213,7 +213,7 @@ var getFirstName = function(req, res, email, callback) {
         if (err || result.length < 1) return res.status(404).json("stats corupt");
         else return res.json(result[0].firstname);
     });
-}
+};
 
 var updateUser = function(req, res, callback) {
     var salt = getSalt();
@@ -230,7 +230,7 @@ var updateUser = function(req, res, callback) {
         }
         return callback(err, result);
     });
-}
+};
 
 function init(app) {
 

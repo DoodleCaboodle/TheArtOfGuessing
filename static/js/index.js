@@ -34,7 +34,7 @@
 
     window.onunload = function() {
         socket.close();
-    }
+    };
 
     var loadWindow = function() {
 
@@ -136,14 +136,14 @@
             rgb = rgb.replace(/[^\d,]/g, '').split(',');
             var hex = "#" + ((1 << 24) + (parseInt(rgb[0]) << 16) + (parseInt(rgb[1]) << 8) + parseInt(rgb[2])).toString(16).slice(1);
             colourPanel.value = hex;
-        }
+        };
 
         var changeColour = function(newColour) {
             if (canDraw) {
                 curr.colour = newColour;
                 changePanelColour(newColour);
             }
-        }
+        };
 
         colourPanel.addEventListener("input", function(e) {
             changeColour(e.target.value);
@@ -160,7 +160,7 @@
                 curr.brushSize = newBrushSize;
                 brushSelector.value = newBrushSize;
             }
-        }
+        };
 
         brushSelector.addEventListener("input", function(e) {
             changeBrushSize(e.target.value);
@@ -187,7 +187,7 @@
                     socket.emit('undo', {});
                 }
             }
-        }
+        };
 
         undoButton.addEventListener("click", function(e) {
             undoFunc();
@@ -210,7 +210,7 @@
                     socket.emit('redo', {});
                 }
             }
-        }
+        };
 
         redoButton.addEventListener("click", function(e) {
             redoFunc();
@@ -227,7 +227,7 @@
 
                 socket.emit('clear', {});
             }
-        }
+        };
 
         clearButton.addEventListener("click", function(e) {
             clearFunc();
@@ -392,7 +392,7 @@
             document.getElementById('queueTimer').style.display = 'none';
             document.getElementById("cancel").style.display = 'flex';
             //socket.emit('gameStatus', {});
-        }
+        };
 
         // queue setup
         document.getElementById('ready').addEventListener('click', readyFunc);
@@ -405,7 +405,7 @@
             document.getElementById("ready").style.display = 'flex';
             document.getElementById('queueTimer').style.display = 'none';
             document.getElementById("cancel").style.display = 'none';
-        }
+        };
 
         document.getElementById("alert").addEventListener('click', function() {
             document.getElementById("alert").style.display = 'none';
@@ -506,23 +506,23 @@
 
         var logoutFunc = function() {
             window.location.href = "/signout";
-        }
+        };
 
         var profileFunc = function() {
             window.location.href = "/profile";
-        }
+        };
 
         var homeFunc = function() {
             window.location.href = "/";
-        }
+        };
 
         var backFunc = function() {
             window.history.back();
-        }
+        };
 
         var nextFunc = function() {
             window.history.forward();
-        }
+        };
 
         var sendMessage = function(msg) {
             if (!canDraw) {
@@ -531,7 +531,7 @@
                     msg: msg
                 });
             }
-        }
+        };
 
         //VOICE REC
         if (annyang) {
@@ -582,13 +582,13 @@
             annyang.pause();
             document.getElementById('pauseVoice').style.display = "none";
             document.getElementById('resumeVoice').style.display = "flex";
-        }
+        };
 
         var resumeVoice = function() {
             annyang.resume();
             document.getElementById('pauseVoice').style.display = "flex";
             document.getElementById('resumeVoice').style.display = "none";
-        }
+        };
 
         document.getElementById('pauseVoice').addEventListener('click', function() {
             pauseVoice();
@@ -677,7 +677,7 @@
         });
         // queueupdated
         socket.on('queueUpdated', function(data) {
-            if (data.numInQueue < 2) document.getElementById('queueTimer').style.display = 'none'
+            if (data.numInQueue < 2) document.getElementById('queueTimer').style.display = 'none';
             document.getElementById('num-in-queue').innerHTML = data.numInQueue;
         });
         // gameWinner
@@ -741,7 +741,7 @@
                 color = data.color;
             postFeed('System', data.msg, color);
 
-            if (data.endGame) setTimeout(goBack, 1000);;
+            if (data.endGame) setTimeout(goBack, 1000);
         });
         // current word
         socket.on('word', function(data) {
@@ -782,5 +782,5 @@
         function goBack() {
             window.location.href = '/';
         }
-    }
+    };
 }());

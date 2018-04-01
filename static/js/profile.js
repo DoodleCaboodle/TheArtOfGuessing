@@ -38,7 +38,7 @@
         document.getElementById("mainInfo").appendChild(h);
         console.log(user);
         api.getStats(user, function(err, res) {
-            if (err) console.log(err)
+            if (err) console.log(err);
             else {
                 var gamesWon = res.gamesWon;
                 var gamesLost = res.gamesPlayed - res.gamesWon;
@@ -75,7 +75,7 @@
                             animateRotate: true
                         }
                     }
-                }
+                };
                 var ctx = document.getElementById("gameStats").getContext("2d");
                 ctx.canvas.width = 180;
                 ctx.canvas.height = 180;
@@ -108,8 +108,8 @@
                         borderWidth: 1,
                         data: guessed
                     }]
-                }
-                var ctx = document.getElementById("wordsData").getContext("2d");
+                };
+                ctx = document.getElementById("wordsData").getContext("2d");
                 window.myBarChart = new Chart(ctx, {
                     type: 'bar',
                     data: barWordsData,
@@ -160,8 +160,8 @@
                             animateRotate: true
                         }
                     }
-                }
-                var ctx = document.getElementById("roundsStats").getContext("2d");
+                };
+                ctx = document.getElementById("roundsStats").getContext("2d");
                 ctx.canvas.width = 180;
                 ctx.canvas.height = 180;
                 window.myDoughnut = new Chart(ctx, roundsStatsConfig);
@@ -170,19 +170,19 @@
 
         var logoutFunc = function() {
             window.location.href = "/signout";
-        }
+        };
 
         var homeFunc = function() {
             window.location.href = "/";
-        }
+        };
 
         var backFunc = function() {
             window.history.back();
-        }
+        };
 
         var nextFunc = function() {
             window.history.forward();
-        }
+        };
 
         if (annyang) {
             var commands = {
@@ -222,13 +222,13 @@
             annyang.pause();
             document.getElementById('pauseVoice').style.display = "none";
             document.getElementById('resumeVoice').style.display = "flex";
-        }
+        };
 
         var resumeVoice = function() {
             annyang.resume();
             document.getElementById('pauseVoice').style.display = "flex";
             document.getElementById('resumeVoice').style.display = "none";
-        }
+        };
 
         document.getElementById('pauseVoice').addEventListener('click', function() {
             pauseVoice();
@@ -279,6 +279,5 @@
                 }
             });            
         });
-    }
-
+    };
 }());

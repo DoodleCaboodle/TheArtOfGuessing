@@ -31,9 +31,9 @@ User.updateUser = function(oldEmail, email, password, salt, firstname, lastname,
             $currentDate: {
                 lastModified: true
             }
-        }).then(function(result) {callback(null, result)});
+        }).then(function(result) {callback(null, result);});
     });
-}
+};
 
 User.findByEmail = function(email, callback) {
     email = email.replace('%40', '@');
@@ -52,7 +52,7 @@ User.findByEmail = function(email, callback) {
             client.close();
         });
     });
-}
+};
 
 User.getStats = function(email, callback) {
     email = email.replace('%40', '@');
@@ -71,7 +71,7 @@ User.getStats = function(email, callback) {
             client.close();
         });
     });
-}
+};
 
 User.updateStats = function(email, roundsWon, roundsPlayed, gamesWon, gamesPlayed, newWords) {
     email = email.replace('%40', '@');
@@ -108,6 +108,6 @@ User.updateStats = function(email, roundsWon, roundsPlayed, gamesWon, gamesPlaye
             });
         }
     });
-}
+};
 
 module.exports = User;

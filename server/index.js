@@ -238,7 +238,7 @@ exports.init = function(hio, hsocket) {
     hsocket.on('disbandPL', function(data) {
         disbandPL(hsocket.id, data);
     });
-}
+};
 
 function disbandPL(id, data) {
     if (privateLobbies[data.name]) {
@@ -344,8 +344,9 @@ function startQueue() {
 }
 
 function startQueueTimer() {
+	var key;
     if (io.sockets.adapter.rooms[queueRoom].length < 2) {
-        for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
+        for (key in io.sockets.adapter.rooms[queueRoom].sockets) {
             io.sockets.connected[key].emit('stopQueueTimer', {});
             io.sockets.connected[key].emit('queueUpdated', {
                 numInQueue: io.sockets.adapter.rooms[queueRoom].length
@@ -356,7 +357,7 @@ function startQueueTimer() {
         return;
     }
     queueTimer -= 1;
-    for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
+    for (key in io.sockets.adapter.rooms[queueRoom].sockets) {
         io.sockets.connected[key].emit('queueTimer', {
             time: queueTimer
         });
@@ -371,7 +372,8 @@ function startQueueTimer() {
 function startGame(privateQueue = null) {
     var gameRoom;
     var playerList = [];
-    if (privateQueue == null) {;
+    var key;
+    if (privateQueue == null) {
         gameRoom = "gameRoom" + roomId;
         lobbyData[gameRoom] = {
             sockets: [],
@@ -379,7 +381,7 @@ function startGame(privateQueue = null) {
             i: 0
         };
         if (io.sockets.adapter.rooms[queueRoom]) {
-            for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
+            for (key in io.sockets.adapter.rooms[queueRoom].sockets) {
                 io.sockets.connected[key].leave(queueRoom);
                 io.sockets.connected[key].join(gameRoom);
                 playerList.push({
@@ -393,7 +395,7 @@ function startGame(privateQueue = null) {
         }
         lobbyData[gameRoom].playerList = playerList;
         if (io.sockets.adapter.rooms[gameRoom]) {
-            for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
+            for (key in io.sockets.adapter.rooms[gameRoom].sockets) {
                 io.sockets.connected[key].emit('startGame', {
                     playerList: playerList
                 });
@@ -408,7 +410,7 @@ function startGame(privateQueue = null) {
             i: 0
         };
         for (var i = 0; i < lobbyData[gameRoom].sockets.length; i++) {
-            var key = lobbyData[gameRoom].sockets[i];
+            key = lobbyData[gameRoom].sockets[i];
             io.sockets.connected[key].leave(queueRoom);
             io.sockets.connected[key].join(gameRoom);
             playerList.push({
@@ -420,7 +422,7 @@ function startGame(privateQueue = null) {
         }
         lobbyData[gameRoom].playerList = playerList;
         if (io.sockets.adapter.rooms[gameRoom]) {
-            for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
+            for (key in io.sockets.adapter.rooms[gameRoom].sockets) {
                 io.sockets.connected[key].emit('startGame', {
                     playerList: playerList
                 });
@@ -542,12 +544,13 @@ function userWon(id, gameRoom) {
 function endGame(gameRoom, immediate = false) {
     clearInterval(roundIntervals[gameRoom]);
     //pickWinner
+    var key;
     if (!immediate) {
         var gameWinner = '';
         var winnerEmail = '';
         var winnerID;
         var winCount = 0;
-        for (var key in queueData) {
+        for (key in queueData) {
             if (queueData[key].wincount >= winCount) {
                 gameWinner = queueData[key].name;
                 winnerID = key;
@@ -556,7 +559,7 @@ function endGame(gameRoom, immediate = false) {
             }
             userModel.updateStats(queueData[key].email, queueData[key].wincount, 0, 0, 1, {});
         }
-        for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
+        for (key in io.sockets.adapter.rooms[gameRoom].sockets) {
             io.sockets.connected[key].emit("gameWinner", {
                 name: gameWinner
             });
@@ -571,7 +574,7 @@ function endGame(gameRoom, immediate = false) {
         userModel.updateStats(winnerEmail, 0, 0, 1, 0, {});
     }
     if (io.sockets.adapter.rooms[queueRoom]) {
-        for (var key in io.sockets.adapter.rooms[queueRoom].sockets) {
+        for (key in io.sockets.adapter.rooms[queueRoom].sockets) {
             io.sockets.connected[key].emit('gameStatus', {});
         }
     }
