@@ -378,7 +378,8 @@ function startGame(privateQueue = null) {
         lobbyData[gameRoom] = {
             sockets: [],
             matchNum: 2,
-            i: 0
+            i: 0,
+            drawing: null
         };
         if (io.sockets.adapter.rooms[queueRoom]) {
             for (key in io.sockets.adapter.rooms[queueRoom].sockets) {
@@ -399,6 +400,7 @@ function startGame(privateQueue = null) {
                 io.sockets.connected[key].emit('startGame', {
                     playerList: playerList
                 });
+
             }
         }
         roomId++;
@@ -456,7 +458,11 @@ function endRound(gameRoom) {
                 guessed: 0,
                 drawn: 0
             };
-            userModel.updateStats(queueData[key].email, 0, 1, 0, 0, word);
+            if (key == lobbyData[gameRoom].drawing) {
+                word[words[gameRoom]],drawn++;
+                userModel.updateStats(queueData[key].email, 0, 0, 0, 0, word);
+            }
+            else userModel.updateStats(queueData[key].email, 0, 1, 0, 0, word);
         }
     }
     delete words[gameRoom];
@@ -480,6 +486,7 @@ function startNextRound(gameRoom) {
     }
     var drawing = lobbyData[gameRoom].sockets[lobbyData[gameRoom].i];
     lobbyData[gameRoom].i++;
+    lobbyData[gameRoom],drawing = drawing;
     if (io.sockets.adapter.rooms[gameRoom]) {
         for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
             io.sockets.connected[key].emit('systemMessage', {
