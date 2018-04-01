@@ -1,93 +1,110 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-        <title>AOG: Login</title>
-        <link rel="stylesheet" type="text/css" href="../style/main.css"/>
-        <link rel="stylesheet" type="text/css" href="../style/login.css"/>
-	</head>
-	<body>
-		<div id="overlay">
-			<div id="voiceCommands">
-				<button type="button" id="close_help">Close</button>
-				<h2>Available Voice Commands:</h2>
-				<p>Log in: Switches to the login panel</p>
-				<p>Sign up: Switches to the sign-up panel</p>
-				<p>Log in with Facebook: Redirects to Facebook Login</p>
-				<p>Log in with Google: Redirects to Google Login</p>
-				<p>Help me: Displays instructions and available voice commands</p>
-				<p>Thank you: Closes the instructions overlay</p>
-			</div>
+
+<head>
+	<meta charset="utf-8">
+    <title>AOG: Login</title>
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="../style/main.css" />
+	<link rel="stylesheet" type="text/css" href="../style/login.css" />
+</head>
+
+<body>
+	<div id="overlay" class="full-screen">
+		<button type="button" id="close_help"></button>
+		<div id="voiceCommands">
+			<h2 class="overlay-title">Available Voice Commands</h2>
+			<div class="overlay-item">
+				<div class="overlay-command">Ready/Queue up</div> Puts you in the queue for a public game</div>
+			<div class="overlay-item">
+				<div class="overlay-command">Cancel</div> Removes you from the queue</div>
+			<div class="overlay-item">
+				<div class="overlay-command">Profile</div> Lets you view your profile</div>
+			<div class="overlay-item">
+				<div class="overlay-command">Log out/Sign out</div> Logs you out</div>
+			<div class="overlay-item">
+				<div class="overlay-command">Home</div> Brings you back to the main page</div>
+			<div class="overlay-item">
+				<div class="overlay-command">Back</div> Similar to the back button of the browser</div>
+			<div class="overlay-item">
+				<div class="overlay-command">Next/Forward</div> Similar to the forward button of the browser</div>
+			<div class="overlay-item">
+				<div class="overlay-command">Help me</div> Displays instructions and available voice commands</div>
+			<div class="overlay-item">
+				<div class="overlay-command">Thank you</div> Closes the instructions overlay</div>
 		</div>
-        <!--
+	</div>
+	<!--
   		This was created based on the Dribble shot by Deepak Yadav that you can find at https://goo.gl/XRALsw
   		I am @hurickkrugner on Twitter or @hk95 on GitHub. Feel free to message me anytime.
 		-->
-		<section class="user">
-			<div id="other_login_mediums">
-				<button class="loginBtn loginBtn--facebook" onclick="window.location.href='/login/facebook'">Login with Facebook</button>
+	<section class="user">
+		<div id="other_login_mediums">
+			<button class="loginBtn loginBtn--facebook" onclick="window.location.href='/login/facebook'">Login with Facebook</button>
 
-				<button class="loginBtn loginBtn--google" onclick="window.location.href='/login/google'">Login with Google</button>
+			<button class="loginBtn loginBtn--google" onclick="window.location.href='/login/google'">Login with Google</button>
+		</div>
+
+		<div class="user_options-container">
+			<div class="user_options-text">
+				<div class="user_options-unregistered">
+					<h2 class="user_unregistered-title">Don't have an account?</h2>
+					<p class="user_unregistered-text">Art of Guessing is a multiplayer game where you can guess what others are drawing and then draw for others as well.
+						</p>
+					<button class="user_unregistered-signup" id="signup-button">Sign up</button>
+				</div>
+
+				<div class="user_options-registered">
+					<h2 class="user_registered-title">Have an account?</h2>
+					<p class="user_registered-text">Art of Guessing is a multiplayer game where you can guess what others are drawing and then draw for others as well.</p>
+					<button class="user_registered-login" id="login-button">Login</button>
+				</div>
 			</div>
 
-		  	<div class="user_options-container">
-			    <div class="user_options-text">
-			      <div class="user_options-unregistered">
-			        <h2 class="user_unregistered-title">Don't have an account?</h2>
-			        <p class="user_unregistered-text">Art of Guessing is a multiplayer game where you can guess what others are drawing and then draw for others as well. </p>
-			        <button class="user_unregistered-signup" id="signup-button">Sign up</button>
-			      </div>
+			<div class="user_options-forms" id="user_options-forms">
+				<div class="user_forms-login">
+					<h2 class="forms_title">Login</h2>
+					<form class="forms_form">
+						<fieldset class="forms_fieldset">
+							<div class="forms_field">
+								<input type="email" placeholder="Email" class="forms_field-input" id="login-email" required autofocus />
+							</div>
+							<div class="forms_field">
+								<input type="password" placeholder="Password" class="forms_field-input" id="login-password" required />
+							</div>
+						</fieldset>
+						<div class="forms_buttons">
+							<button type="button" class="forms_buttons-forgot">Forgot password?</button>
+							<input type="submit" value="Log In" class="forms_buttons-action" id="login-submit-btn">
+						</div>
+					</form>
+				</div>
+				<div class="user_forms-signup">
+					<h2 class="forms_title">Sign Up</h2>
+					<form class="forms_form">
+						<fieldset class="forms_fieldset">
+							<div class="forms_field">
+								<input type="text" placeholder="Full Name" class="forms_field-input" id="full-name" required />
+							</div>
+							<div class="forms_field">
+								<input type="email" placeholder="Email" class="forms_field-input" id="signup-email" required />
+							</div>
+							<div class="forms_field">
+								<input type="password" placeholder="Password" class="forms_field-input" id="signup-password" required />
+							</div>
+						</fieldset>
+						<div class="forms_buttons">
+							<input type="submit" value="Sign up" class="forms_buttons-action" id="signup-submit-btn">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
 
-			      <div class="user_options-registered">
-			        <h2 class="user_registered-title">Have an account?</h2>
-			        <p class="user_registered-text">Art of Guessing is a multiplayer game where you can guess what others are drawing and then draw for others as well.</p>
-			        <button class="user_registered-login" id="login-button">Login</button>
-			      </div>
-			    </div>
-			    
-			    <div class="user_options-forms" id="user_options-forms">
-			      <div class="user_forms-login">
-			        <h2 class="forms_title">Login</h2>
-			        <form class="forms_form">
-			          <fieldset class="forms_fieldset">
-			            <div class="forms_field">
-			              <input type="email" placeholder="Email" class="forms_field-input" id="login-email" required autofocus />
-			            </div>
-			            <div class="forms_field">
-			              <input type="password" placeholder="Password" class="forms_field-input" id="login-password" required />
-			            </div>
-			          </fieldset>
-			          <div class="forms_buttons">
-			            <button type="button" class="forms_buttons-forgot">Forgot password?</button>
-			            <input type="submit" value="Log In" class="forms_buttons-action" id="login-submit-btn">
-			          </div>
-			        </form>
-			      </div>
-			      <div class="user_forms-signup">
-			        <h2 class="forms_title">Sign Up</h2>
-			        <form class="forms_form">
-			          <fieldset class="forms_fieldset">
-			          	<div class="forms_field">
-			              		<input type="text" placeholder="Full Name" class="forms_field-input" id="full-name" required />
-			            </div>
-			            <div class="forms_field">
-			              <input type="email" placeholder="Email" class="forms_field-input" id="signup-email" required />
-			            </div>
-			            <div class="forms_field">
-			              <input type="password" placeholder="Password" class="forms_field-input" id="signup-password" required />
-			            </div>
-			          </fieldset>
-			          <div class="forms_buttons">
-			            <input type="submit" value="Sign up" class="forms_buttons-action" id="signup-submit-btn">
-			          </div>
-			        </form>
-			      </div>
-			    </div>
-		  	</div>
-		</section>
-		
-		<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
-		<script src="../js/api.js"></script>
-		<script src="../js/login.js"></script>
-	</body>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+	<script src="../js/api.js"></script>
+	<script src="../js/login.js"></script>
+</body>
+
 </html>
