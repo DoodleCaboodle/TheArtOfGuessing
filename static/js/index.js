@@ -556,7 +556,7 @@
                 'clear': clearFunc,
                 'send *message': sendMessage,
                 'help me': function() {
-                    document.getElementById('overlay').style.display = "block";
+                    document.getElementById('overlay').style.display = "flex";
                 },
                 'thank you': function() {
                     document.getElementById('overlay').style.display = "none";

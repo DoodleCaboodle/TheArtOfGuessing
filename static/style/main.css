@@ -32,7 +32,7 @@ body {
 }
 
 .highlight {
-    font-weight: bold;
+   font-weight: bold;
 }
 
 #alert {
@@ -154,6 +154,10 @@ header a {
     transition-duration: 0.4s;
 }
 
+.nav-btn:hover {
+    cursor: pointer;
+}
+
 .nav-btn:hover .tooltip {
     transition-duration: 0.4s;
     opacity: 1;
@@ -214,7 +218,7 @@ header a {
     background-repeat: no-repeat;
 }
 
-#start-container {
+.content-container {
     width: 70%;
     height: 100%;
     display: flex;
@@ -917,6 +921,15 @@ header a {
     margin-left: 10px;
     color: rgb(255, 101, 101);
     font-weight: bold;
+}
+
+.overlay-link {
+    text-decoration: none;
+    color: #000;
+}
+
+.overlay-link:hover {
+    font-size: 18pt;
 }
 
 #loading {

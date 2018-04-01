@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const cookie = require('cookie');
 const bodyParser = require('body-parser');
+const config = require("./config.js");
 // the APP
 const app = express();
 
@@ -29,6 +30,11 @@ app.use(function(req, res, next) {
 require('./user').init(app);
 var server = require('./server');
 
+// credits route
+app.get("/credits/", function(req, res, next) {
+    console.log("credits");
+    res.sendFile(config.filepath + "/credits.html");
+});
 
 // Handle 404
 app.use(function(req, res) {

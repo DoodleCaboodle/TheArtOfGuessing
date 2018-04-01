@@ -196,7 +196,7 @@
                 'next': nextFunc,
                 'forward': nextFunc,
                 'help me': function() {
-                    document.getElementById('overlay').style.display = "block";
+                    document.getElementById('overlay').style.display = "flex";
                 },
                 'thank you': function() {
                     document.getElementById('overlay').style.display = "none";
@@ -212,7 +212,7 @@
         }
 
         document.getElementById("helpButton").addEventListener('click', function(){
-            document.getElementById('overlay').style.display = "block";
+            document.getElementById('overlay').style.display = "flex";
         });
 
         document.getElementById("close_help").addEventListener('click', function() {
