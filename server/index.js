@@ -1,3 +1,7 @@
+// constants
+const TIMER_ROUND = 60;
+const TIMER_QUEUE = 45;
+
 var io;
 var userModel = require("../user/user.js");
 var roomId = 0;
@@ -6,17 +10,19 @@ var queueData = {};
 var lobbyData = {};
 var privateLobbies = {};
 var queueStarted = false;
-var roundTimer = 60;
-var queueTimer = 45;
+var queueTimer = TIMER_QUEUE;
 var queueInterval;
 var roundIntervals = {};
 var words = {};
 
+// initialize a new socket.
 exports.init = function(hio, hsocket) {
     io = hio;
     hsocket.emit('connected', {
         msg: 'You have connected!'
     });
+
+    // handle all messages from clients
 
     hsocket.on('drawing', function(data) {
         if (queueData[hsocket.id]) {
@@ -240,6 +246,12 @@ exports.init = function(hio, hsocket) {
     });
 };
 
+/**
+ * Disband a private lobby and inform all its users
+ *
+ * @param {number} id
+ * @param {object} data data must contain the name property which represents the name of the lobby
+ */
 function disbandPL(id, data) {
     if (privateLobbies[data.name]) {
         for (var i = 1; i < privateLobbies[data.name].users.length; i++) {
@@ -260,7 +272,8 @@ function disbandPL(id, data) {
 }
 
 /**
- * Removes a given user, @name, from a given game room, @gameRoom, and informs all other users in the game room of this change
+ * Removes a given user, @name, from a given game room, @gameRoom, 
+ * and informs all other users in the game room of this change
  *
  * @param {string} gameRoom
  * @param {string} name
@@ -279,6 +292,14 @@ function updateGameRoom(gameRoom, name) {
     }
 }
 
+/**
+ * Reset a socket, remove from any queues / lobbies and reset their data.
+ *
+ * @param {number} id
+ * @param {object} data must contain the property userdata which is as follows
+ *                          {name: <name>, email:<email>}
+ * @param {boolean} notInQueu default value false, set to true if queue for public queue
+ */
 function clearSocket(id, data, notInQueue = false) {
 
     if (queueData[id]) {
@@ -307,6 +328,11 @@ function clearSocket(id, data, notInQueue = false) {
 
 }
 
+/**
+ * Removes a socket its connected private lobby.
+ *
+ * @param {number} id
+ */
 function leaveLobby(id) {
 
     if (privateLobbies[queueData[id].pl] && privateLobbies[queueData[id].pl].users.indexOf(id) > -1) {
@@ -325,10 +351,20 @@ function leaveLobby(id) {
 
 }
 
+/**
+ * Test if the msg contains the correct word, if so end round. Relay message to all users in the room
+ *
+ * @param {number} id
+ * @param {string} gameRoom
+ * @param {string} msg
+ */
 function checkMessage(id, gameRoom, msg) {
     if (words[gameRoom] && msg.includes(words[gameRoom].toLowerCase())) userWon(id, gameRoom);
 }
 
+/**
+ * Check if the queue is ready to start, if so start.
+ */
 function checkQueue() {
     if (!queueStarted && io.sockets.adapter.rooms[queueRoom].length > 1) {
         queueStarted = true;
@@ -336,13 +372,19 @@ function checkQueue() {
     }
 }
 
+/**
+ * Start the queue.
+ */
 function startQueue() {
-    queueTimer = 45;
+    queueTimer = TIMER_QUEUE;
     queueInterval = setInterval(function() {
         startQueueTimer();
     }, 1000);
 }
 
+/**
+ * Start the queue timer, and inform all users of queue status (time/num of users)
+ */
 function startQueueTimer() {
 	var key;
     if (io.sockets.adapter.rooms[queueRoom].length < 2) {
@@ -364,11 +406,16 @@ function startQueueTimer() {
     }
     if (queueTimer <= 0) {
         clearInterval(queueInterval);
-        queueTimer = 45;
+        queueTimer = TIMER_QUEUE;
         startGame();
     }
 }
 
+/**
+ * Initialize a new game (public / private) and inform all users in the lobby of the game.
+ *
+ * @param {string} privateQueue the name of the private lobby
+ */
 function startGame(privateQueue = null) {
     var gameRoom;
     var playerList = [];
@@ -432,6 +479,8 @@ function startGame(privateQueue = null) {
         }
         delete privateLobbies[gameRoom];
     }
+    // if any users missed the start of the game inform them that a game hs already begun
+    // update their connected user count.
     if (io.sockets.adapter.rooms[queueRoom])
         io.emit('queueUpdated', {
             numInQueue: io.sockets.adapter.rooms[queueRoom].length
@@ -442,10 +491,14 @@ function startGame(privateQueue = null) {
         });
     queueStarted = false;
     lobbyData[gameRoom].matchNum--;
-    roundTimer = 60;
     startNextRound(gameRoom);
 }
 
+/**
+ * End the current round of a given lobby
+ *
+ * @param {string} gameRoom
+ */
 function endRound(gameRoom) {
 
     clearInterval(roundIntervals[gameRoom]);
@@ -466,7 +519,7 @@ function endRound(gameRoom) {
         }
     }
     delete words[gameRoom];
-    roundIntervals[gameRoom + 'Timer'] = 60;
+    roundIntervals[gameRoom + "Timer"] = TIMER_ROUND;
     if (lobbyData[gameRoom].i >= lobbyData[gameRoom].sockets.length) {
         if (lobbyData[gameRoom].matchNum <= 0) endGame(gameRoom);
         else {
@@ -479,6 +532,11 @@ function endRound(gameRoom) {
     }
 }
 
+/**
+ * Start the next round of a given lobby
+ *
+ * @param {string} gameRoom
+ */
 function startNextRound(gameRoom) {
     if (io.sockets.adapter.rooms[gameRoom].length == 0) {
         endGame();
@@ -499,12 +557,17 @@ function startNextRound(gameRoom) {
     }
     io.sockets.connected[drawing].emit("draw", {});
     // round robin
-    roundIntervals[gameRoom + 'Timer'] = 60;
+    roundIntervals[gameRoom + "Timer"] = TIMER_ROUND;
     roundIntervals[gameRoom] = setInterval(function() {
         startRoundTimer(gameRoom);
     }, 1000);
 }
 
+/**
+ * Start the round timer of a given lobby
+ *
+ * @param {string} gameRoom
+ */
 function startRoundTimer(gameRoom) {
     var gameRoomLength = 0;
     if (io.sockets.adapter.rooms[gameRoom]) gameRoomLength = io.sockets.adapter.rooms[gameRoom].length;
@@ -515,6 +578,7 @@ function startRoundTimer(gameRoom) {
         });
         endGame(gameRoom, true);
     }
+    // do not advance the lobby timer if a word hasn't been chosen
     if (words[gameRoom]) roundIntervals[gameRoom + 'Timer'] -= 1;
     if (io.sockets.adapter.rooms[gameRoom]) {
         for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
@@ -528,6 +592,12 @@ function startRoundTimer(gameRoom) {
     }
 }
 
+/**
+ * Given socket has won the round, inform it's lobby users and update the socket's stats
+ *
+ * @param {number} id
+ * @param {string} gameRoom
+ */
 function userWon(id, gameRoom) {
     queueData[id].wincount++;
     if (io.sockets.adapter.rooms[gameRoom]) {
@@ -548,6 +618,13 @@ function userWon(id, gameRoom) {
     endRound(gameRoom);
 }
 
+/**
+ * End the game for a given gameroom. If immidiate is passed, game will end without picking a winner.
+ *
+ * @param {string} gameRoom
+ * @param {boolean} immediate default value is false, if the set to true, end game without a winner
+ *                            (ie. something has gone wrong, end the game)
+ */
 function endGame(gameRoom, immediate = false) {
     clearInterval(roundIntervals[gameRoom]);
     //pickWinner
