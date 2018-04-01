@@ -4,11 +4,13 @@
     <head>
         <meta charset="utf-8">
         <title>AOG</title>
+        <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet"> 
         <link rel="stylesheet" href="style/main.css" type="text/css" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
 
     <body>
+        <div id="loading" class="full-screen"><div class="loading-container"><div class="loading-icon"></div>Loading</div></div>
         <header id="header">
             <div id="header-container">
                 <div id="title-container">
@@ -17,10 +19,10 @@
                 </div>
                 <div id="nav-button-container">
                     <!-- <div>Icons made by <a href="https://www.flaticon.com/authors/eleonor-wang" title="Eleonor Wang">Eleonor Wang</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
-                    <a id="helpButton" class="nav-btn"></a>
+                    <a id="helpButton" class="nav-btn" href="#"></a>
                     <!-- <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
-                    <a id="pauseVoice" class="nav-btn"></a>
-                    <a id="resumeVoice" class="nav-btn"></a>
+                    <a id="pauseVoice" class="nav-btn" href="#"></a>
+                    <a id="resumeVoice" class="nav-btn" href="#"></a>
                     <!-- icon credit: <div>Icons made by <a href="https://www.flaticon.com/authors/nice-and-serious" title="Nice and Serious">Nice and Serious</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
                     <a id="profile" class="nav-btn" href="/profile"></a>
                     <!-- icon credit: <div>Icons made by <a href="https://www.flaticon.com/authors/elias-bikbulatov" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
@@ -28,27 +30,28 @@
                 </div>
             </div>
         </header>
-        <div id="overlay">
-            <button type="button" id="close_help">Close</button>
+        <div id="overlay" class="full-screen">
+            <button type="button" id="close_help"></button>
             <div id="voiceCommands">
-                <h2>Available Voice Commands:</h2>
-                <p>Ready/Queue up: Puts you in the queue for a public game</p>
-                <p>Cancel: Removes you from the queue</p>
-                <p>Profile: Lets you view your profile
-                <p>Log out/Sign out: Logs you out</p>
-                <p>Home: Brings you back to the main page</p>
-                <p>Back: Similar to the back button of the browser</p>
-                <p>Next/Forward: Similar to the forward button of the browser</p>
-                <p>Help me: Displays instructions and available voice commands</p>
-                <p>Thank you: Closes the instructions overlay</p>
-                <h3>ONLY while drawing during a game:</h3>
-                <p>Change colour to <em>colour</em>: Changes the colour of the brush</p>
-                <p>Change brush size to <em>size</em>: Changes the size of the brush</p>
-                <p>Undo: Undos a previous change to the canvas</p>
-                <p>Redo: Redos a previous change to the canvas</p>
-                <p>Clear: Creals the canvas</p>
-                <p>Send <em>message</em>: Posts a message on the chat</p>
+                <h2 class="overlay-title">Available Voice Commands</h2>
+                <div class="overlay-item"><div class="overlay-command">Ready/Queue up</div> Puts you in the queue for a public game</div>
+                <div class="overlay-item"><div class="overlay-command">Cancel</div> Removes you from the queue</div>
+                <div class="overlay-item"><div class="overlay-command">Profile</div> Lets you view your profile</div>
+                <div class="overlay-item"><div class="overlay-command">Log out/Sign out</div> Logs you out</div>
+                <div class="overlay-item"><div class="overlay-command">Home</div> Brings you back to the main page</div>
+                <div class="overlay-item"><div class="overlay-command">Back</div> Similar to the back button of the browser</div>
+                <div class="overlay-item"><div class="overlay-command">Next/Forward</div> Similar to the forward button of the browser</div>
+                <div class="overlay-item"><div class="overlay-command">Help me</div> Displays instructions and available voice commands</div>
+                <div class="overlay-item"><div class="overlay-command">Thank you</div> Closes the instructions overlay</div>
+                <h2 class="overlay-title">ONLY while drawing during a game</h3>
+                <div class="overlay-item"><div class="overlay-command">Change colour to <div class="overlay-emph">colour</div></div> Changes the colour of the brush</div>
+                <div class="overlay-item"><div class="overlay-command">Change brush size to <div class="overlay-emph">size</div></div> Changes the size of the brush. Deafult brush size is 10.</div>
+                <div class="overlay-item"><div class="overlay-command">Undo</div> Undos a previous change to the canvas</div>
+                <div class="overlay-item"><div class="overlay-command">Redo</div> Redos a previous change to the canvas</div>
+                <div class="overlay-item"><div class="overlay-command">Clear</div> Creals the canvas</div>
+                <div class="overlay-item"><div class="overlay-command">Send <div class="overlay-emph">message</div></div> Posts a message on the chat</div>
             </div>
+            
         </div>
         <div id="alert" class="slideDown">
             <div id="alert-icon"></div>

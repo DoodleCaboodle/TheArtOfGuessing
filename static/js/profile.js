@@ -15,6 +15,7 @@
                     else {
                         firstName = name;
                         loadWindow();
+                        document.getElementById("loading").classList.add('slide-up');
                         Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d) {
                             d.innerHTML = firstName;
                         });

@@ -14,6 +14,7 @@
                     if (err) console.log(err);
                     else {
                         firstName = name;
+                        document.getElementById("loading").classList.add('slide-up');
                         loadWindow();
                         Array.prototype.forEach.call(document.getElementsByClassName("user"), function(d) {
                             d.innerHTML = firstName;
@@ -571,7 +572,7 @@
         }
 
         document.getElementById("helpButton").addEventListener('click', function(){
-            document.getElementById('overlay').style.display = "block";
+            document.getElementById('overlay').style.display = "flex";
         });
 
         document.getElementById("close_help").addEventListener('click', function() {
