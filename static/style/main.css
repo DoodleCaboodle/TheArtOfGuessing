@@ -41,7 +41,7 @@ body {
     height: 40px;
     background: #fff;
     color: #333;
-    font-size: 15pt;
+    font-size: 1.25468751254688em;
     text-align: center;
     line-height: 40px;
     -webkit-box-shadow: 0px 7px 21px 1px rgba(0, 0, 0, 0.75);
@@ -127,7 +127,7 @@ header a {
 }
 
 #header-title {
-    font-size: 22pt;
+    font-size: 1.84020835173542em;
 }
 
 #header-title:hover {
@@ -203,7 +203,7 @@ header a {
 
 #welcom-title {
     color: #ddd;
-    font-size: 48pt;
+    font-size: 4.01500004015em;
     padding: 0;
     margin: 0;
     margin-bottom: 50px;
@@ -244,7 +244,7 @@ header a {
 
 #pl-title {
     width: 80%;
-    font-size: 18pt;
+    font-size: 1.50562501505625em;
     margin-bottom: 20px;
     border-bottom: 1px solid #aaa;
 }
@@ -330,9 +330,9 @@ header a {
 }
 
 #pl-lobby-join .pl-sub-item {
-    font-size: 11pt;
+    font-size: 0.920104175867708em;
     min-width: 100px;
-    line-height: 11pt;
+    line-height: 0.920104175867708em;
 }
 
 .queue-container {
@@ -344,7 +344,7 @@ header a {
     justify-content: space-between;
     padding: 20px;
     color: #ddd;
-    font-size: 13pt;
+    font-size: 1.08739584420729em;
     text-align: center;
     border-radius: 10px;
     min-height: 200px;
@@ -366,7 +366,7 @@ header a {
     border-radius: 5px;
     color: #fff;
     display: block;
-    font-size: 11pt;
+    font-size: 0.920104175867708em;
     font-weight: bold;
     margin: 5px auto;
     position: relative;
@@ -434,7 +434,7 @@ header a {
 
 #queue-time {
     color: rgb(26, 55, 41);
-    font-size: 14pt;
+    font-size: 1.17104167837708em;
     padding: 0;
     margin: 0;
 }
@@ -752,7 +752,7 @@ header a {
 }
 
 .message {
-    font-size: 11pt;
+    font-size: 0.920104175867708em;
     margin: 0;
     padding: 0;
     width: 98%;
@@ -769,7 +769,7 @@ header a {
     padding: 0;
     background: rgba(0, 0, 0, 0.4);
     color: #fff;
-    font-size: 10pt;
+    font-size: 0.836458341697917em;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -790,16 +790,10 @@ header a {
 
 .wincount {
     color: #fff;
-    font-size: 8pt;
+    font-size: 0.669166673358333em;
     margin: 0;
     padding: 2px;
     background: #555;
-}
-
-@media (max-width: 1366px) {
-    #start-container {
-        width: 100%;
-    }
 }
 
 .full-screen {
@@ -819,7 +813,7 @@ header a {
     color: #fff;
     padding: 10px;
     font-family: 'Quicksand', sans-serif;
-    font-size: 16pt;
+    font-size: 1.33833334671667em;
 }
 
 #helpButton {
@@ -863,7 +857,7 @@ header a {
     text-align: center;
     border-bottom: 1px solid #fff;
     font-weight: normal;
-    font-size: 28pt;
+    font-size: 2.34208335675417em;
 }
 
 .overlay-item {
@@ -877,11 +871,11 @@ header a {
     align-items: center;
     justify-content: flex-start;
     line-height: 16pt;
-    font-size: 14pt;
+    font-size: 1.17104167837708em;
 }
 
 .overlay-command {
-    font-size: 16pt;
+    font-size: 1.33833334671667em;
     width: 30%;
     display: flex;
     flex-direction: row;
@@ -916,7 +910,7 @@ header a {
     justify-content: center;
     align-items: center;
     width: 100%;
-    font-size: 48pt;
+    font-size: 4.01500004015em;
     padding-bottom: 25px;
 }
 
@@ -934,4 +928,10 @@ header a {
     top: -40px;
     border-bottom: 1px solid #000;
     max-height: 0% !important;
+}
+
+@media (max-width: 1366px) {
+    #start-container {
+        width: 100%;
+    }
 }
