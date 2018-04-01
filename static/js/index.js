@@ -553,13 +553,30 @@
                 'undo': undoFunc,
                 'redo': redoFunc,
                 'clear': clearFunc,
-                'send *message': sendMessage
+                'send *message': sendMessage,
+                'help me': function() {
+                    document.getElementById('overlay').style.display = "block";
+                },
+                'thank you': function() {
+                    document.getElementById('overlay').style.display = "none";
+                }
             };
 
             annyang.addCommands(commands);
             annyang.start();
             document.getElementById('pauseVoice').style.display = "flex";
+        } else {
+            //CHANGE THE CONTENT OF THE VOICE COMMANDS PART HERE
+            document.getElementById('voiceCommands').innerHTML = "Sorry, your browser does not support speech recognition. If you want to use this feature, try to use Chrome instead.";
         }
+
+        document.getElementById("helpButton").addEventListener('click', function(){
+            document.getElementById('overlay').style.display = "block";
+        });
+
+        document.getElementById("close_help").addEventListener('click', function() {
+            document.getElementById('overlay').style.display = "none";
+        });
 
         var pauseVoice = function() {
             annyang.pause();

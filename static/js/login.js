@@ -9,6 +9,10 @@
                     userForms.classList.remove('bounceLeft');
                     userForms.classList.add('bounceRight');
                 },
+                'log in': function() {
+                    userForms.classList.remove('bounceLeft');
+                    userForms.classList.add('bounceRight');
+                },
                 'sign up': function() {
                     userForms.classList.remove('bounceRight');
                     userForms.classList.add('bounceLeft');
@@ -17,11 +21,23 @@
                     userForms.classList.remove('bounceRight');
                     userForms.classList.add('bounceLeft');
                 },
+                'log in with facebook': function() {
+                    window.location.href = "/login/facebook";
+                },
                 'login with facebook': function() {
-                    window.location.href = "/login/facebook"
+                    window.location.href = "/login/facebook";
+                },
+                'log in with google': function() {
+                    window.location.href = "/login/google";
                 },
                 'login with google': function() {
-                    window.location.href = "/login/google"
+                    window.location.href = "/login/google";
+                },
+                'help me': function() {
+                    document.getElementById('overlay').style.display = "block";
+                },
+                'thank you': function() {
+                    document.getElementById('overlay').style.display = "none";
                 }
             };
             annyang.addCommands(commands);
