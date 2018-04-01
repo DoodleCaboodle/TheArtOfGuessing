@@ -151,16 +151,18 @@ header a {
     background: red;
     margin-left: 20px;
     padding: 2px;
+    transition-duration: 0.4s;
 }
 
 .nav-btn:hover .tooltip {
-    display: block;
+    transition-duration: 0.4s;
+    opacity: 1;
 }
 
 .tooltip {
     font-family: 'Quicksand', sans-serif;
     width: 100px;
-    display: none;
+    display: block;
     position: absolute;
     margin-top: 25px;
     margin-left: -40px;
@@ -171,6 +173,8 @@ header a {
     text-align: center;
     color: #000;
     font-weight: bold;
+    transition-duration: 0.4s;
+    opacity: 0;
 }
 
 #logout {
