@@ -153,6 +153,26 @@ header a {
     padding: 2px;
 }
 
+.nav-btn:hover .tooltip {
+    display: block;
+}
+
+.tooltip {
+    font-family: 'Quicksand', sans-serif;
+    width: 100px;
+    display: none;
+    position: absolute;
+    margin-top: 25px;
+    margin-left: -40px;
+    padding: 5px;
+    border: 1px solid #000;
+    background: white;
+    border-radius: 20px;
+    text-align: center;
+    color: #000;
+    font-weight: bold;
+}
+
 #logout {
     background: url("../media/logout.png");
     background-size: 100% 100%;
