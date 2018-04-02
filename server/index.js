@@ -349,7 +349,16 @@ function leaveLobby(id) {
             });
         });
         return true;
-    } else return false;
+    } 
+    else if (queueData[id].gameRoom && queueData[id].gameRoom !== '') {
+        var key;
+        for (key in io.sockets.adapter.rooms[queueData[id].gameRoom].sockets) {
+            io.sockets.connected[hid].emit("updatePl", {
+                users: lobbyData[queueData[id].gameRoom].playerList
+            });
+        }
+    }
+    else return false;
 
 }
 
