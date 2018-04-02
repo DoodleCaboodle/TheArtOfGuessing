@@ -80,6 +80,7 @@
             var key = e.which || e.keyCode;
             if (canMessage) {
                 if (key === 13) {
+                    document.getElementById("feed-input").value = "";
                     var msg = document.getElementById("feed-input").value;
                     if (msg !== '') socket.emit('message', {
                         name: firstName,
@@ -89,6 +90,7 @@
                 }
             } else {
                 if (key === 13) {
+                    document.getElementById("feed-input").value = "";
                     postFeed("System", "You are currently drawing.", "red");
                 }
             }
@@ -102,7 +104,6 @@
             div.style.color = colour;
             document.getElementById("feed").appendChild(div);
             document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight;
-            document.getElementById("feed-input").value = "";
         }
 
         function drawLine(fromx, fromy, tox, toy, colour, brushSize, emit) {

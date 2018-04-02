@@ -624,7 +624,7 @@ function userWon(id, gameRoom) {
                 wincount: queueData[id].wincount
             });
             io.sockets.connected[key].emit('systemMessage', {
-                msg: queueData[id].name + " won the round.",
+                msg: queueData[id].name + " guessed " + words[gameRoom] + " and won the round.",
                 endGame: false,
                 color: '#3333aa'
             });
