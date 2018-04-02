@@ -620,6 +620,11 @@
             });
         });
 
+        socket.on('updateUserList', function(data) {
+            document.getElementById("users-list").innerHTML = '';
+            addPlayers(data.playerList);
+        });
+
         socket.on("createLobby", function(data) {
             document.getElementById("alert").style.display = 'none';
         });

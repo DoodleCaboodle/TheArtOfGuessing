@@ -89,6 +89,7 @@ User.updateStats = function(email, roundsWon, roundsPlayed, gamesWon, gamesPlaye
             }
 
             MongoClient.connect(uri, function(err, client) {
+                if (err) return;
                 const collection = client.db("art-of-guessing").collection("user-stats");
                 collection.updateOne({
                     email: email
