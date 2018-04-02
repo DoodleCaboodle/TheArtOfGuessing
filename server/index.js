@@ -637,11 +637,11 @@ function endGame(gameRoom, immediate = false) {
         var winnerID;
         var winCount = 0;
         for (key in queueData) {
-            if (queueData[key].wincount >= winCount) {
-                gameWinner = queueData[key].name;
-                winnerID = key;
-                winCount = queueData[key].wincount;
-                winnerEmail = queueData[winnerID].email;
+            if (queueData[key].wincount >= winCount && queueData[key].gameRoom === gameRoom) {
+              gameWinner = queueData[key].name;
+              winnerID = key;
+              winCount = queueData[key].wincount;
+              winnerEmail = queueData[winnerID].email;
             }
             userModel.updateStats(queueData[key].email, queueData[key].wincount, 0, 0, 1, {});
         }
