@@ -603,6 +603,15 @@ function startRoundTimer(gameRoom) {
         }
     }
     if (roundIntervals[gameRoom + 'Timer'] <= 0) {
+        if (io.sockets.adapter.rooms[gameRoom]) {
+            for (var key in io.sockets.adapter.rooms[gameRoom].sockets) {
+                io.sockets.connected[key].emit('systemMessage', {
+                    msg: "It was " + words[gameRoom] + ".",
+                    endGame: false,
+                    color: '#3333aa'
+                });
+            }
+        }
         endRound(gameRoom);
     }
 }
