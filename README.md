@@ -1,4 +1,4 @@
-# The Art of Guessing (https://art-of-guessing.herokuapp.com/)
+# [The Art of Guessing] :https://art-of-guessing.herokuapp.com/
 ###  Team Members: Andrei Anculete and Kalindu De Costa
 
 
