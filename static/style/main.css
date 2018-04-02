@@ -282,6 +282,8 @@ header a {
     padding: 0;
     margin: 0;
     text-align: right;
+    min-height: 20px;
+    margin-left: 5px;
 }
 
 .pl-item {
@@ -755,7 +757,7 @@ header a {
 
 #feed {
     width: 100%;
-    height: 75%;
+    height: 92%;
     display: flex;
     flex-direction: column;
     align-content: center;

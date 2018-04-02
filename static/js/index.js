@@ -778,6 +778,21 @@
                     canDraw = true;
                 }
             });
+            document.getElementById("word-to-draw").addEventListener("keypress", function(e) {
+            var key = e.which || e.keyCode;
+            if (key === 13) {
+                var word = document.getElementById('word-to-draw').value;
+                if (word !== '') {
+                    document.getElementById("word").innerHTML = word;
+                    socket.emit('word', {
+                        word: word
+                    });
+                    document.getElementById('word-to-draw').value = '';
+                    document.getElementById('popup').style.display = 'none';
+                    canDraw = true;
+                }
+            }
+        });
         }
 
         function goBack() {

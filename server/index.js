@@ -172,6 +172,7 @@ exports.init = function(hio, hsocket) {
                 msg: "Successfully created lobby."
             });
         }
+        console.log(privateLobbies);
     });
 
     hsocket.on('leaveLobby', function(data) {
@@ -197,6 +198,7 @@ exports.init = function(hio, hsocket) {
     });
 
     hsocket.on('joinLobby', function(data) {
+        console.log(privateLobbies);
         if (privateLobbies[data.name]) {
             if (privateLobbies[data.name].pass == data.pass) {
                 clearSocket(hsocket.id, data);
