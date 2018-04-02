@@ -80,13 +80,13 @@
             var key = e.which || e.keyCode;
             if (canMessage) {
                 if (key === 13) {
-                    document.getElementById("feed-input").value = "";
                     var msg = document.getElementById("feed-input").value;
                     if (msg !== '') socket.emit('message', {
                         name: firstName,
                         msg: msg
                     });
                     //postFeed(firstName, msg);
+                    document.getElementById("feed-input").value = "";
                 }
             } else {
                 if (key === 13) {
