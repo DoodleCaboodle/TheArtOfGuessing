@@ -8,18 +8,20 @@ The Art of Guessing is a multiplayer browser game that has 2 game modes. The fir
 
 ## Key Features for the Beta Version (https://art-of-guessing.herokuapp.com/)
 
-We will focus on three main features for the Beta release; the first game mode where every user will have the chance to enter a word that they will be drawing for all other users to guess, the ability for users to guess using a text-based system as well as voice input, and a working leaderboard and statistics. The beta implementation will consist of one lobby with 10 users and a queue of users.  Each game will consist of 10 rounds and each user will have the chance to draw. After a game has been completed, the next 10 users in the queue will occupy the next game. If there are less than 10 users in the queue, the game will begin after a 45 second wait period. However, the game will not begin if the queue only consists of one person. Users will have the option to guess the drawing using a text-based input as well as voice input where the game will register each word separately. Lastly, we will gather user statistics for the user leaderboards. 
+We will focus on three main features for the Beta release; the first game mode where every user will have the chance to enter a word that they will be drawing for all other users to guess, the ability for users to guess using a text-based system as well as voice input, and a working leaderboard and statistics. The beta implementation will consist of one lobby with any amount of users. Each game will consist of as many rounds as there are users so that each user will have the chance to draw. After a game has been completed, the next users in the queue will occupy the next game. If there are more than two users in the queue, the game will begin after a 45 second wait period. However, the game will not begin if the queue only consists of one person. Users will have the option to guess the drawing using a text-based input as well as voice input where the game will register each word separately. Lastly, we will gather user statistics for the user leaderboards. 
 
-## Key Features for the Final version
+## Key Features for the Final version (https://art-of-guessing.herokuapp.com/)
 
-The final version will consist of two additional features. The first of the features will be a second game mode where every user will make a drawing of a word and an AI will try to guess the word based on the drawings. Points for the second game mode will be awarded based on time taken for the AI to guess the correct word; the lower the time, the higher the points. A game will consist of 10 rounds and during each round a unique user will have the chance to submit a word of their choice. Further, the leaderboards will be updated to accommodate the new game mode.  The last of the features will be multiple lobbies with peer-to-peer hosting to eliminate the queue system. Users will have the option to create a private lobby with a password as well as join a public lobby based on a matching system.
+The final version will consist of four additional features. The first feature will be multiple lobbies with peer-to-peer hosting to eliminate the queue system. Users will have the option to create a private lobby with a password as well as join a public lobby based on a matching system. The second feature will be the ability to edit the user profile. The user can change their first and last names, email and password. A third feature will be to allow users to log in with their Facebook and Google accounts in addition to the regular login system. When they do so, they can change their password in profile settings, so then they can also login with the regular login system. The last feature will be the ability to edit the user profile. The last feature will be to allow the users to control the game and the rest of the website by voice commands. This feature can be paused or resumed at any time. In addition, when the voice control is activated, the user can still use all the other features like he would normally do.
 
 ## Technologies
-- Google draw AI: https://github.com/googlecreativelab/quickdraw-dataset
-- Server hosting: https://www.heroku.com/ or http://www.smartfoxserver.com/
-- VOIP: https://sipjs.com/ 
-- Leader boards / statistics: http://playtomic.org/
-- Database: http://couchdb.apache.org/, Heroku Postgress
+- Server hosting: https://www.heroku.com/
+- Leader boards / statistics: https://www.chartjs.org/
+- Database: https://www.mongodb.com/
+- Voice control: https://www.talater.com/annyang/
+- Realtime application framework: https://socket.io/
+- Facebook/Google login: http://www.passportjs.org/
+- Cool popups: https://sweetalert2.github.io/
 
 ## Technical Challenges
 1. Implementing multiple lobbies as peer-to-peer hosting for groups of users
