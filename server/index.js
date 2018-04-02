@@ -525,7 +525,10 @@ function endRound(gameRoom) {
     delete words[gameRoom];
     roundIntervals[gameRoom + "Timer"] = TIMER_ROUND;
     if (lobbyData[gameRoom].i >= lobbyData[gameRoom].sockets.length) {
-        if (io.sockets.adapter.rooms[gameRoom].length <= 1) {
+        if (!io.sockets.adapter.rooms[gameRoom]) {
+            endGame(gameRoom, true);
+        }
+        else if (io.sockets.adapter.rooms[gameRoom].length <= 1) {
             if (io.sockets.adapter.rooms[gameRoom].length == 1)
                 io.sockets.connected[Object.keys(io.sockets.adapter.rooms[gameRoom].sockets)[0]].emit('systemMessage', {
                         msg: "Ending game, not enough players in game.",

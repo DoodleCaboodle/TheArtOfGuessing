@@ -801,6 +801,7 @@
         }
 
         function goBack() {
+            document.getElementById("popup").style.display = "none";
             window.location.href = '/';
         }
     };
