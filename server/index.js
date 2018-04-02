@@ -516,7 +516,7 @@ function endRound(gameRoom) {
                 drawn: 0
             };
             if (key == lobbyData[gameRoom].drawing) {
-                word[words[gameRoom]],drawn++;
+                word[words[gameRoom]].drawn++;
                 userModel.updateStats(queueData[key].email, 0, 0, 0, 0, word);
             }
             else userModel.updateStats(queueData[key].email, 0, 1, 0, 0, word);
@@ -653,7 +653,7 @@ function endGame(gameRoom, immediate = false) {
               winCount = queueData[key].wincount;
               winnerEmail = queueData[winnerID].email;
             }
-            userModel.updateStats(queueData[key].email, queueData[key].wincount, 0, 0, 1, {});
+            if (queueData[key].gameRoom === gameRoom) userModel.updateStats(queueData[key].email, queueData[key].wincount, 0, 0, 1, {});
         }
         for (key in io.sockets.adapter.rooms[gameRoom].sockets) {
             io.sockets.connected[key].emit("gameWinner", {
