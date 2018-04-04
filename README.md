@@ -32,5 +32,5 @@ The final version consists of four additional features. The first feature is the
 5. Real time synchronization between users, for the drawing mechanics.
 
 ## Links
-App: https://art-of-guessing.herokuapp.com/
-Demo: https://youtu.be/ZxZvy9cayNc
+- App: https://art-of-guessing.herokuapp.com/
+- Demo: https://youtu.be/ZxZvy9cayNc
