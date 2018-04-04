@@ -1,7 +1,7 @@
 
 # <a href="https://art-of-guessing.herokuapp.com/">The Art of Guessing </a>
 ###  Team Members: Andrei Anculete and Kalindu De Costa
-###  <a href="https://youtu.be/ZxZvy9cayNc">Demo</a>
+###  <a href="https://www.youtube.com/watch?v=cznICEKMN7g">Demo</a>
 
 ## Project Description
 
@@ -33,4 +33,4 @@ The final version consists of four additional features. The first feature is the
 
 ## Links
 - App: https://art-of-guessing.herokuapp.com/
-- Demo: https://youtu.be/ZxZvy9cayNc
+- Demo: https://www.youtube.com/watch?v=cznICEKMN7g
