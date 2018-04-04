@@ -1,7 +1,7 @@
 
 # <a href="https://art-of-guessing.herokuapp.com/">The Art of Guessing </a>
 ###  Team Members: Andrei Anculete and Kalindu De Costa
-
+###  <a href="https://youtu.be/ZxZvy9cayNc">Demo</a>
 
 ## Project Description
 
@@ -30,3 +30,7 @@ The final version consists of four additional features. The first feature is the
 3. Using a NoSQL API based database for data storage and statistics
 4. Collecting user data for statistical analysis
 5. Real time synchronization between users, for the drawing mechanics.
+
+## Links
+App: https://art-of-guessing.herokuapp.com/
+Demo: https://youtu.be/ZxZvy9cayNc
