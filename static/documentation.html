@@ -1,0 +1,308 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>README.md</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="the-art-of-guessing-api-documentation">The Art of Guessing API Documentation</h1>
+<h2 id="managing-users-api">Managing Users API</h2>
+<h3 id="create">Create</h3>
+<ul>
+<li>description: register an user</li>
+<li>request: <code>POST /signup/</code>
+<ul>
+<li>content-type: <code>application/json</code></li>
+<li>body: object
+<ul>
+<li>email: (string) the email of the user</li>
+<li>password: (string) the password of the user</li>
+<li>firstname: (string) first name of the user</li>
+<li>lastname: (string) last name of the user</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>response: 200
+<ul>
+<li>body: User <em>email</em> signed up</li>
+</ul>
+</li>
+<li>response: 409
+<ul>
+<li>body: email <em>email</em> already exists</li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request POST
+	   --header 'Content-Type: application/json'
+	   --data `{"email": "alice@gmail.com", "password": "alice", "firstname": "alice", "lastname": "wonderland"}'
+	   http://localhost:3000/signup/
+</code></pre>
+<ul>
+<li>description: sign-in the user with the given credentials</li>
+<li>request: <code>POST /signin/</code>
+<ul>
+<li>content-type: <code>application/json</code></li>
+<li>body: object
+<ul>
+<li>email: (string) the email of the user</li>
+<li>password: (string) the password of the user</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>response: 200
+<ul>
+<li>body: user <em>email</em> signed in</li>
+</ul>
+</li>
+<li>response: 401
+<ul>
+<li>body: access denied</li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request POST
+       --header 'Content-Type: application/json'
+       --data '{"username": "alice", "password": "alice"}'
+       --cookie-jar cookie.txt
+       http://localhost:3000/signin/
+</code></pre>
+<ul>
+<li>description: sign-out the user</li>
+<li>request: <code>GET /signout/</code></li>
+<li>response: 200</li>
+</ul>
+<pre><code>$ curl --request GET
+       --cookie cookie.txt
+       --cookie-jar cookie.txt
+       http://localhost:3000/signout/
+</code></pre>
+<h3 id="read">Read</h3>
+<ul>
+<li>description: retrieve the login page if not logged in. Otherwise redirect to home page</li>
+<li>request: <code>GET /login/</code></li>
+<li>response: 200
+<ul>
+<li>content-type: <code>text/html</code></li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request GET
+       --cookie cookie.txt
+       http://localhost:3000/login/
+</code></pre>
+<ul>
+<li>description: retrieve the profile page if logged in. Otherwise redirect to login page</li>
+<li>request: <code>GET /profile/</code></li>
+<li>response: 200
+<ul>
+<li>content-type: <code>text/html</code></li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request GET
+	   --cookie cookie.txt
+	   http://localhost:3000/profile/
+</code></pre>
+<ul>
+<li>description: retrieve the statistics for the given email</li>
+<li>request: <code>GET /stats/:email/</code></li>
+<li>response: 200
+<ul>
+<li>content-type: <code>application/json</code></li>
+<li>body: object
+<ul>
+<li>email: (string) the email of the user</li>
+<li>roundsWon: (int) the number of rounds won</li>
+<li>roundsPlayed: (int) the number of rounds played</li>
+<li>gamesWon: (int) the number of games won</li>
+<li>gamesPlayed: (int) the number of games played</li>
+<li>words: (object) words used during all games</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>response: 404
+<ul>
+<li>body: stats corrupt</li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request GET
+	   --cookie cookie.txt
+	   http://localhost:3000/stats/alice@gmail.com
+</code></pre>
+<ul>
+<li>description: retrieve the first name of the user with the given email</li>
+<li>request <code>GET /firstname/:email/</code></li>
+<li>response: 200
+<ul>
+<li>content-type: <code>application/json</code></li>
+<li>body: object
+<ul>
+<li>firstname: (string) first name of the user</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request GET
+	   http://localhost:3000/firstname/alice@gmail.com
+</code></pre>
+<ul>
+<li>description: redirect to the Facebook Login page</li>
+<li>request <code>GET /login/facebook/</code></li>
+</ul>
+<pre><code>$ curl --request GET
+	   http://localhost:3000/login/facebook/
+</code></pre>
+<ul>
+<li>description: redirect accordingly based on whether the Facebook Login failed or succeeded</li>
+<li>request <code>GET /login/facebook/callback/</code></li>
+</ul>
+<pre><code>$ curl --request GET
+	   http://localhost:3000/login/facebook/callback/
+</code></pre>
+<ul>
+<li>description: redirect to the Google Login page</li>
+<li>request <code>GET /login/google</code></li>
+</ul>
+<pre><code>$ curl --request GET
+	   http://localhost:3000/login/google/
+</code></pre>
+<ul>
+<li>description: redirect accordingly based on whether the Google Login failed or succeeded</li>
+<li>request <code>GET /login/google/callback/</code></li>
+</ul>
+<pre><code>$ curl --request GET
+	   http://localhost:3000/login/google/callback/
+</code></pre>
+<ul>
+<li>description: retrieve the email of the authenticated user</li>
+<li>request <code>GET /user/</code></li>
+<li>response: 200
+<ul>
+<li>content-type: <code>application/json</code></li>
+<li>body: object
+<ul>
+<li>email: (string) email of the authenticated user</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>response: 404
+<ul>
+<li>body: User not found!</li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request GET
+	   --cookie cookie.txt
+	   http://localhost:3000/user/
+</code></pre>
+<ul>
+<li>description: retrieve the last name of the authenticated user</li>
+<li>request <code>GET /lastname/</code></li>
+<li>response: 200
+<ul>
+<li>content-type: <code>application/json</code></li>
+<li>body: object
+<ul>
+<li>lastname: (string) last name of the authenticated user</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>response: 404
+<ul>
+<li>body: User not found!</li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request GET
+	   --cookie cookie.txt
+	   http://localhost:3000/lastname/
+</code></pre>
+<ul>
+<li>description: retrieve the first name of the authenticated user</li>
+<li>request <code>GET /firstname/</code></li>
+<li>response: 200
+<ul>
+<li>content-type: <code>application/json</code></li>
+<li>body:object
+<ul>
+<li>firstname: (string) first name of the authenticated user</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>response: 404
+<ul>
+<li>body: User not found!</li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request get
+	   --cookie cookie.txt
+	   http://localhost:3000/firstname/
+</code></pre>
+<ul>
+<li>description: retrieve the credits page</li>
+<li>request: <code>GET /credits/</code></li>
+<li>response: 200
+<ul>
+<li>content-type: <code>text/html</code></li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request GET
+	   http://localhost:3000/credits/
+</code></pre>
+<h3 id="update">Update</h3>
+<ul>
+<li>description: update the information of the authenticated user</li>
+<li>request: <code>POST /user/</code>
+<ul>
+<li>content-type: <code>application/json</code></li>
+<li>body: object
+<ul>
+<li>email: (string) the new email, if any</li>
+<li>pass: (string) the new password, if any</li>
+<li>firstname: (string) the new first name, if any</li>
+<li>lastname: (string) the new last name, if any</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>response: 200
+<ul>
+<li>content-type: <code>application/json</code></li>
+<li>body: object
+<ul>
+<li>success: (boolean) True if the update took place, False if the update failed</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>response:  403
+<ul>
+<li>body: Access Denied!</li>
+</ul>
+</li>
+</ul>
+<pre><code>$ curl --request POST
+       --header 'Content-Type: application/json'
+       --data '{"email": "alice@gmail.com", "pass": "alice", "firstname": "alice", "lastname":"wonderland"}'
+       --cookie cookie.txt
+       http://localhost:3000/user/
+</code></pre>
+</div>
+</body>
+
+</html>
