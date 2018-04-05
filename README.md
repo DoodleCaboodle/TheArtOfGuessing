@@ -35,3 +35,4 @@ The final version consists of four additional features. The first feature is the
 ## Links
 - App: https://art-of-guessing.herokuapp.com/
 - Demo: https://www.youtube.com/watch?v=cznICEKMN7g
+- Documentation: https://art-of-guessing.herokuapp.com/documentation.html
